@@ -45,9 +45,6 @@ public class Player {
         else if (i==0 && inventory[i]==null) {
             returningString = returningString+"Empty\n";
         }
-        /*else {
-            returningString = returningString+"Empty\n";
-        }*/
         return returningString;
     }
     
