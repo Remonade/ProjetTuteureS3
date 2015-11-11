@@ -1,6 +1,7 @@
 package Graphic;
 
 import java.nio.FloatBuffer;
+import math.Vector2f;
 import static org.lwjgl.opengl.GL11.*;
 
 /*
@@ -17,15 +18,16 @@ public class Model {
 	final public void createTexture() {
 		m_texture=new Texture("");
 	}
-	public void draw(float x,float y) {
-		startRender(x,y);
+	public void draw(Vector2f pos,Vector2f size) {
+		startRender(pos,size);
 		render();
 		endRender();
 	}
-	public void startRender(float x,float y) {
+	public void startRender(Vector2f pos,Vector2f size) {
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
-		glTranslatef(x,y,0);
+		glTranslatef(pos.x,pos.y,0);
+		glScalef(size.x,size.y,0);
 		if(m_texture!=null)
 			m_texture.bind(); // bind texture
 	}
