@@ -1,6 +1,6 @@
 package Logic;
 
-
+import Graphic.Model;
 import math.Vector2f;
 
 public class Entity {
@@ -36,9 +36,13 @@ public class Entity {
 		m_pos=null;
 		m_size=null;
 	}
-	public void draw() {
-		
+	public void setModel(Model m){
+		m_model = m;
 	}
+	public void draw() {
+		m_model.draw(m_pos,m_size);
+	}
+	protected Model m_model;
 	protected Vector2f m_pos;
 	protected Vector2f m_size;
 }
