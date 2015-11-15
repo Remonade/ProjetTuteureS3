@@ -9,6 +9,14 @@ package Logic;
 import math.Vector2f;
 
 public class EntityDynamic extends Entity {
+	public EntityDynamic() {
+		super();
+		m_speed=new Vector2f(0,0);
+	}
+	public EntityDynamic(float h,float w) {
+		super(h,w);
+		m_speed=new Vector2f(0,0);
+	}
 	public Vector2f getSpeed() {
 		return m_speed;
 	}
