@@ -1,5 +1,8 @@
 package Graphic;
 
+import Logic.Ennemi;
+import Logic.Player;
+import math.Vector2f;
 import org.lwjgl.Sys;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
@@ -20,15 +23,11 @@ public class GraphicMain {
  
     // The window handle
     private long window;
-	
-	private Model m_red;
-	private Model m_magenta;
-	private Model m_blue;
-	private Model m_cyan;
-	private Model m_green;
-	private Model m_yellow;
-	private Model m_player;
-	private ModelTest m_test;
+        
+	private Player m_player;
+        private Ennemi m_ennemi;
+        private Ennemi m_ennemi2;
+        
 	private Shader m_shader;
 	private int m_VAO;
 	private float m_mouseX=0;
@@ -118,24 +117,24 @@ public class GraphicMain {
 			glfwSetKeyCallback(window, keyCallback = new GLFWKeyCallback() {
 				@Override
 				public void invoke(long window, int key, int scancode, int action, int mods) {
-					if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
-						glfwSetWindowShouldClose(window, GL_TRUE); // We will detect this in our rendering loop
-					if ( key == GLFW_KEY_LEFT && action == GLFW_PRESS )
-						LEFT=true;
-					if ( key == GLFW_KEY_LEFT && action == GLFW_RELEASE )
-						LEFT=false;
-					if ( key == GLFW_KEY_RIGHT && action == GLFW_PRESS )
-						RIGHT=true;
-					if ( key == GLFW_KEY_RIGHT && action == GLFW_RELEASE )
-						RIGHT=false;
-					if ( key == GLFW_KEY_UP && action == GLFW_PRESS )
-						UP=true;
-					if ( key == GLFW_KEY_UP && action == GLFW_RELEASE )
-						UP=false;
-					if ( key == GLFW_KEY_DOWN && action == GLFW_PRESS )
-						DOWN=true;
-					if ( key == GLFW_KEY_DOWN && action == GLFW_RELEASE )
-						DOWN=false;
+                                    if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
+                                            glfwSetWindowShouldClose(window, GL_TRUE); // We will detect this in our rendering loop
+                                    if ( key == GLFW_KEY_LEFT && action == GLFW_PRESS )
+                                            LEFT=true;
+                                    if ( key == GLFW_KEY_LEFT && action == GLFW_RELEASE )
+                                            LEFT=false;
+                                    if ( key == GLFW_KEY_RIGHT && action == GLFW_PRESS )
+                                            RIGHT=true;
+                                    if ( key == GLFW_KEY_RIGHT && action == GLFW_RELEASE )
+                                            RIGHT=false;
+                                    if ( key == GLFW_KEY_UP && action == GLFW_PRESS )
+                                            UP=true;
+                                    if ( key == GLFW_KEY_UP && action == GLFW_RELEASE )
+                                            UP=false;
+                                    if ( key == GLFW_KEY_DOWN && action == GLFW_PRESS )
+                                            DOWN=true;
+                                    if ( key == GLFW_KEY_DOWN && action == GLFW_RELEASE )
+                                            DOWN=false;
 				}
 			});
 		}
@@ -148,14 +147,11 @@ public class GraphicMain {
 			m_camera.setBound(1.5f, -1.5f, -1.5f, 1.5f);
 			// matrix setting
 			// Data declaration
-			m_test=new ModelTest(4);
-			m_red=new ModelQuad(1.0f,0.0f,0.0f);
-			m_yellow=new ModelQuad(1.0f,1.0f,0.0f);
-			m_green=new ModelQuad(0.0f,1.0f,0.0f);
-			m_cyan=new ModelQuad(0.0f,1.0f,1.0f);
-			m_blue=new ModelQuad(0.0f,0.0f,1.0f);
-			m_magenta=new ModelQuad(1.0f,0.0f,1.0f);
-			m_player=new ModelPlayer();
+			m_player=new Player(new ModelPlayer());
+                        
+                        m_ennemi=new Ennemi(new ModelEnnemi(0.6f, 0.4f, 0.2f), 0, 1);
+                        m_ennemi2=new Ennemi(new ModelEnnemi(0.2f, 0.4f, 0.6f), 0, -1);
+                        
 			m_shader=new Shader();
 		}
     private void loop() {
@@ -187,14 +183,20 @@ public class GraphicMain {
 			glClear(GL_COLOR_BUFFER_BIT); // clear the framebuffer
 			m_camera.setPos(m_mouseX,m_mouseY);
 			m_camera.useCamera();
-			m_red.draw(-2.5f,0);
-			m_yellow.draw(-1.5f,0);
-			m_green.draw(-0.5f,0);
-			m_cyan.draw(0.5f,0);
-			m_blue.draw(1.5f,0);
-			m_magenta.draw(2.5f,0);
-			m_player.draw(m_mouseX,m_mouseY);
-			m_test.draw(45);
+                        
+                        Vector2f current = new Vector2f(m_mouseX,m_mouseY);
+                        Vector2f size = new Vector2f(1,1);
+                        
+                        m_player.m_coordinates = current;
+			m_player.m_model.draw(m_player.m_coordinates, size);
+                        
+                        m_ennemi.walk(m_player);
+                        m_ennemi.rotate();
+                        m_ennemi.m_model.draw(m_ennemi.m_coordinates, size);
+                        m_ennemi2.walk(m_player);
+                        m_ennemi2.rotate();
+                        m_ennemi2.m_model.draw(m_ennemi2.m_coordinates, size);
+                        
 			//m_model.draw(m_shader,m_modelView,m_projection);
 			glfwSwapBuffers(window); // swap the color buffers
 		}

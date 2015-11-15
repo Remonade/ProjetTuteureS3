@@ -3,7 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Logic;
+package Tests;
+
+import Logic.*;
 
 /**
  *
@@ -15,8 +17,8 @@ public class TestClass {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Classe warrior = new Classe(40, 70, 10, 500, "Warrior");
-        Classe sniper = new Classe(10,15, 100, 250, "Sniper");
+        Category warrior = new Category(40, 70, 10, 500, "Warrior");
+        Category sniper = new Category(10,15, 100, 250, "Sniper");
         Weapon overPoweredGun = new Weapon("Over powered gun", 666, 1);
         System.out.println(overPoweredGun);
         Weapon noobiesLaserSword = new Weapon();
@@ -33,6 +35,7 @@ public class TestClass {
         item5.setName("Peasant shirt");
         Item item6 = new Item();
         item6.setName("Diablo's bra");
+        /*
         Player current = new Player();
         current.setClassePerso(sniper);
         current.setName("Thrandread");
@@ -44,6 +47,7 @@ public class TestClass {
         current.addItemToInventory(item5);
         current.addItemToInventory(item6);
         System.out.println(current);
+        */
     }
     
 }

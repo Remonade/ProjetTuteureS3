@@ -9,7 +9,7 @@ package Logic;
  *
  * @author Flavien
  */
-class Weapon {
+public class Weapon {
     private String name;
     private int damage;
     private int type; //0:melee, 1:ranged
