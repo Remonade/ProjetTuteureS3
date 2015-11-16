@@ -40,7 +40,8 @@ public class Entity {
 		m_model = m;
 	}
 	public void draw() {
-		m_model.draw(m_pos,m_size);
+		if(m_model!=null)
+			m_model.draw(m_pos,m_size);
 	}
 	protected Model m_model;
 	protected Vector2f m_pos;
