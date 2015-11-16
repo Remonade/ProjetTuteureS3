@@ -11,14 +11,17 @@ package Graphic;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
+import math.Vector2f;
 import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
 import static org.lwjgl.opengl.GL11.GL_PROJECTION;
 import static org.lwjgl.opengl.GL11.glLoadIdentity;
 import static org.lwjgl.opengl.GL11.glMatrixMode;
 import static org.lwjgl.opengl.GL11.glTranslatef;
+import static org.lwjgl.opengl.GL11.glOrtho;
 
 
 public class Camera2D {
+	private float m_zoom=1, m_finalZoom=3;
 	private float m_posX,m_posY;
 	private float m_BT,m_BB,m_BL,m_BR;
 	/**
@@ -34,10 +37,28 @@ public class Camera2D {
 	 * @author Bernelin Antoine
 	 */
 	public void useCamera() {
+		update();
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		glTranslatef(-m_posX,-m_posY,0.0f);
+		float ratio=GraphicMain.WIDTH/GraphicMain.HEIGHT;
+		glTranslatef(-m_posX/m_zoom,-m_posY/m_zoom,0.0f);
+		glOrtho(-m_zoom*ratio, m_zoom*ratio, -m_zoom*ratio, m_zoom*ratio, -100, 100);
 		glMatrixMode(GL_MODELVIEW);
+	}
+	public void update() {
+		if(m_zoom<m_finalZoom)
+			m_zoom+=0.05;
+		if(m_zoom>m_finalZoom)
+			m_zoom-=0.05;
+	}
+	public void setZoom(float zoom) {
+		if(zoom>1)
+			m_finalZoom=zoom;
+		else
+			m_finalZoom=1;
+	}
+	public float getZoom() {
+		return m_finalZoom;
 	}
 	/**
 	 * Déplace la camera selon un vecteur passé en paramètre.
@@ -55,15 +76,29 @@ public class Camera2D {
 		else
 			m_posY=max(m_posY+y,m_BB);
 	}
+	public void move(Vector2f pos) {
+		if(pos.x>0.0f)
+			m_posX=min(m_posX+pos.x,m_BR);
+		else
+			m_posX=max(m_posX+pos.x,m_BL);
+		if(pos.y>0.0f)
+			m_posY=min(m_posY+pos.y,m_BT);
+		else
+			m_posY=max(m_posY+pos.y,m_BB);
+	}
 	/**
 	 * Déplace la camera aux coordonnées x,y.
      * @param x float représentant la nouvelle horizontal.
      * @param y float représentant la nouvelle vertical.
 	 * @author Bernelin Antoine
 	 */
-	public void setPos(float x,float y) {
+	public final void setPos(float x,float y) {
 			m_posX=min(max(m_BL,x),m_BR);
 			m_posY=min(max(m_BB,y),m_BT);
+	}
+	public void setPos(Vector2f pos) {
+			m_posX=min(max(m_BL,pos.x),m_BR);
+			m_posY=min(max(m_BB,pos.y),m_BT);
 	}
 	/**
 	 * Définit des limites pour la position de la camera. Lors des appeles de move(x,y) et setPos(x,y), les coordonées sont automatiquement corrigées pour respécter les limites.
@@ -73,7 +108,7 @@ public class Camera2D {
      * @param r float représentant la borne horizontale supérieure.
 	 * @author Bernelin Antoine
 	 */
-	public void setBound(float t, float b,float l,float r) {
+	public final void setBound(float t, float b,float l,float r) {
 		m_BT=max(b,t);
 		m_BB=min(b,t);
 		m_BL=min(r,l);
