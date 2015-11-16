@@ -40,9 +40,9 @@ public class Camera2D {
 		update();
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		float ratio=GraphicMain.WIDTH/GraphicMain.HEIGHT;
+		float ratio=(float)GraphicMain.WIDTH/(float)GraphicMain.HEIGHT;
 		glTranslatef(-m_posX/m_zoom,-m_posY/m_zoom,0.0f);
-		glOrtho(-m_zoom*ratio, m_zoom*ratio, -m_zoom*ratio, m_zoom*ratio, -100, 100);
+		glOrtho(-m_zoom, m_zoom, -m_zoom/ratio, m_zoom/ratio, -100, 100);
 		glMatrixMode(GL_MODELVIEW);
 	}
 	public void update() {
