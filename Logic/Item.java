@@ -9,7 +9,7 @@ package Logic;
  *
  * @author Flavien
  */
-class Item {
+public class Item {
     private String name;
     private int strengthBuff;
     private int defenseBuff;

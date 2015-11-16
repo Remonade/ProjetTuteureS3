@@ -61,11 +61,11 @@ public class Model {
 		if(m_texture!=null)
 			m_texture.destroy();
 	}
-	protected FloatBuffer m_vertice=null;
-	protected FloatBuffer m_textures=null;
-	protected FloatBuffer m_colors=null;
+	public FloatBuffer m_vertice=null;
+	public FloatBuffer m_textures=null;
+	public FloatBuffer m_colors=null;
 	
-	protected Texture m_texture=null;
-	protected int m_verticeCount;
-	protected float m_size=1.0f;
+	public Texture m_texture=null;
+	public int m_verticeCount;
+	public float m_size=1.0f;
 }

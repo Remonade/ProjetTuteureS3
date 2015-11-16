@@ -9,7 +9,7 @@ package Logic;
  *
  * @author Flavien
  */
-public class Classe {
+public class Category {
     private int strength;
     private int defense;
     private int agility;
@@ -17,14 +17,14 @@ public class Classe {
     private String name;
     
     //Constructors
-    public Classe(){
+    public Category(){
         strength=1;
         defense=1;
         agility=1;
         maxHP=100;
         name="Unknown";
     }
-    public Classe(int strength, int defense, int agility, int maxHP, String name){
+    public Category(int strength, int defense, int agility, int maxHP, String name){
         this.strength=strength;
         this.defense=defense;
         this.agility=agility;

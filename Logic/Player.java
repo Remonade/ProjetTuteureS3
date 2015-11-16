@@ -5,6 +5,9 @@
  */
 package Logic;
 
+import Graphic.ModelPlayer;
+import math.Vector2f;
+
 /**
  *
  * @author Flavien
@@ -16,17 +19,23 @@ public class Player {
     private static final int MAXIMUM_INVENTORY = 5; //Number of items that you can have into your inventory
     private Item[] inventory; //contient tableau d'items dispos
     private Weapon weapon; //contient références vers weapons
-    private Classe classePerso;
+    private Category classePerso;
     private String name;
     private int gold;
     
+    public Vector2f m_coordinates;
+    public ModelPlayer m_model;
+    
     //Constructor
-    public Player(){
+    public Player(ModelPlayer aModel){
         this.inventory = new Item[MAXIMUM_INVENTORY];
         this.weapon = new Weapon();
-        this.classePerso = new Classe();
+        this.classePerso = new Category();
         this.name = "Unknown";
         this.gold = 0;
+        
+        m_coordinates = new Vector2f(0f,0f);
+        m_model = aModel;
     }
     public String toString(){
         int i = 0;
@@ -77,7 +86,7 @@ public class Player {
     public Weapon getWeapon(){
         return this.weapon;
     }
-    public Classe getClassePerso(){
+    public Category getClassePerso(){
         return this.classePerso;
     }
     public String getName() {
@@ -91,7 +100,7 @@ public class Player {
     public void setWeapon(Weapon weapon) {
         this.weapon = weapon;
     }
-    public void setClassePerso(Classe classePerso) {
+    public void setClassePerso(Category classePerso) {
         this.classePerso = classePerso;
     }
     public void setName(String name) {
