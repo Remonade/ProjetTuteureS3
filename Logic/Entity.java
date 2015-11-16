@@ -1,7 +1,7 @@
 package Logic;
 
 import Graphic.Model;
-import math.Vector2f;
+import Maths.Vector2f;
 
 public class Entity {
 	public Entity() {

@@ -6,7 +6,7 @@
 
 package Logic;
 
-import math.Vector2f;
+import Maths.Vector2f;
 
 public class EntityDynamic extends Entity {
 	public EntityDynamic() {

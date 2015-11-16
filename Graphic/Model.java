@@ -1,7 +1,7 @@
 package Graphic;
 
 import java.nio.FloatBuffer;
-import math.Vector2f;
+import Maths.Vector2f;
 import static org.lwjgl.opengl.GL11.*;
 
 /*

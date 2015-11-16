@@ -6,7 +6,7 @@
 package Logic;
 
 import Graphic.ModelPlayer;
-import math.Vector2f;
+import Maths.Vector2f;
 
 /**
  *

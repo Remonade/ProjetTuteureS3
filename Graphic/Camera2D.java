@@ -11,7 +11,7 @@ package Graphic;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
-import math.Vector2f;
+import Maths.Vector2f;
 import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
 import static org.lwjgl.opengl.GL11.GL_PROJECTION;
 import static org.lwjgl.opengl.GL11.glLoadIdentity;

@@ -1,5 +1,6 @@
-package Graphic;
+package Tests;
 
+import Graphic.*;
 import Logic.Entity;
 import Logic.EntityDynamic;
 import Physic.PhysicMain;
@@ -22,7 +23,7 @@ public class Main {
     // The window handle
 	private ArrayList<Entity> m_entities=new ArrayList();
 	private EntityDynamic m_player;
-    private long window;
+        private long window;
 	private float m_mouseX=0;
 	private float m_mouseY=0;
 	//private Camera2D m_camera;
@@ -185,14 +186,7 @@ public class Main {
             // invoked during this call.
             glfwPollEvents();
 			if(UP) {
-				if(m_player.getContact(EntityDynamic.CONTACT_LEFT) && LEFT) {
-					m_player.setSpeed(-0.3f,0.075f);
-				}
-				else if(m_player.getContact(EntityDynamic.CONTACT_RIGHT) && RIGHT) {
-					m_player.setSpeed(0.3f,0.075f);
-				} else if(m_player.getContact(EntityDynamic.CONTACT_DOWN)){
-					m_player.setSpeed(m_player.getSpeed().x,0.075f);
-				}
+                            m_player.setSpeed(m_player.getSpeed().x,0.075f);
 			}
 			if(LEFT) {
 				m_player.addSpeed(-0.010f,0);

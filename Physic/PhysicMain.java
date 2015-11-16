@@ -3,7 +3,7 @@ package Physic;
 import Logic.Entity;
 import Logic.EntityDynamic;
 import java.util.ArrayList;
-import math.Vector2f;
+import Maths.Vector2f;
 
 public class PhysicMain {
     
