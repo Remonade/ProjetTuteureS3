@@ -55,17 +55,17 @@ public class Model {
 		glTexCoord2f(data[offset*2],data[offset*2+1]);
 	}
 	public void sendVertice(int offset,float[]data) {
-		glVertex3f(data[offset*2],data[offset*2+1],0.0f);
+		glVertex3f(data[offset*2],data[offset*2+1],GraphicMain.LAYER);
 	}
 	public void destroy() {
 		if(m_texture!=null)
 			m_texture.destroy();
 	}
-	public FloatBuffer m_vertice=null;
-	public FloatBuffer m_textures=null;
-	public FloatBuffer m_colors=null;
+	protected FloatBuffer m_vertice=null;
+	protected FloatBuffer m_textures=null;
+	protected FloatBuffer m_colors=null;
 	
-	public Texture m_texture=null;
-	public int m_verticeCount;
-	public float m_size=1.0f;
+	protected Texture m_texture=null;
+	protected int m_verticeCount;
+	protected float m_size=1.0f;
 }
