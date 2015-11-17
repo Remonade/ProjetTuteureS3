@@ -41,7 +41,7 @@ public class Camera2D {
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 		float ratio=(float)GraphicMain.WIDTH/(float)GraphicMain.HEIGHT;
-		glTranslatef(-m_posX/m_zoom,-m_posY/m_zoom,0.0f);
+		glTranslatef(-m_posX/m_zoom,-m_posY/m_zoom*ratio,0.0f);
 		glOrtho(-m_zoom, m_zoom, -m_zoom/ratio, m_zoom/ratio, -100, 100);
 		glMatrixMode(GL_MODELVIEW);
 	}
