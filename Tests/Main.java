@@ -1,8 +1,11 @@
-package Tests;
+package Graphic;
 
-import Graphic.*;
 import Logic.Entity;
+import Logic.EntityDataDynamic;
 import Logic.EntityDynamic;
+import Logic.EntityParticle;
+import Logic.Logic;
+import Maths.Vector2f;
 import Physic.PhysicMain;
 import org.lwjgl.Sys;
 import org.lwjgl.glfw.*;
@@ -21,12 +24,10 @@ public class Main {
     private GLFWKeyCallback   keyCallback;
  
     // The window handle
-	private ArrayList<Entity> m_entities=new ArrayList();
-	private EntityDynamic m_player;
-        private long window;
+    private long window;
 	private float m_mouseX=0;
 	private float m_mouseY=0;
-	//private Camera2D m_camera;
+	//private Camera2D camera;
 	private int WIDTH = 800;
 	private int HEIGHT = 600;
 	
@@ -53,11 +54,10 @@ public class Main {
     private void init() {
 		initGL();
 		GraphicMain.init(WIDTH,HEIGHT);
+		Logic.init();
 		initKeyCallback();
-		initData();
         // Make the window visible
         glfwShowWindow(GraphicMain.window);
-		//GLContext.createFromCurrent();
 		System.out.println("Init successful");
     }
 		private void initGL() {
@@ -89,9 +89,9 @@ public class Main {
 					if ( key == GLFW_KEY_DOWN && action == GLFW_RELEASE )
 						DOWN=false;
 					if ( key == GLFW_KEY_KP_ADD && action == GLFW_PRESS )
-						GraphicMain.m_camera.setZoom(GraphicMain.m_camera.getZoom()-1);
+						GraphicMain.camera.setZoom(GraphicMain.camera.getZoom()-1);
 					if ( key == GLFW_KEY_KP_SUBTRACT && action == GLFW_PRESS )
-						GraphicMain.m_camera.setZoom(GraphicMain.m_camera.getZoom()+1);
+						GraphicMain.camera.setZoom(GraphicMain.camera.getZoom()+1);
 					
 					/*if ( key == GLFW_KEY_SPACE && action == GLFW_REPEAT ){
 						EntityParticle temp;
@@ -103,62 +103,6 @@ public class Main {
 					}*/
 				}
 			});
-		}
-		
-		private void initData() {
-			// Camera setting
-			//m_camera=new Camera2D();
-			//m_camera.setBound(1.5f, -1.5f, -1.5f, 1.5f);
-			// matrix setting
-			// Data declaration
-			/*FloatBuffer temp=FloatBuffer.allocate(4*2);
-			temp.put(0.25f);temp.put(0.25f);
-			temp.put(-0.25f);temp.put(0.25f);
-			temp.put(-0.25f);temp.put(-0.25f);
-			temp.put(0.25f);temp.put(-0.25f);
-			temp.flip();*/
-			
-			Entity temp;
-			m_player=new EntityDynamic(0.1f,0.2f);
-			temp=m_player;
-			temp.setPos(0.5f,0.5f);
-			temp.setModel(GraphicMain.getModel("blue"));
-			m_entities.add(temp);
-			// ground
-			temp=new Entity(3f,0.5f);
-			temp.setPos(0,-0.5f);
-			temp.setModel(GraphicMain.getModel("green"));
-			m_entities.add(temp);
-			// left wall
-			temp=new Entity(0.5f,5f);
-			temp.setPos(-2.5f,5);
-			temp.setModel(GraphicMain.getModel("green"));
-			m_entities.add(temp);
-			// right wall
-			temp=new Entity(0.5f,5f);
-			temp.setPos(2.5f,5);
-			temp.setModel(GraphicMain.getModel("green"));
-			m_entities.add(temp);
-			// blocks
-			temp=new Entity(0.3f,0.1f);
-			temp.setPos(0f,0.75f);
-			temp.setModel(GraphicMain.getModel("red"));
-			m_entities.add(temp);
-			
-			temp=new Entity(0.3f,0.1f);
-			temp.setPos(1f,1.5f);
-			temp.setModel(GraphicMain.getModel("red"));
-			m_entities.add(temp);
-			
-			temp=new Entity(0.3f,0.1f);
-			temp.setPos(2f,2.25f);
-			temp.setModel(GraphicMain.getModel("red"));
-			m_entities.add(temp);
-			
-			temp=new Entity(1.5f,0.1f);
-			temp.setPos(-0.75f,3f);
-			temp.setModel(GraphicMain.getModel("red"));
-			m_entities.add(temp);
 		}
     private void loop() {
         // This line is critical for LWJGL's interoperation with GLFW's
@@ -176,8 +120,8 @@ public class Main {
 				EntityParticle temp;
 				for(int i=0;i<3;i++) {
 					temp=new EntityParticle(1.0f,1.0f,(float)Math.random()*360);
-					temp.setModel(m_particle);
-					m_entityParticle.add(temp);
+					temp.setModel(GraphicMain.getModel("fume"));
+					GraphicMain.particle.add(temp);
 					temp=null;
 				}
 			}*/
@@ -185,22 +129,65 @@ public class Main {
             // Poll for window events. The key callback above will only be
             // invoked during this call.
             glfwPollEvents();
-			if(UP) {
-                            m_player.setSpeed(m_player.getSpeed().x,0.075f);
-			}
-			if(LEFT) {
-				m_player.addSpeed(-0.010f,0);
-			}
-			else if(RIGHT) {
-				m_player.addSpeed(0.010f,0);
-			}
-			m_player.setSpeed(m_player.getSpeed().x*0.8f,m_player.getSpeed().y);
-			
+				if(UP) {
+					if(Logic.getPlayer().getContact(EntityDynamic.CONTACT_LEFT) && LEFT) {
+						Logic.getPlayer().setSpeed(-0.1f,0.075f);
+						EntityParticle temp;
+						for(int i=0;i<5;i++) {
+							temp=new EntityParticle(1.5f,((float)Math.random()*50)-25+225);
+							temp.setData(EntityDataDynamic.get("particle"));
+							temp.setPos(Logic.getPlayer().getPos().x+Logic.getPlayer().getSize().x/2,Logic.getPlayer().getPos().y-Logic.getPlayer().getSize().y);
+							GraphicMain.particle.add(temp);
+						}
+					}
+					else if(Logic.getPlayer().getContact(EntityDynamic.CONTACT_RIGHT) && RIGHT) {
+						Logic.getPlayer().setSpeed(0.1f,0.075f);
+						EntityParticle temp;
+						for(int i=0;i<5;i++) {
+							temp=new EntityParticle(1.5f,((float)Math.random()*50)-25+315);
+							temp.setData(EntityDataDynamic.get("particle"));
+							temp.setPos(Logic.getPlayer().getPos().x+Logic.getPlayer().getSize().x/2,Logic.getPlayer().getPos().y+Logic.getPlayer().getSize().y);
+							GraphicMain.particle.add(temp);
+						}
+					} else if(Logic.getPlayer().getContact(EntityDynamic.CONTACT_DOWN)){
+						Logic.getPlayer().jump();
+					}
+				}
+				if(LEFT && !RIGHT) {
+					Logic.getPlayer().addSpeed(-0.010f,0);
+					EntityParticle temp;
+					if(Logic.getPlayer().getContact(EntityDynamic.CONTACT_DOWN) && Math.random()<0.2) {
+						temp=new EntityParticle(1.5f,((float)Math.random()*50)-25+0);
+							temp.setData(EntityDataDynamic.get("particle"));
+						temp.setPos(Logic.getPlayer().getPos().x+Logic.getPlayer().getSize().x/2,Logic.getPlayer().getPos().y-Logic.getPlayer().getSize().y);
+						GraphicMain.particle.add(temp);
+					}
+				}
+				else if(RIGHT && !LEFT) {
+					Logic.getPlayer().addSpeed(0.010f,0);
+					EntityParticle temp;
+					if(Logic.getPlayer().getContact(EntityDynamic.CONTACT_DOWN) && Math.random()<0.2) {
+						temp=new EntityParticle(1.5f,((float)Math.random()*50)-25+180);
+							temp.setData(EntityDataDynamic.get("particle"));
+						temp.setPos(Logic.getPlayer().getPos().x-Logic.getPlayer().getSize().x/2,Logic.getPlayer().getPos().y-Logic.getPlayer().getSize().y);
+						GraphicMain.particle.add(temp);
+					}
+				} else Logic.getPlayer().setSpeed(Logic.getPlayer().getSpeed().x*0.8f,Logic.getPlayer().getSpeed().y);
+				if(DOWN) {
+					Logic.getPlayer().shoot(Logic.getPlayer().getPos().add(new Vector2f(-1,0)));
+					Logic.getPlayer().shoot(Logic.getPlayer().getPos().add(new Vector2f(1,0)));
+				}
 			// draw to screen.
-			PhysicMain.update(m_entities);
-			GraphicMain.m_camera.setPos(m_player.getPos());
-			//GraphicMain.m_camera.move(0,0.01f);
-			GraphicMain.display(m_entities);
+			try {
+				Logic.update();
+				PhysicMain.update();
+				Logic.execute();
+				GraphicMain.camera.setPos(Logic.getPlayer().getPos());
+				//GraphicMain.camera.move(0,0.01f);
+				GraphicMain.display();
+			} catch (Exception e) {
+				
+			}
         }
     }
 	private void quit() {
