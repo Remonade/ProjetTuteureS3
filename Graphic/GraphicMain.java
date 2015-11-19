@@ -1,109 +1,200 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package Graphic;
 
 import Logic.Entity;
-import java.util.ArrayList;
-import java.util.HashMap;
+import Logic.EntityDataDynamic;
+import Logic.EntityDynamic;
+import Logic.EntityParticle;
+import Logic.Logic;
+import Maths.Vector2f;
+import Physic.PhysicMain;
+import org.lwjgl.Sys;
+import org.lwjgl.glfw.*;
+
+import org.lwjgl.glfw.GLFWKeyCallback;
+
 import static org.lwjgl.glfw.GLFW.*;
-import org.lwjgl.glfw.GLFWVidMode;
-import org.lwjgl.opengl.GL;
-import org.lwjgl.opengl.GL11;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.system.MemoryUtil.NULL;
 
-public class GraphicMain {
-	public static void init(int w,int h) {
+import java.util.ArrayList;
+
+public class Main {
+ 
+    // We need to strongly reference callback instances.
+    private GLFWErrorCallback errorCallback;
+    private GLFWKeyCallback   keyCallback;
+ 
+    // The window handle
+	public static ArrayList<Entity> m_entities=new ArrayList();
+    private long window;
+	private float m_mouseX=0;
+	private float m_mouseY=0;
+	//private Camera2D camera;
+	private int WIDTH = 800;
+	private int HEIGHT = 600;
+	
+	private boolean LEFT;
+	private boolean RIGHT;
+	private boolean UP;
+	private boolean DOWN;
+	
+    public void run() {
+        System.out.println("Hello LWJGL " + Sys.getVersion() + "!");
+        try {
+            init();
+            loop();
+			quit();
+            // Release window and window callbacks
+            glfwDestroyWindow(GraphicMain.window);
+            keyCallback.release();
+        } finally {
+            // Terminate GLFW and release the GLFWErrorCallback
+            glfwTerminate();
+            errorCallback.release();
+        }
+    }
+    private void init() {
 		initGL();
-		initWindow(w,h);
-		initShader();
-		initTexture();
-		initModel();
-		m_camera.setBound(10.0f, -1.0f, -1.5f, 1.5f);
-	}
-	private static void initGL() {
-		// Initialize GLFW. Most GLFW functions will not work before doing this.
-		if ( glfwInit() != GL11.GL_TRUE )
-			throw new IllegalStateException("Unable to initialize GLFW");
-	}
-	private static void initWindow(int w, int h) {
-		HEIGHT=h;
-		WIDTH=w;
-		// Configure our window
-		glfwDefaultWindowHints(); // optional, the current window hints are already the default
-		glfwWindowHint(GLFW_VISIBLE, GL_FALSE); // the window will stay hidden after creation
-		glfwWindowHint(GLFW_DOUBLE_BUFFER, GL_TRUE);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 1);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
-		//glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); 
-		//glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-
-		// Create the window
-		window = glfwCreateWindow(WIDTH, HEIGHT, "Shader", NULL, NULL);
-		if ( window == NULL )
-			throw new RuntimeException("Failed to create the GLFW window");
-
-		// Get the resolution of the primary monitor
-		GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-		// Center our window
-		glfwSetWindowPos(
-			window,
-			(vidmode.getWidth() - WIDTH) / 2,
-			(vidmode.getHeight() - HEIGHT) / 2
-		);
-
-		// Make the OpenGL context current
-		glfwMakeContextCurrent(window);
-		//GLContext.createFromCurrent();
-		// Enable v-sync
-		glfwSwapInterval(1);
-		GL.createCapabilities();
-		//glEnable(GL_TEXTURE_2D);
-		glEnable(GL_BLEND);
-		glEnable(GL_DEPTH_TEST);
-		glDepthFunc(GL_LESS);
-		glDepthMask(true);
-		glHint(GL_PERSPECTIVE_CORRECTION_HINT,GL_NICEST);
-	}
-	private static void initShader() {
-		
-	}
-	private static void initTexture() {
-		
-	}
-	private static void initModel() {
-		m_models.put("default",new ModelQuad(1,1,1));
-		m_models.put("white",m_models.get("default"));
-		m_models.put("red",new ModelQuad(1,0,0));
-		m_models.put("green",new ModelQuad(0,1,0));
-		m_models.put("blue",new ModelQuad(0,0,1));
-	}
-	public static Model getModel(String ref) {
-		Model temp=m_models.get(ref);
-		if(temp==null)
-			return m_models.get("default");
-		return temp;
-	}
-	public static void display(ArrayList<Entity> entities) {
-		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-		m_camera.useCamera();
-		LAYER=0;
-		for(Entity i:entities) {
-			i.draw();
-			//LAYER++;
+		GraphicMain.init(WIDTH,HEIGHT);
+		Logic.init();
+		initKeyCallback();
+        // Make the window visible
+        glfwShowWindow(GraphicMain.window);
+		System.out.println("Init successful");
+    }
+		private void initGL() {
+			// Setup an error callback. The default implementation
+			// will print the error message in System.err.
+			glfwSetErrorCallback(errorCallback = GLFWErrorCallback.createPrint(System.err));
 		}
-		glfwSwapBuffers(window); // swap the color buffers
+		private void initKeyCallback() {
+			// Setup a key callback. It will be called every time a key is pressed, repeated or released.
+			glfwSetKeyCallback(GraphicMain.window, keyCallback = new GLFWKeyCallback() {
+				@Override
+				public void invoke(long window, int key, int scancode, int action, int mods) {
+					if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
+						glfwSetWindowShouldClose(window, GL_TRUE); // We will detect this in our rendering loop
+					if ( key == GLFW_KEY_LEFT && action == GLFW_PRESS )
+						LEFT=true;
+					if ( key == GLFW_KEY_LEFT && action == GLFW_RELEASE )
+						LEFT=false;
+					if ( key == GLFW_KEY_RIGHT && action == GLFW_PRESS )
+						RIGHT=true;
+					if ( key == GLFW_KEY_RIGHT && action == GLFW_RELEASE )
+						RIGHT=false;
+					if ( key == GLFW_KEY_UP && action == GLFW_PRESS )
+						UP=true;
+					if ( key == GLFW_KEY_UP && action == GLFW_RELEASE )
+						UP=false;
+					if ( key == GLFW_KEY_DOWN && action == GLFW_PRESS )
+						DOWN=true;
+					if ( key == GLFW_KEY_DOWN && action == GLFW_RELEASE )
+						DOWN=false;
+					if ( key == GLFW_KEY_KP_ADD && action == GLFW_PRESS )
+						GraphicMain.camera.setZoom(GraphicMain.camera.getZoom()-1);
+					if ( key == GLFW_KEY_KP_SUBTRACT && action == GLFW_PRESS )
+						GraphicMain.camera.setZoom(GraphicMain.camera.getZoom()+1);
+					
+					/*if ( key == GLFW_KEY_SPACE && action == GLFW_REPEAT ){
+						EntityParticle temp;
+						for(int i=0;i<1;i++) {
+							temp=new EntityParticle(1.0f,1.0f,(float)Math.random()*0);
+							temp.setModel(m_particle);
+							m_entityParticle.add(temp);
+						}
+					}*/
+				}
+			});
+		}
+    private void loop() {
+        // This line is critical for LWJGL's interoperation with GLFW's
+        // OpenGL context, or any context that is managed externally.
+        // LWJGL detects the context that is current in the current thread,
+        // creates the GLCapabilities instance and makes the OpenGL
+        // bindings available for use.
+ 
+        // Set the clear color
+        glClearColor(0.20f, 0.15f, 0.20f, 1.0f);
+		
+		float angle=0.0f;
+        while(glfwWindowShouldClose(GraphicMain.window) == GL_FALSE) {
+			/*if(Math.random()<0.75) {
+				EntityParticle temp;
+				for(int i=0;i<3;i++) {
+					temp=new EntityParticle(1.0f,1.0f,(float)Math.random()*360);
+					temp.setModel(GraphicMain.getModel("fume"));
+					GraphicMain.particle.add(temp);
+					temp=null;
+				}
+			}*/
+			
+            // Poll for window events. The key callback above will only be
+            // invoked during this call.
+            glfwPollEvents();
+				if(UP) {
+					if(Logic.getPlayer().getContact(EntityDynamic.CONTACT_LEFT) && LEFT) {
+						Logic.getPlayer().setSpeed(-0.1f,0.075f);
+						EntityParticle temp;
+						for(int i=0;i<5;i++) {
+							temp=new EntityParticle(1.5f,((float)Math.random()*50)-25+225);
+							temp.setData(EntityDataDynamic.get("particle"));
+							temp.setPos(Logic.getPlayer().getPos().x+Logic.getPlayer().getSize().x/2,Logic.getPlayer().getPos().y-Logic.getPlayer().getSize().y);
+							GraphicMain.particle.add(temp);
+						}
+					}
+					else if(Logic.getPlayer().getContact(EntityDynamic.CONTACT_RIGHT) && RIGHT) {
+						Logic.getPlayer().setSpeed(0.1f,0.075f);
+						EntityParticle temp;
+						for(int i=0;i<5;i++) {
+							temp=new EntityParticle(1.5f,((float)Math.random()*50)-25+315);
+							temp.setData(EntityDataDynamic.get("particle"));
+							temp.setPos(Logic.getPlayer().getPos().x+Logic.getPlayer().getSize().x/2,Logic.getPlayer().getPos().y+Logic.getPlayer().getSize().y);
+							GraphicMain.particle.add(temp);
+						}
+					} else if(Logic.getPlayer().getContact(EntityDynamic.CONTACT_DOWN)){
+						Logic.getPlayer().jump();
+					}
+				}
+				if(LEFT && !RIGHT) {
+					Logic.getPlayer().addSpeed(-0.010f,0);
+					EntityParticle temp;
+					if(Logic.getPlayer().getContact(EntityDynamic.CONTACT_DOWN) && Math.random()<0.2) {
+						temp=new EntityParticle(1.5f,((float)Math.random()*50)-25+0);
+							temp.setData(EntityDataDynamic.get("particle"));
+						temp.setPos(Logic.getPlayer().getPos().x+Logic.getPlayer().getSize().x/2,Logic.getPlayer().getPos().y-Logic.getPlayer().getSize().y);
+						GraphicMain.particle.add(temp);
+					}
+				}
+				else if(RIGHT && !LEFT) {
+					Logic.getPlayer().addSpeed(0.010f,0);
+					EntityParticle temp;
+					if(Logic.getPlayer().getContact(EntityDynamic.CONTACT_DOWN) && Math.random()<0.2) {
+						temp=new EntityParticle(1.5f,((float)Math.random()*50)-25+180);
+							temp.setData(EntityDataDynamic.get("particle"));
+						temp.setPos(Logic.getPlayer().getPos().x-Logic.getPlayer().getSize().x/2,Logic.getPlayer().getPos().y-Logic.getPlayer().getSize().y);
+						GraphicMain.particle.add(temp);
+					}
+				} else Logic.getPlayer().setSpeed(Logic.getPlayer().getSpeed().x*0.8f,Logic.getPlayer().getSpeed().y);
+				if(DOWN) {
+					Logic.getPlayer().shoot(Logic.getPlayer().getPos().add(new Vector2f(-1,0)));
+					Logic.getPlayer().shoot(Logic.getPlayer().getPos().add(new Vector2f(1,0)));
+				}
+			// draw to screen.
+			try {
+				Logic.update();
+				PhysicMain.update();
+				Logic.execute();
+				GraphicMain.camera.setPos(Logic.getPlayer().getPos());
+				//GraphicMain.camera.move(0,0.01f);
+				GraphicMain.display();
+			} catch (Exception e) {
+				
+			}
+        }
+    }
+	private void quit() {
+		GraphicMain.clear();
 	}
-	public static void clear() {
-		m_models.clear();
-	}
-	public static HashMap<String,Model> m_models=new HashMap();
-	public static Camera2D m_camera=new Camera2D();
-	public static long window;
-	public static int HEIGHT, WIDTH;
-	public static int LAYER=-50;
+    public static void main(String[] args) {
+        new Main().run();
+    }
 }
