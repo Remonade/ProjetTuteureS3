@@ -1,4 +1,4 @@
-package Graphic;
+package Tests;
 
 import Logic.Entity;
 import Logic.EntityDataDynamic;
