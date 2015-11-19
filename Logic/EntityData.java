@@ -14,26 +14,30 @@ import java.util.HashMap;
 import Maths.Vector2f;
 
 class EntityData {
-    private Vector2f m_size;
-    private Model m_model;
+    private Vector2f m_size=new Vector2f();
+    private Model m_model=null;
     /**
      * Vous ne devez instancier manuelement cette classe!
      * Utilisez seulement EntityData.create(...), qui renvoit l'instance nouvelement créé.
      */
-    public EntityData(Vector2f size,Model model) {
-        m_size=size;
-        m_model=model;
+    public EntityData() {
     }
+	public void setModel(Model model) {
+		m_model=model;
+	}
     public Model getModel() {
         return m_model;
     }
+	public void setSize(Vector2f size) {
+		m_size=size;
+	}
     public Vector2f getSize() {
         return m_size;
     }
     
-    private static HashMap<String,EntityData> all=new HashMap();
-    public static EntityData create(String key,Vector2f size,Model model) {
-        EntityData e=new EntityData(size,model);
+    protected static HashMap<String,EntityData> all=new HashMap();
+    public static EntityData create(String key) {
+        EntityData e=new EntityData();
         all.put(key,e);
         return e;
     }
@@ -42,10 +46,5 @@ class EntityData {
 		if(temp==null)
 			return all.get("default");
         return temp;
-    }
-    public static EntityData create(String key,Vector2f size,Model model) {
-        EntityData e=new EntityData(size,model);
-        all.put(key,e);
-        return e;
     }
 }
