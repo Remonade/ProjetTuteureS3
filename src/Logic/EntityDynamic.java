@@ -19,6 +19,17 @@ public class EntityDynamic extends Entity {
 		for(boolean i:m_contact)
 			i=false;
 		m_speed=new Vector2f();
+		m_team=1;
+	}
+	@Override
+	public void setData(EntityData data) {
+		super.setData(data);
+	}
+	public void setTeam(int team) {
+		m_team=team;
+	}
+	public int getTeam() {
+		return m_team;
 	}
 	public Vector2f getSpeed() {
 		return m_speed;
@@ -54,48 +65,13 @@ public class EntityDynamic extends Entity {
 		if(contact>-1 && contact<4)
 			m_contact[contact]=value;
 	}
-	public void shoot(Vector2f target) {
-		EntityMissile mis=EntityMissile.create();
-		mis.setDir(target.subtract(m_pos).normalize());
-		mis.setPos(m_pos.add(mis.getDir().divide(50)));
-		mis.setData(EntityDataDynamic.get("missile"));
-		mis.setOwner(this);
-	}
-	public void jump() {
-		if(m_contact[CONTACT_DOWN])
-			setSpeed(0,0.075f);
-	}
-	public void damage(int damage) {
-		m_hp-=damage;
-		if(m_hp<=0)
-			kill();
-	}
-	public void kill() {
-		remove(this);
-		
-		if(this==Logic.getPlayer())
-			Logic.killPlayer();
-	}
-	public int getHP() {
-		return m_hp;
-	}
-	public int getMaxHP() {
-		if(m_data==null)
-			return 0;
-		return ((EntityDataDynamic)m_data).getMaxHP();
-	}
 	public void update() {
 		addSpeed(0f,PhysicMain.GRAVITY);
-		//if(m_hp<getMaxHP())
-			//m_hp++;
-		if(m_hp>getMaxHP())
-			m_hp=getMaxHP();
 	}
 	@Override
     public void draw() {
 		super.draw();
-		//GraphicMain.drawString(m_name,m_pos.add(m_size),0.01f,new Vector3f(1,1,1));
-		GraphicMain.drawString(getHP()+"/"+getMaxHP(),m_pos,0.01f,new Vector3f(1,1,1));
+		GraphicMain.drawString(""+m_team,m_pos,0.01f,new Vector3f(1,1,1));
 	}
 	public boolean isActive() {
 		return m_active;
@@ -103,11 +79,11 @@ public class EntityDynamic extends Entity {
 	public void setActive(boolean value) {
 		m_active=value;
 	}
+	private int m_team=1;
 	protected String m_name="Entity";
-	protected int m_hp=1000000;
 	protected Vector2f m_speed;
 	protected boolean m_contact[];
-	protected float maxspeed=0.1f;
+	protected float maxspeed=0.5f;
 	protected boolean m_active=true;
 	
 	private static ArrayList<EntityDynamic> all=new ArrayList();
