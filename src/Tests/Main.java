@@ -1,7 +1,7 @@
 package Tests;
 
 import Graphic.GraphicMain;
-import Logic.EntityDataDynamic;
+import Logic.EntityDataUnit;
 import Logic.EntityDynamic;
 import Logic.EntityParticle;
 import Logic.Logic;
@@ -136,7 +136,7 @@ public class Main {
                     EntityParticle temp;
                     for(int i=0;i<5;i++) {
                             temp=new EntityParticle(1.5f,((float)Math.random()*50)-25+225);
-                            temp.setData(EntityDataDynamic.get("particle"));
+                            temp.setData(EntityDataUnit.get("particle"));
                             temp.setPos(Logic.getPlayer().getPos().x+Logic.getPlayer().getSize().x/2,Logic.getPlayer().getPos().y-Logic.getPlayer().getSize().y);
                             GraphicMain.particle.add(temp);
                     }
@@ -146,7 +146,7 @@ public class Main {
                     EntityParticle temp;
                     for(int i=0;i<5;i++) {
                             temp=new EntityParticle(1.5f,((float)Math.random()*50)-25+315);
-                            temp.setData(EntityDataDynamic.get("particle"));
+                            temp.setData(EntityDataUnit.get("particle"));
                             temp.setPos(Logic.getPlayer().getPos().x+Logic.getPlayer().getSize().x/2,Logic.getPlayer().getPos().y+Logic.getPlayer().getSize().y);
                             GraphicMain.particle.add(temp);
                     }
@@ -159,7 +159,7 @@ public class Main {
                 EntityParticle temp;
                 if(Logic.getPlayer().getContact(EntityDynamic.CONTACT_DOWN) && Math.random()<0.2) {
                     temp=new EntityParticle(1.5f,((float)Math.random()*50)-25+0);
-                    temp.setData(EntityDataDynamic.get("particle"));
+                    temp.setData(EntityDataUnit.get("particle"));
                     temp.setPos(Logic.getPlayer().getPos().x+Logic.getPlayer().getSize().x/2,Logic.getPlayer().getPos().y-Logic.getPlayer().getSize().y);
                     GraphicMain.particle.add(temp);
                 }
@@ -169,7 +169,7 @@ public class Main {
                 EntityParticle temp;
                 if(Logic.getPlayer().getContact(EntityDynamic.CONTACT_DOWN) && Math.random()<0.2) {
                     temp=new EntityParticle(1.5f,((float)Math.random()*50)-25+180);
-                    temp.setData(EntityDataDynamic.get("particle"));
+                    temp.setData(EntityDataUnit.get("particle"));
                     temp.setPos(Logic.getPlayer().getPos().x-Logic.getPlayer().getSize().x/2,Logic.getPlayer().getPos().y-Logic.getPlayer().getSize().y);
                     GraphicMain.particle.add(temp);
                 }
