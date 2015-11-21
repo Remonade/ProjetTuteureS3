@@ -1,11 +1,11 @@
-/**
- * Class utilisée pour stocker les données communes aux entités
- * En particulier: taille et model.
- * Pour
- * Ex: des ennemis d'un même type ont le même nombre de PV max, le même model,
- * la même taille...
- *
- */
+ /**
+  * Class utilisée pour stocker les données communes aux entités
+  * En particulier: taille et model.
+  * Pour
+  * Ex: des ennemis d'un même type ont le même nombre de PV max, le même model,
+  * la même taille...
+  *
+  */
 package Logic;
 
 
@@ -22,15 +22,15 @@ class EntityData {
      */
     public EntityData() {
     }
-	public void setModel(Model model) {
-		m_model=model;
-	}
+    public void setModel(Model model) {
+        m_model=model;
+    }
     public Model getModel() {
         return m_model;
     }
-	public void setSize(Vector2f size) {
-		m_size=size;
-	}
+    public void setSize(Vector2f size) {
+        m_size=size;
+    }
     public Vector2f getSize() {
         return m_size;
     }
@@ -42,9 +42,9 @@ class EntityData {
         return e;
     }
     public static EntityData get(String key) {
-		EntityData temp=all.get(key);
-		if(temp==null)
-			return all.get("default");
+        EntityData temp=all.get(key);
+        if(temp==null)
+            return all.get("default");
         return temp;
     }
 }

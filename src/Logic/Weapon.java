@@ -1,8 +1,8 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+* To change this license header, choose License Headers in Project Properties.
+* To change this template file, choose Tools | Templates
+* and open the template in the editor.
+*/
 package Logic;
 
 /**
@@ -13,7 +13,7 @@ public class Weapon {
     private String name;
     private int damage;
     private int type; //0:melee, 1:ranged
-        
+    
     public Weapon() {
         this.name="unknown laser sword";
         this.damage=5;
@@ -27,8 +27,8 @@ public class Weapon {
     
     public String toString(){
         String returningString = "Name : "+this.name+"\n"+
-                                "Damage : "+this.damage+"\n"+
-                                "Type : ";
+                "Damage : "+this.damage+"\n"+
+                "Type : ";
         if (this.type==0){
             returningString = returningString+"melee";
         }

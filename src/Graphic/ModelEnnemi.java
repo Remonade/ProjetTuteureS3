@@ -1,8 +1,8 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+* To change this license header, choose License Headers in Project Properties.
+* To change this template file, choose Tools | Templates
+* and open the template in the editor.
+*/
 package Graphic;
 
 import java.nio.FloatBuffer;
@@ -26,7 +26,7 @@ public class ModelEnnemi extends Model{
         m_vertice.put(m_size* 0);m_vertice.put(m_size* -1);
         m_vertice.put(m_size* 0);m_vertice.put(m_size* 1);
         m_vertice.put(m_size* 1);m_vertice.put(m_size* 0);
-
+        
         // init textures cord
         m_textures.put(0);m_textures.put(0);
         m_textures.put(1);m_textures.put(0);
@@ -38,7 +38,7 @@ public class ModelEnnemi extends Model{
             m_colors.put(0);
             m_colors.put(0);
         }
-
+        
         // flipping buffer
         m_vertice.flip();
         m_textures.flip();
@@ -58,7 +58,7 @@ public class ModelEnnemi extends Model{
         m_vertice.put(m_size* 0);m_vertice.put(m_size* -1);
         m_vertice.put(m_size* 0);m_vertice.put(m_size* 1);
         m_vertice.put(m_size* 1);m_vertice.put(m_size* 0);
-
+        
         // init textures cord
         m_textures.put(0);m_textures.put(0);
         m_textures.put(1);m_textures.put(0);

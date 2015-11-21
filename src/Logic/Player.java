@@ -1,8 +1,8 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+* To change this license header, choose License Headers in Project Properties.
+* To change this template file, choose Tools | Templates
+* and open the template in the editor.
+*/
 package Logic;
 
 import Graphic.ModelPlayer;
@@ -40,13 +40,13 @@ public class Player {
     public String toString(){
         int i = 0;
         String returningString = "name : "+name+"\n"+
-                                "amount of gold : "+gold+"\n"+
-                                "class of character : "+classePerso.getName()+"\n"+
-                                "Current weapon : "+weapon.getName()+"\n"+
-                                "Inventory : - ";
+                "amount of gold : "+gold+"\n"+
+                "class of character : "+classePerso.getName()+"\n"+
+                "Current weapon : "+weapon.getName()+"\n"+
+                "Inventory : - ";
         while (i<MAXIMUM_INVENTORY-1 && inventory[i+1]!=null){
-            returningString = returningString+inventory[i].getName()+"\n            - "; 
-            i++; 
+            returningString = returningString+inventory[i].getName()+"\n            - ";
+            i++;
         }
         if (inventory[i]!=null){
             returningString = returningString+inventory[i].getName()+"\n";
