@@ -51,7 +51,7 @@ public class Entity {
 	protected EntityData m_data;
 	protected Vector2f m_pos;
 	protected boolean m_collide=true;
-	private boolean m_visible=true;
+	protected boolean m_visible=true;
 	private static ArrayList<Entity> all=new ArrayList();
 	
 	public static ArrayList getAll() {
