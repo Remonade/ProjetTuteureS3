@@ -7,6 +7,7 @@
 package Logic;
 
 import Graphic.GraphicMain;
+import static Logic.Type.*;
 import Maths.Vector2f;
 import Physic.PhysicMain;
 import java.util.ArrayList;
@@ -44,11 +45,23 @@ public class Logic {
 		e.setModel(GraphicMain.getModel("white"));
 		
 		// data for enemies
-		EntityDataUnit d=EntityDataUnit.create("enemy");
+		EntityDataUnit d=EntityDataUnit.create("sniper");
 		d.setSize(new Vector2f(0.1f,0.1f));
 		d.setModel(GraphicMain.getModel("red"));
-		d.setMaxHealth(50);
+		d.setMaxHealth(100);
+                d.setMaxEnergy(100);
+                d.setRegenEnergy(0.1f);
 		d.setMaxSpeed(new Vector2f(0.1f,0.1f));
+                d.setType(SNIPER);
+                
+                d=EntityDataUnit.create("gunner");
+		d.setSize(new Vector2f(0.3f,0.1f));
+		d.setModel(GraphicMain.getModel("white"));
+		d.setMaxHealth(300);
+                d.setMaxEnergy(100);
+                d.setRegenEnergy(0.2f);
+		d.setMaxSpeed(new Vector2f(0.1f,0.1f));
+                d.setType(GUNNER);
 		
 		d=EntityDataUnit.create("player");
 		d.setSize(new Vector2f(0.15f,0.15f));
@@ -72,10 +85,14 @@ public class Logic {
 		try{
 			initData();
 			Entity temp;
-
+                        
+                        temp=EntityUnit.create();
+                        temp.setData(EntityDataUnit.get("gunner"));
+                        temp.setPos(-5,1);
+                                
 			temp=EntityUnit.create();
-			temp.setData(EntityDataUnit.get("enemy"));
-			temp.setPos(7,1);
+			temp.setData(EntityDataUnit.get("sniper"));
+			temp.setPos(5,1);
 			// ground
 			temp=Entity.create();
 			temp.setData(EntityData.get("ground"));
@@ -112,7 +129,7 @@ public class Logic {
 	public static void update() {
 		updateIA();
 		updateMissile();
-	}
+        }
 	private static void updateIA() {
 		ArrayList<EntityUnit> enemy=getEnemy();
 		for(int i=0;i<enemy.size();i++) {

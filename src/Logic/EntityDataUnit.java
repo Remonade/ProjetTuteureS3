@@ -6,14 +6,16 @@
 
 package Logic;
 
+import static Logic.Type.*;
 import Maths.Vector2f;
 
 public class EntityDataUnit extends EntityData {
     private int m_maxHealth=0;
 	private int m_regenHealth=0;
-    private int m_maxEnergy=0;
-	private int m_regenEnergy=0;
+    private float m_maxEnergy=0;
+	private float m_regenEnergy=0;
     private Vector2f m_maxSpeed=new Vector2f();
+        private Type m_type=GUNNER;
     
     public EntityDataUnit() {
         super();
@@ -35,6 +37,24 @@ public class EntityDataUnit extends EntityData {
     }
     public Vector2f getMaxSpeed() {
         return m_maxSpeed;
+    }
+    public void setType(Type type) {
+        m_type=type;
+    }
+    public Type getType(){
+        return m_type; 
+    }
+    public void setMaxEnergy(float maxEnergy) {
+        m_maxEnergy=maxEnergy;
+    }
+    public float getMaxEnergy() {
+        return m_maxEnergy;
+    }
+    public void setRegenEnergy(float regenEnergy){
+        m_regenEnergy=regenEnergy;
+    }
+    public float getRegenEnergy() {
+        return m_regenEnergy;
     }
     
     public static EntityDataUnit create(String key) {

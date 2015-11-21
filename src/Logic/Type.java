@@ -10,8 +10,9 @@ package Logic;
  * @author Pierrot
  */
 public enum Type {
-    MELEE ("Melee ennemi"),
-    RANGED ("Ranged ennemi");
+    SNIPER ("Sniper"),
+    GUNNER ("Gunner"),
+    PLAYER ("Lucas");
     
     private String name = "";
     
