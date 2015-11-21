@@ -14,6 +14,11 @@ public class EntityMissile extends EntityDynamic {
 		super();
 		m_collide=false;
 	}
+	
+	@Override
+	public void setData(EntityData data) {
+		super.setData(data);
+	}
 	public void setDir(Vector2f dir) {
 		m_direction.x=dir.x;
 		m_direction.y=dir.y;
@@ -39,8 +44,8 @@ public class EntityMissile extends EntityDynamic {
 	}
 	public void explode(Entity target) {
 		if(target!=m_owner) {
-			if(target instanceof EntityDynamic || target instanceof EntityEnemy) {
-				((EntityDynamic)target).damage(m_damage);
+			if(target instanceof EntityUnit && getTeam()!=((EntityUnit)target).getTeam()) {
+				((EntityUnit)target).damage(getDamage());
 			}
 			remove(this);
 		}
@@ -55,23 +60,20 @@ public class EntityMissile extends EntityDynamic {
 	}
 
 	public int getDamage() {
-		return m_damage;
+		if(m_data!=null)
+			return ((EntityDataMissile)m_data).getDamage();
+		return 1;
 	}
 	public void setOwner(Entity owner) {
 		m_owner=owner;
 	}
-	public void setDamage(int damage) {
-		this.m_damage = damage;
-	}
 	@Override
     public void draw() {
-		if(getModel()!=null)
-			getModel().draw(m_pos,getSize());
+		super.draw();
 	}
 	
 	private Vector2f m_direction=new Vector2f();
 	private float m_time;
-	private int m_damage;
 	private Entity m_owner;
 	private static ArrayList<EntityMissile> all=new ArrayList();
 	
@@ -82,7 +84,6 @@ public class EntityMissile extends EntityDynamic {
 		EntityMissile temp=new EntityMissile();
 		temp.setDir(new Vector2f());
 		temp.setTime(0.0f);
-		temp.setDamage(1);
 		all.add(temp);
 		EntityDynamic.getAll().add(temp);
 		Entity.getAll().add(temp);
