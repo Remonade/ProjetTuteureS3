@@ -1,21 +1,19 @@
 package Tests;
 
-import Logic.Entity;
 import Logic.EntityDataDynamic;
 import Logic.EntityDynamic;
 import Logic.EntityParticle;
 import Logic.Logic;
 import Maths.Vector2f;
 import Physic.PhysicMain;
+import Graphic.GraphicMain;
+
 import org.lwjgl.Sys;
 import org.lwjgl.glfw.*;
-
 import org.lwjgl.glfw.GLFWKeyCallback;
-
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
-import java.util.ArrayList;
 
 public class Main {
  
@@ -25,16 +23,16 @@ public class Main {
  
     // The window handle
     private long window;
-	private float m_mouseX=0;
-	private float m_mouseY=0;
-	//private Camera2D camera;
-	private int WIDTH = 800;
-	private int HEIGHT = 600;
-	
-	private boolean LEFT;
-	private boolean RIGHT;
-	private boolean UP;
-	private boolean DOWN;
+    private float m_mouseX=0;
+    private float m_mouseY=0;
+    //private Camera2D camera;
+    private int WIDTH = 800;
+    private int HEIGHT = 600;
+
+    private boolean LEFT;
+    private boolean RIGHT;
+    private boolean UP;
+    private boolean DOWN;
 	
     public void run() {
         System.out.println("Hello LWJGL " + Sys.getVersion() + "!");
