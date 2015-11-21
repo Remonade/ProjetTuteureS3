@@ -12,12 +12,13 @@ import Physic.PhysicMain;
 import java.util.ArrayList;
 
 public class Logic {
-	private static EntityDynamic PLAYER;
-	public static EntityDynamic getPlayer() {
+	private static EntityUnit PLAYER;
+	public static EntityUnit getPlayer() {
 		if(PLAYER==null) {
-			PLAYER=EntityDynamic.create();
-			PLAYER.setData(EntityDataDynamic.get("player"));
+			PLAYER=EntityUnit.create();
+			PLAYER.setData(EntityDataUnit.get("player"));
 			PLAYER.setPos(0.5f,0.5f);
+			PLAYER.setTeam(0);
 		}
 		return PLAYER;
 	}
@@ -43,25 +44,27 @@ public class Logic {
 		e.setModel(GraphicMain.getModel("white"));
 		
 		// data for enemies
-		EntityDataDynamic d=EntityDataDynamic.create("enemy");
+		EntityDataUnit d=EntityDataUnit.create("enemy");
 		d.setSize(new Vector2f(0.1f,0.1f));
 		d.setModel(GraphicMain.getModel("red"));
-		d.setMaxHP(5);
+		d.setMaxHealth(50);
 		d.setMaxSpeed(new Vector2f(0.1f,0.1f));
 		
-		d=EntityDataDynamic.create("player");
+		d=EntityDataUnit.create("player");
 		d.setSize(new Vector2f(0.15f,0.15f));
 		d.setModel(GraphicMain.getModel("blue"));
-		d.setMaxHP(1000);
+		d.setMaxHealth(400);
 		d.setMaxSpeed(new Vector2f(0.1f,0.1f));
 		
 		// data for missile
-		EntityDataDynamic m=EntityDataDynamic.create("missile");
+		EntityDataMissile m=EntityDataMissile.create("missile");
 		m.setSize(new Vector2f(0.05f,0.05f));
 		m.setModel(GraphicMain.getModel("missile"));
+		m.setDamage(10);
+		m.setMaxSpeed(1.0f);
 		
 		//data for particle
-		EntityDataDynamic p=EntityDataDynamic.create("particle");
+		EntityDataUnit p=EntityDataUnit.create("particle");
 		p.setSize(new Vector2f(0.01f,0.01f));
 		p.setModel(GraphicMain.getModel("fume"));
 	}
@@ -70,8 +73,8 @@ public class Logic {
 			initData();
 			Entity temp;
 
-			temp=EntityEnemy.create();
-			temp.setData(EntityDataDynamic.get("enemy"));
+			temp=EntityUnit.create();
+			temp.setData(EntityDataUnit.get("enemy"));
 			temp.setPos(7,1);
 			// ground
 			temp=Entity.create();
@@ -111,9 +114,9 @@ public class Logic {
 		updateMissile();
 	}
 	private static void updateIA() {
-		ArrayList<EntityEnemy> enemy=getEnemy();
+		ArrayList<EntityUnit> enemy=getEnemy();
 		for(int i=0;i<enemy.size();i++) {
-			EntityEnemy e=enemy.get(i);
+			EntityUnit e=enemy.get(i);
 			if(e.isActive())
 				e.update();
 		}
@@ -149,8 +152,8 @@ public class Logic {
 	public static ArrayList<EntityDynamic> getDynamic() {
 		return EntityDynamic.getAll();
 	}
-	public static ArrayList<EntityEnemy> getEnemy() {
-		return EntityEnemy.getAll();
+	public static ArrayList<EntityUnit> getEnemy() {
+		return EntityUnit.getAll();
 	}
 	public static ArrayList<EntityMissile> getMissile() {
 		return EntityMissile.getAll();
