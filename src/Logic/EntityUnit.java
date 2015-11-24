@@ -5,11 +5,14 @@ import static Logic.Type.*;
 import java.util.ArrayList;
 import Maths.Vector2f;
 import Maths.Vector3f;
+import org.lwjgl.glfw.GLFW;
 
 public class EntityUnit extends EntityDynamic {
     protected boolean m_lookRight; //True means "look to the right"
 	protected int m_health=0;
     protected float m_energy=0f;
+    protected float m_shield=0f;
+	protected double m_lastDamage=0;
         protected float m_custom=0f;
 
     /**
@@ -23,12 +26,26 @@ public class EntityUnit extends EntityDynamic {
 
     @Override
     public void setData(EntityData data) {
-	super.setData(data);
-	m_health=getMaxHealth();
-        m_energy=getMaxEnergy();
+		super.setData(data);
+		m_health=getMaxHealth();
+		m_energy=getMaxEnergy();
+		m_shield=getMaxShield();
     }
+	public float getShield() {
+		return m_shield;
+	}
+	public float getMaxShield() {
+		if(m_data==null)
+			return 0;
+		return ((EntityDataUnit)m_data).getMaxShield();
+	}
+	public float getRegenShield() {
+		if(m_data==null)
+			return 0;
+		return ((EntityDataUnit)m_data).getRegenShield();
+	}
     public float getEnergy() {
-	return m_energy;
+		return m_energy;
     }
     public float getRegenEnergy() {
         if(m_data==null)
@@ -93,9 +110,16 @@ public class EntityUnit extends EntityDynamic {
             setSpeed(0,0.075f);
     }
     public void damage(int damage) {
-	m_health-=damage;
-	if(m_health<=0)
-            kill();
+		m_lastDamage=GLFW.glfwGetTime();
+		if(m_shield>=damage)
+			m_shield-=damage;
+		else {
+			float diff=damage-m_shield;
+			m_shield=0;
+		m_health-=diff;
+		if(m_health<=0)
+			kill();
+		}
     }
     
     public void rotate() {
@@ -166,19 +190,24 @@ public class EntityUnit extends EntityDynamic {
         }
     }
     public void regen(){
-        if(m_energy+getRegenEnergy()<getMaxEnergy()){
-            m_energy+=getRegenEnergy();
-        }
-        else if (m_energy==getMaxEnergy());
-        else 
-            m_energy=getMaxEnergy();
+		if(m_lastDamage+1<GLFW.glfwGetTime() && m_shield<getMaxShield())
+			m_shield+=getRegenShield();
+		if(m_shield>getMaxShield())
+			m_shield=getMaxShield();
+		if(m_energy<getMaxEnergy())
+			m_energy+=getRegenEnergy();
+		if(m_energy>getMaxEnergy())
+			m_energy=getMaxEnergy();
     }
     
     @Override
     public void draw() {
-	super.draw();
-	GraphicMain.drawString(getHealth()+"/"+getMaxHealth(),m_pos.add(getSize()),0.01f,new Vector3f(1,1,1));
-    }
+		super.draw();
+		GraphicMain.drawString((int)getHealth()+"/"+getMaxHealth(),m_pos.add(getSize()),0.01f,new Vector3f(0,1,0));
+		GraphicMain.drawString((int)getShield()+"/"+getMaxShield(),m_pos.add(new Vector2f(getSize().x,0)),0.01f,new Vector3f(0,0,1));
+		GraphicMain.drawString((int)getEnergy()+"/"+getMaxEnergy(),m_pos.add(new Vector2f(getSize().x,-getSize().y)),0.01f,new Vector3f(1,0,1));
+		GraphicMain.drawString("/"+m_lastDamage,m_pos.add(new Vector2f(getSize().x,-getSize().y*2)),0.01f,new Vector3f(1,0,0));
+	}
     public static EntityUnit create() {
 	EntityUnit temp=new EntityUnit();
 	add(temp);
