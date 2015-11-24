@@ -14,6 +14,8 @@ public class EntityDataUnit extends EntityData {
 	private int m_regenHealth=0;
     private float m_maxEnergy=0;
 	private float m_regenEnergy=0;
+    private float m_maxShield=0;
+	private float m_regenShield=0;
     private Vector2f m_maxSpeed=new Vector2f();
         private Type m_type=GUNNER;
     
@@ -43,6 +45,18 @@ public class EntityDataUnit extends EntityData {
     }
     public Type getType(){
         return m_type; 
+    }
+    public void setMaxShield(float maxShield) {
+        m_maxShield=maxShield;
+    }
+    public float getMaxShield() {
+        return m_maxShield;
+    }
+    public void setRegenShield(float regenShield){
+        m_regenShield=regenShield;
+    }
+    public float getRegenShield() {
+        return m_regenShield;
     }
     public void setMaxEnergy(float maxEnergy) {
         m_maxEnergy=maxEnergy;
