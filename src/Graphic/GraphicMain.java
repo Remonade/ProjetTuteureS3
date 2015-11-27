@@ -79,6 +79,7 @@ public class GraphicMain {
     private static void initTexture() {
         
     }
+    
     private static void initModel() {
         models.put("default",new ModelQuad(0.75f,0.75f,0.75f));
         models.put("white",models.get("default"));

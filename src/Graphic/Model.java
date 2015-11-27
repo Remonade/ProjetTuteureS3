@@ -2,6 +2,7 @@ package Graphic;
 
 import java.nio.FloatBuffer;
 import Maths.Vector2f;
+import java.nio.ByteBuffer;
 import static org.lwjgl.opengl.GL11.*;
 
 /*
@@ -16,7 +17,7 @@ public class Model {
         createTexture();
     }
     final public void createTexture() {
-        m_texture=new Texture("");
+        m_texture = Texture.loadTexture("pong.png");
     }
     public void draw(Vector2f pos,Vector2f size) {
         startRender(pos,size);
