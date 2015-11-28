@@ -46,6 +46,9 @@ public class Entity {
 	public boolean getCollide() {
 		return m_collide;
 	}
+	public void setCollide(boolean value) {
+		m_collide=value;
+	}
 	public boolean isVisible() {
 		return m_visible;
 	}
