@@ -1,50 +1,77 @@
 package Graphic;
 
 import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
+import org.lwjgl.BufferUtils;
+
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL13.*;
+import static org.lwjgl.opengl.GL13.GL_CLAMP_TO_BORDER;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
+import static org.lwjgl.opengl.GL13.glActiveTexture;
+import static org.lwjgl.stb.STBImage.*;
 
 public class Texture {
-    public Texture(String path) {
-        ByteBuffer texture=ByteBuffer.allocate(64);
-        for(int i=0;i<64;i++)
-            texture.put((byte)0x88);
-        texture.flip();
-        
-        m_ID=glGenTextures();
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D,m_ID);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    private final int id;    
+    private final int width;
+    private final int height;
+
+    public Texture(int width, int height, ByteBuffer data) {
+        id = glGenTextures();
+        this.width = width;
+        this.height = height;
+
+        this.bind();
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-        glTexImage2D (
-                GL_TEXTURE_2D, 	//Type : texture 2D
-                0, 	//Mipmap : aucun
-                GL_RGBA, 	//Couleurs : 4
-                4, 	//Largeur : 4
-                4, 	//Hauteur : 4
-                0, 	//Largeur du bord : 0
-                GL_RGBA, 	//Format : RGBA
-                GL_UNSIGNED_BYTE, 	//Type des couleurs
-                texture); 	//Addresse de l'image
-        glBindTexture(GL_TEXTURE_2D,0);
+
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
     }
-    public int getID() {
-        return m_ID;
-    }
+
     public void bind() {
-        glEnable(GL_TEXTURE);
+        glEnable(GL_TEXTURE_2D);
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D,m_ID);
+        glBindTexture(GL_TEXTURE_2D, id);
     }
+    
     public void unbind() {
         glBindTexture(GL_TEXTURE_2D,0);
         glDisable(GL_TEXTURE);
     }
-    public void destroy() {
-        glDeleteTextures(m_ID);
+
+    public int getWidth() {
+        return width;
     }
-    private final int m_ID;
+
+    public int getHeight() {
+        return height;
+    }
+    
+    public void destroy() {
+        glDeleteTextures(id);
+    }
+    
+    
+    public static Texture loadTexture(String path) {
+        /* Prepare image buffers */
+        IntBuffer w = BufferUtils.createIntBuffer(1);
+        IntBuffer h = BufferUtils.createIntBuffer(1);
+        IntBuffer comp = BufferUtils.createIntBuffer(1);
+
+        /* Load image */
+        stbi_set_flip_vertically_on_load(1);
+        ByteBuffer image = stbi_load(path, w, h, comp, 4);
+        if (image == null) {
+            throw new RuntimeException("Failed to load a texture file!"
+                    + System.lineSeparator() + stbi_failure_reason());
+        }
+
+        /* Get width and height of image */
+        int width = w.get();
+        int height = h.get();
+
+        return new Texture(width, height, image);
+    }
 }
