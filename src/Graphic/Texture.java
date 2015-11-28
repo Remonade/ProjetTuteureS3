@@ -20,10 +20,10 @@ public class Texture {
         this.width = width;
         this.height = height;
 
-        this.bind();
+        bind();
 
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
@@ -38,7 +38,7 @@ public class Texture {
     
     public void unbind() {
         glBindTexture(GL_TEXTURE_2D,0);
-        glDisable(GL_TEXTURE);
+        glDisable(GL_TEXTURE_2D);
     }
 
     public int getWidth() {
@@ -53,7 +53,6 @@ public class Texture {
         glDeleteTextures(id);
     }
     
-    
     public static Texture loadTexture(String path) {
         /* Prepare image buffers */
         IntBuffer w = BufferUtils.createIntBuffer(1);
@@ -65,7 +64,7 @@ public class Texture {
         ByteBuffer image = stbi_load(path, w, h, comp, 4);
         if (image == null) {
             throw new RuntimeException("Failed to load a texture file!"
-                    + System.lineSeparator() + stbi_failure_reason());
+                    + System.lineSeparator() + stbi_failure_reason() + path);
         }
 
         /* Get width and height of image */
