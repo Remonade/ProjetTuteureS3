@@ -6,6 +6,8 @@ import org.lwjgl.BufferUtils;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.GL_CLAMP_TO_BORDER;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
+import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.stb.STBImage.*;
 
 public class Texture {
@@ -18,7 +20,7 @@ public class Texture {
         this.width = width;
         this.height = height;
 
-        glBindTexture(GL_TEXTURE_2D, id);
+        this.bind();
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
@@ -29,6 +31,8 @@ public class Texture {
     }
 
     public void bind() {
+        glEnable(GL_TEXTURE_2D);
+        glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, id);
     }
     
@@ -48,7 +52,6 @@ public class Texture {
     public void destroy() {
         glDeleteTextures(id);
     }
-    
     
     
     public static Texture loadTexture(String path) {

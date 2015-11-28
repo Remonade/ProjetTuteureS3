@@ -81,13 +81,13 @@ public class GraphicMain {
     }
     
     private static void initModel() {
-        models.put("default",new ModelQuad(0.75f,0.75f,0.75f));
+        models.put("default",new ModelQuad(1f,1f,1f));
         models.put("white",models.get("default"));
-        models.put("red",new ModelQuad(0.5f,0,0));
-        models.put("green",new ModelQuad(0,0.5f,0));
-        models.put("blue",new ModelQuad(0,0,0.5f));
-        models.put("fume",new Particle(0.5f,0.5f,0.5f));
-        models.put("missile",new ModelQuad(0.5f,0.5f,0f));
+        models.put("red",new ModelQuad(1f,1f,1f));
+        models.put("green",new ModelQuad(1f,1f,1f));
+        models.put("blue",new ModelQuad(1f,1f,1f));
+        models.put("fume",new Particle(1f,1f,1f));
+        models.put("missile",new ModelQuad(1f,1f,1f));
     }
     public static Model getModel(String ref) {
         Model temp=models.get(ref);

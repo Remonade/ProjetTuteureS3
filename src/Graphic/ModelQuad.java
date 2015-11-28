@@ -23,11 +23,11 @@ public class ModelQuad extends Model{
         
         // init textures cord
         m_textures.put(0);m_textures.put(0);
-        m_textures.put(2.0f);m_textures.put(0);
-        m_textures.put(2.0f);m_textures.put(2.0f);
+        m_textures.put(1.0f);m_textures.put(0);
+        m_textures.put(1.0f);m_textures.put(1.0f);
         m_textures.put(0);m_textures.put(0);
-        m_textures.put(0);m_textures.put(2.0f);
-        m_textures.put(2.0f);m_textures.put(2.0f);
+        m_textures.put(0);m_textures.put(1.0f);
+        m_textures.put(1.0f);m_textures.put(1.0f);
         
         // init colors
         for(int i=0;i<m_verticeCount;i++) {

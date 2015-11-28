@@ -2,7 +2,6 @@ package Graphic;
 
 import java.nio.FloatBuffer;
 import Maths.Vector2f;
-import java.nio.ByteBuffer;
 import static org.lwjgl.opengl.GL11.*;
 
 /*
@@ -17,7 +16,7 @@ public class Model {
         createTexture();
     }
     final public void createTexture() {
-        m_texture = Texture.loadTexture("pong.png");
+        m_texture = Texture.loadTexture("textures/doge.png");
     }
     public void draw(Vector2f pos,Vector2f size) {
         startRender(pos,size);
@@ -32,6 +31,7 @@ public class Model {
         if(m_texture!=null)
             m_texture.bind(); // bind texture
     }
+    
     public void render() {
         glBegin(GL_TRIANGLES);
         float[] colors=m_colors.array();
@@ -45,6 +45,7 @@ public class Model {
         }
         glEnd();
     }
+    
     public void endRender() {
         if(m_texture!=null) // unbind texture
             m_texture.unbind();
