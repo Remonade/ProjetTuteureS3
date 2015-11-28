@@ -66,7 +66,7 @@ public class GraphicMain {
         // Enable v-sync
         glfwSwapInterval(1);
         GL.createCapabilities();
-        //glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+        glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
         glEnable(GL_BLEND);
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LESS);
@@ -74,20 +74,40 @@ public class GraphicMain {
         glHint(GL_PERSPECTIVE_CORRECTION_HINT,GL_NICEST);
     }
     private static void initShader() {
-        
+        // no shader yet...
     }
     private static void initTexture() {
-        
+		try {
+			textures.put("ling",Texture.loadTexture("carbot_ling.png"));
+			textures.put("background",Texture.loadTexture("dark_is_the_night.jpg"));
+			textures.put("anim_Test",TextureAnimated.loadTextureAnimated("anim_fire.png",5,0.5));
+			textures.put("anim_fire",textures.get("anim_Test"));
+			textures.put("anim_energy",TextureAnimated.loadTextureAnimated("anim_energy.png",5,0.75));
+			textures.put("anim_thunder",TextureAnimated.loadTextureAnimated("anim_thunder.png",10,0.1));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
     }
-    
     private static void initModel() {
-        models.put("default",new ModelQuad(1f,1f,1f));
+        models.put("default",new ModelQuad(0.75f,0.75f,0.75f));
+		models.get("default").setTexture(textures.get("ling"));
         models.put("white",models.get("default"));
-        models.put("red",new ModelQuad(1f,1f,1f));
-        models.put("green",new ModelQuad(1f,1f,1f));
-        models.put("blue",new ModelQuad(1f,1f,1f));
-        models.put("fume",new Particle(1f,1f,1f));
-        models.put("missile",new ModelQuad(1f,1f,1f));
+        models.put("red",new ModelQuad(1f,0.25f,0.25f));
+        models.put("green",new ModelQuad(0.25f,1f,0.25f));
+		models.get("green").setTexture(textures.get("background"));
+        models.put("blue",new ModelQuad(0.25f,0.25f,1f));
+		models.get("blue").setTexture(textures.get("ling"));
+        models.put("fume",new Particle(0.5f,0.5f,0.5f));
+        models.put("missile",new ModelAnim(1f,1f,1f));
+		models.get("missile").setTexture(textures.get("anim_Test"));
+        models.put("anim_Test",new ModelAnim(0.5f,0.5f,0f));
+		models.get("anim_Test").setTexture(textures.get("anim_Test"));
+        models.put("fire",new ModelAnim(0.5f,0.5f,0f));
+		models.get("fire").setTexture(textures.get("anim_fire"));
+        models.put("energy",new ModelAnim(1f,1f,1f));
+		models.get("energy").setTexture(textures.get("anim_energy"));
+        models.put("thunder",new ModelAnim(1f,1f,1f));
+		models.get("thunder").setTexture(textures.get("anim_thunder"));
     }
     public static Model getModel(String ref) {
         Model temp=models.get(ref);
