@@ -36,8 +36,12 @@ public class Entity {
 		return m_data.getModel();
 	}
 	public void draw() {
-		if(getModel()!=null)
-			getModel().draw(m_pos,getSize());
+		if(getModel()!=null) {
+			if(getModel() instanceof ModelAnim)
+				((ModelAnim)getModel()).draw(m_pos,getSize(),Logic.CURRENT_TIME%((ModelAnim)getModel()).getAnimDuration());
+			else
+				getModel().draw(m_pos,getSize());
+		}
 	}
 	public boolean getCollide() {
 		return m_collide;
