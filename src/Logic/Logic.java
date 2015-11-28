@@ -11,8 +11,10 @@ import static Logic.Type.*;
 import Maths.Vector2f;
 import Physic.PhysicMain;
 import java.util.ArrayList;
+import org.lwjgl.glfw.GLFW;
 
 public class Logic {
+	public static double CURRENT_TIME=0;
 	private static EntityUnit PLAYER;
 	public static EntityUnit getPlayer() {
 		if(PLAYER==null) {
@@ -34,46 +36,45 @@ public class Logic {
 		
 		e=EntityData.create("ground");
 		e.setSize(new Vector2f(10f,0.5f));
-		e.setModel(GraphicMain.getModel("green"));
+		e.setModel(GraphicMain.getModel("ground"));
 		
 		e=EntityData.create("block");
 		e.setSize(new Vector2f(0.5f,0.5f));
 		e.setModel(GraphicMain.getModel("white"));
 		
-		e=EntityData.create("block");
+		e=EntityData.create("prop/fire");
 		e.setSize(new Vector2f(0.5f,0.5f));
-		e.setModel(GraphicMain.getModel("white"));
+		e.setModel(GraphicMain.getModel("fire"));
 		
 		// data for enemies
-		EntityDataUnit d=EntityDataUnit.create("sniper");
+		EntityDataUnit d=EntityDataUnit.create("enemy");
 		d.setSize(new Vector2f(0.1f,0.1f));
 		d.setModel(GraphicMain.getModel("red"));
-		d.setMaxHealth(100);
-                d.setMaxEnergy(100);
-                d.setRegenEnergy(0.1f);
+		d.setMaxHealth(50);
+		d.setMaxShield(1000);
+		d.setRegenShield(2);
+		d.setMaxEnergy(100);
+		d.setRegenEnergy(3);
+		d.setType(SNIPER);
 		d.setMaxSpeed(new Vector2f(0.1f,0.1f));
-                d.setType(SNIPER);
-                
-                d=EntityDataUnit.create("gunner");
-		d.setSize(new Vector2f(0.3f,0.1f));
-		d.setModel(GraphicMain.getModel("white"));
-		d.setMaxHealth(300);
-                d.setMaxEnergy(100);
-                d.setRegenEnergy(0.2f);
-		d.setMaxSpeed(new Vector2f(0.1f,0.1f));
-                d.setType(GUNNER);
 		
 		d=EntityDataUnit.create("player");
 		d.setSize(new Vector2f(0.15f,0.15f));
 		d.setModel(GraphicMain.getModel("blue"));
 		d.setMaxHealth(400);
+		d.setRegenHealth(1);
+		d.setMaxShield(100);
+		d.setRegenShield(1);
+		d.setMaxEnergy(0);
+		d.setRegenEnergy(0);
+		d.setType(GUNNER);
 		d.setMaxSpeed(new Vector2f(0.1f,0.1f));
 		
 		// data for missile
 		EntityDataMissile m=EntityDataMissile.create("missile");
 		m.setSize(new Vector2f(0.05f,0.05f));
-		m.setModel(GraphicMain.getModel("missile"));
-		m.setDamage(10);
+		m.setModel(GraphicMain.getModel("thunder"));
+		m.setDamage(25);
 		m.setMaxSpeed(1.0f);
 		
 		//data for particle
@@ -85,14 +86,11 @@ public class Logic {
 		try{
 			initData();
 			Entity temp;
-                        
-                        temp=EntityUnit.create();
-                        temp.setData(EntityDataUnit.get("gunner"));
-                        temp.setPos(-5,1);
-                                
+
 			temp=EntityUnit.create();
-			temp.setData(EntityDataUnit.get("sniper"));
-			temp.setPos(5,1);
+			temp.setData(EntityDataUnit.get("enemy"));
+			temp.setPos(7,1);
+			((EntityUnit)temp).setTeam(1);
 			// ground
 			temp=Entity.create();
 			temp.setData(EntityData.get("ground"));
@@ -121,15 +119,21 @@ public class Logic {
 			temp=Entity.create();
 			temp.setPos(4f,1f);
 			temp.setData(EntityData.get("block"));
+			// prop
+			temp=Entity.create();
+			temp.setPos(0f,1f);
+			temp.setData(EntityData.get("prop/fire"));
+			temp.setCollide(false);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 	}
 	public static void update() {
+		CURRENT_TIME=GLFW.glfwGetTime();
 		updateIA();
 		updateMissile();
-        }
+	}
 	private static void updateIA() {
 		ArrayList<EntityUnit> enemy=getEnemy();
 		for(int i=0;i<enemy.size();i++) {
