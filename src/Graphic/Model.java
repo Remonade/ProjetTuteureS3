@@ -13,11 +13,10 @@ import static org.lwjgl.opengl.GL11.*;
 public class Model {
     public Model() {
         System.out.println("New Model instance");
-        createTexture();
     }
-    final public void createTexture() {
-        m_texture = Texture.loadTexture("textures/doge.png");
-    }
+	public void setTexture(Texture texture) {
+		m_texture=texture;
+	}
     public void draw(Vector2f pos,Vector2f size) {
         startRender(pos,size);
         render();
@@ -31,7 +30,6 @@ public class Model {
         if(m_texture!=null)
             m_texture.bind(); // bind texture
     }
-    
     public void render() {
         glBegin(GL_TRIANGLES);
         float[] colors=m_colors.array();
@@ -45,7 +43,6 @@ public class Model {
         }
         glEnd();
     }
-    
     public void endRender() {
         if(m_texture!=null) // unbind texture
             m_texture.unbind();
