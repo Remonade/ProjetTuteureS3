@@ -7,7 +7,9 @@
 package Graphic;
 
 import Logic.Entity;
+import Logic.EntityDynamic;
 import Logic.EntityParticle;
+import Logic.EntityUnit;
 import Logic.Logic;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -81,6 +83,7 @@ public class GraphicMain {
 			textures.put("ling",Texture.loadTexture("carbot_ling.png"));
 			textures.put("background",Texture.loadTexture("dark_is_the_night.jpg"));
 			textures.put("anim_Test",TextureAnimated.loadTextureAnimated("anim_fire.png",5,0.5));
+			textures.put("repeat_Test",Texture.loadTexture("anim_Test.jpg"));//
 			textures.put("anim_fire",textures.get("anim_Test"));
 			textures.put("anim_energy",TextureAnimated.loadTextureAnimated("anim_energy.png",5,0.75));
 			textures.put("anim_thunder",TextureAnimated.loadTextureAnimated("anim_thunder.png",10,0.1));
@@ -108,6 +111,8 @@ public class GraphicMain {
 		models.get("energy").setTexture(textures.get("anim_energy"));
         models.put("thunder",new ModelAnim(1f,1f,1f));
 		models.get("thunder").setTexture(textures.get("anim_thunder"));
+        models.put("repeat",new ModelRepeat(1f,1f,1f));
+		models.get("repeat").setTexture(textures.get("repeat_Test"));
     }
     public static Model getModel(String ref) {
         Model temp=models.get(ref);
@@ -119,15 +124,28 @@ public class GraphicMain {
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT); // clear the framebuffer
         camera.useCamera();
         glEnable(GL_DEPTH_TEST);
-        LAYER=0;
-        for(Entity i:Logic.getEntity()) {
-            if(i.isVisible())
-                i.draw();
-        }
-        LAYER=1;
+        LAYER=UNIT_LAYER;
+		Logic.getEntity().stream().filter((i) -> (i.isVisible() && i instanceof EntityUnit)).map((i) -> {
+			return i;
+		}).forEach((i) -> {
+			i.draw();
+		});
+        LAYER=DYNAMIC_LAYER;
+		Logic.getEntity().stream().filter((i) -> (i.isVisible() && i instanceof EntityDynamic)).map((i) -> {
+			return i;
+		}).forEach((i) -> {
+			i.draw();
+		});
+        LAYER=STATIC_LAYER;
+		Logic.getEntity().stream().filter((i) -> (i.isVisible() && i instanceof Entity)).map((i) -> {
+			return i;
+		}).forEach((i) -> {
+			i.draw();
+		});
+		
+        LAYER=PARTICLE_LAYER;
         renderParticle();
         camera.prepareGUICamera();
-        glDisable(GL_DEPTH_TEST);
         COUNT++;
         drawString("x:"+(float)((int)(Logic.getPlayer().getPos().x*1000))/1000f+"\ny:"+(float)((int)(Logic.getPlayer().getPos().y*1000))/1000f,new Vector2f(0,200),2f,new Vector3f(1,1,1));
         glfwSwapBuffers(window); // swap the color buffers
@@ -584,5 +602,9 @@ public class GraphicMain {
     public static int HEIGHT, WIDTH;
     public static int LAYER=0;
     public static int COUNT=0;
-    public static int STRING_LAYER=2;
+    public static int STRING_LAYER=4;
+    public static int PARTICLE_LAYER=3;
+    public static int UNIT_LAYER=2;
+    public static int DYNAMIC_LAYER=1;
+    public static int STATIC_LAYER=0;
 }
