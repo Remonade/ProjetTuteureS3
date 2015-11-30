@@ -1,6 +1,8 @@
 package Logic;
 
 import Graphic.Model;
+import Graphic.ModelAnim;
+import Graphic.ModelRepeat;
 import java.util.ArrayList;
 import Maths.Vector2f;
 
@@ -39,15 +41,17 @@ public class Entity {
 		if(getModel()!=null) {
 			if(getModel() instanceof ModelAnim)
 				((ModelAnim)getModel()).draw(m_pos,getSize(),Logic.CURRENT_TIME%((ModelAnim)getModel()).getAnimDuration());
+			else if(getModel() instanceof ModelRepeat)
+				((ModelRepeat)getModel()).draw(m_pos,getSize());
 			else
 				getModel().draw(m_pos,getSize());
 		}
 	}
-	public boolean getCollide() {
-		return m_collide;
-	}
 	public void setCollide(boolean value) {
 		m_collide=value;
+	}
+	public boolean getCollide() {
+		return m_collide;
 	}
 	public boolean isVisible() {
 		return m_visible;
