@@ -36,11 +36,11 @@ public class Logic {
 		
 		e=EntityData.create("ground");
 		e.setSize(new Vector2f(10f,0.5f));
-		e.setModel(GraphicMain.getModel("ground"));
+		e.setModel(GraphicMain.getModel("repeat"));
 		
 		e=EntityData.create("block");
 		e.setSize(new Vector2f(0.5f,0.5f));
-		e.setModel(GraphicMain.getModel("white"));
+		e.setModel(GraphicMain.getModel("repeat"));
 		
 		e=EntityData.create("prop/fire");
 		e.setSize(new Vector2f(0.5f,0.5f));
