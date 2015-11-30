@@ -35,10 +35,10 @@ public class Model {
         float[] colors=m_colors.array();
         float[] textures=m_textures.array();
         float[] vertice=m_vertice.array();
+        sendColors(colors);
         for(int i=0;i<m_verticeCount;i++) {
             if(m_texture!=null) // send texture
                 sendTextures(i,textures);
-            sendColors(i,colors);
             sendVertice(i,vertice);
         }
         glEnd();
@@ -47,8 +47,8 @@ public class Model {
         if(m_texture!=null) // unbind texture
             m_texture.unbind();
     }
-    public void sendColors(int offset,float[]data) {
-        glColor4f(data[offset*3],data[offset*3+1],data[offset*3+2],0.5f);
+    public void sendColors(float[]data) {
+        glColor4f(data[0],data[1],data[2],0.5f);
     }
     public void sendTextures(int offset,float[]data) {
         glTexCoord2f(data[offset*2],data[offset*2+1]);
