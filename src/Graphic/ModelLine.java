@@ -31,7 +31,7 @@ public class ModelLine extends Model{
         glVertex3f(data[offset*2],data[offset*2+1],0.0f);
     }
     @Override
-    public void sendColors(int offset,float[]data) {
+    public void sendColors(float[]data) {
         glColor3f(data[0],data[1],0.0f);
     }
     @Override
@@ -39,8 +39,8 @@ public class ModelLine extends Model{
         glBegin(GL_LINE_STRIP);
         float[] colors=m_colors.array();
         float[] vertice=m_vertice.array();
+        sendColors(colors);
         for(int i=0;i<m_verticeCount;i++) {
-            sendColors(i,colors);
             sendVertice(i,vertice);
         }
         glEnd();
