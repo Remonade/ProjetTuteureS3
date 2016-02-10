@@ -253,7 +253,7 @@ public class EntityUnit extends EntityDynamic {
         super.update();
 		if(m_dialog==null)
 			if(Math.random()<0.01) {
-				m_dialog=new GUIDialog("Je disparait a nouveau.");
+				talk("Je disparait a nouveau.");
 			}
 		
 		if(m_shieldCooldown<Logic.DELTA_TIME)
@@ -441,6 +441,9 @@ public class EntityUnit extends EntityDynamic {
 			if(!m_dialog.update())
 				m_dialog=null;
 		}
+	}
+	public void talk(String text) {
+		m_dialog=new GUIDialog(text);
 	}
 	
 	
