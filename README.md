@@ -2,6 +2,7 @@
 Réalisation d'un Rogue-like
 
 ##Push les modifications sur le git
+- Sur netbeans : Team/Git/Clone, entrer le lien du repository, "open project" à la fin du clone
 - Effectuer les modifications
 - Ouvrir git bash et se placer dans le dossier du projet
 - "git status" pour voir les modifications effectuées sur le git
