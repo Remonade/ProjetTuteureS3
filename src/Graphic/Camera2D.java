@@ -1,5 +1,5 @@
  /**
-  * Cette objet sert à gérer a camera dans un espace 2D.
+  * Cet objet sert à gérer a camera dans un espace 2D.
   * Les coorodnnées de la camera peuvent être contraintes grâce à setBound(top,bot,left,right).
   * setPos(x,y) permet de recadrer la camera aux positions x,y.
   * move(x,y) applique un vecteur de déplacement de coordonnées x,y.
@@ -12,6 +12,7 @@ package Graphic;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 import Maths.Vector2f;
+import Maths.Vector4f;
 import static org.lwjgl.opengl.GL11.GL_PROJECTION;
 import static org.lwjgl.opengl.GL11.glLoadIdentity;
 import static org.lwjgl.opengl.GL11.glMatrixMode;
@@ -24,16 +25,14 @@ public class Camera2D {
     private float m_posX,m_posY;
     private float m_BT,m_BB,m_BL,m_BR;
     /**
-     * Instancie un objet Camera avec des paramètres par défaut: setPos(0,0), setBound(1000,-1000,-1000,1000).
-     * @author Bernelin Antoine
+     * Instancie un objet Camera avec des paramètres par défaut: setPos(0,0), setCameraBound(1000,-1000,-1000,1000).
      */
     public Camera2D() {
         setPos(0.0f,0.0f);
-        setBound(1000.0f,-1000.0f,-1000.0f,1000.0f);
+        setCameraBound(1000.0f,-1000.0f,-1000.0f,1000.0f);
     }
     /**
      * Modifie la camera openGL avec les données de l'instance. Cette fonction doit être appelée avant toute tentative de dessiner sur la carte graphique.
-     * @author Bernelin Antoine
      */
     public void useCamera() {
         update();
@@ -46,10 +45,15 @@ public class Camera2D {
         glTranslatef(-m_posX/m_zoom,-m_posY/m_zoom*ratio,0.0f);
         glOrtho(-m_zoom, m_zoom, -m_zoom/ratio, m_zoom/ratio, -100, 100);
     }
+    public void prepareBackgroundCamera() {
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        glOrtho(-1,1,-1,1, -100, 100);
+    }
     public void prepareGUICamera() {
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
-        glOrtho(0,600,0,800, -100, 100);
+        glOrtho(0,GraphicMain.WIDTH,0,GraphicMain.HEIGHT, -100, 100);
     }
     public void update() {
         if(m_zoom<m_finalZoom)
@@ -66,6 +70,12 @@ public class Camera2D {
     public float getZoom() {
         return m_finalZoom;
     }
+	public float getCurrentZoom() {
+		return m_zoom;
+	}
+	public float getRatio() {
+		return (float)GraphicMain.WIDTH/(float)GraphicMain.HEIGHT;
+	}
     /**
      * Déplace la camera selon un vecteur passé en paramètre.
      * @param x float représentant le déplacement horizontal.
@@ -114,10 +124,16 @@ public class Camera2D {
      * @param r float représentant la borne horizontale supérieure.
      * @author Bernelin Antoine
      */
-    public final void setBound(float t, float b,float l,float r) {
+    public final void setCameraBound(float t, float b,float l,float r) {
         m_BT=max(b,t);
         m_BB=min(b,t);
         m_BL=min(r,l);
         m_BR=max(r,l);
+    }
+    public final void setCameraBound(Vector4f bound) {
+        m_BT=max(bound.z,bound.w);
+        m_BB=min(bound.z,bound.w);
+        m_BL=min(bound.y,bound.x);
+        m_BR=max(bound.y,bound.x);
     }
 }

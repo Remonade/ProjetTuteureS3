@@ -6,20 +6,14 @@
 
 package Logic;
 
-import Graphic.GraphicMain;
-import Physic.PhysicMain;
+import Logic.Data.EntityData;
 import java.util.ArrayList;
 import Maths.Vector2f;
-import Maths.Vector3f;
 
 public class EntityDynamic extends Entity {
 	public EntityDynamic() {
 		super();
-		m_contact = new boolean[4];
-		for(boolean i:m_contact)
-			i=false;
 		m_speed=new Vector2f();
-		m_team=1;
 	}
 	@Override
 	public void setData(EntityData data) {
@@ -35,43 +29,30 @@ public class EntityDynamic extends Entity {
 		return m_speed;
 	}
 	public void setSpeed(Vector2f speed) {
-		m_speed = speed;
+		setSpeed(speed.x,speed.y);
 	}
 	public void setSpeed(float x,float y) {
 		m_speed.x=x;
 		m_speed.y=y;
+		
+		if(m_speed.y<-0.1f)
+			m_speed.y=-0.1f;
 	}
 	public void addSpeed(Vector2f speed) {
-		m_speed.add(speed);
-		if(Math.abs(m_speed.x)>maxspeed)
-			m_speed.x=maxspeed*Math.signum(m_speed.x)*0.25f;
-		if(Math.abs(m_speed.y)>maxspeed)
-			m_speed.y=maxspeed*Math.signum(m_speed.y);
+		addSpeed(speed.x,speed.y);
 	}
 	public void addSpeed(float x,float y) {
 		m_speed.x+=x;
 		m_speed.y+=y;
-		if(Math.abs(m_speed.x)>maxspeed)
-			m_speed.x=maxspeed*Math.signum(m_speed.x)*0.25f;
-		if(Math.abs(m_speed.y)>maxspeed)
-			m_speed.y=maxspeed*Math.signum(m_speed.y);
-	}
-	public boolean getContact(int contact) {
-		if(contact>-1 && contact<4)
-			return m_contact[contact];
-		return false;
-	}
-	public void setContact(int contact, boolean value) {
-		if(contact>-1 && contact<4)
-			m_contact[contact]=value;
+		
+		if(m_speed.y<-0.1f)
+			m_speed.y=-0.1f;
 	}
 	public void update() {
-		addSpeed(0f,PhysicMain.GRAVITY);
 	}
 	@Override
     public void draw() {
 		super.draw();
-		GraphicMain.drawString(""+m_team,m_pos,0.01f,new Vector3f(1,1,1));
 	}
 	public boolean isActive() {
 		return m_active;
@@ -79,18 +60,13 @@ public class EntityDynamic extends Entity {
 	public void setActive(boolean value) {
 		m_active=value;
 	}
-	private int m_team=1;
+	private int m_team=0;
 	protected String m_name="Entity";
 	protected Vector2f m_speed;
-	protected boolean m_contact[];
 	protected float maxspeed=0.5f;
 	protected boolean m_active=true;
 	
 	private static ArrayList<EntityDynamic> all=new ArrayList();
-	public static final int CONTACT_UP=0;
-	public static final int CONTACT_DOWN=1;
-	public static final int CONTACT_LEFT=2;
-	public static final int CONTACT_RIGHT=3;
 	
 	public static ArrayList getAll() {
 		return all;
@@ -106,6 +82,6 @@ public class EntityDynamic extends Entity {
 	}
 	public static void remove(Entity e) {
 		Entity.remove(e);
-		all.remove(e);
+		all.remove((EntityDynamic)e);
 	}
 }

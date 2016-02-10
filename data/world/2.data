@@ -1,0 +1,40 @@
++ This file is used to describe world data
++ Everything is created in the last edited realm. Be sure to create at least one!
++ To create a block:
++	"new Entity [type:string] [pos X:double] [pos Y:double]"
++
++ To create a waypoint:
++	"new WayPoint [type:string] [pos X:double] [pos Y:double] [direction:int] [target:int] [out X:double] [out Y:double]"
++
++ To create a unit:
++	"new Unit [type:string] [pos X:double] [pos Y:double] [team id:int]"
++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++ Creating initial realm (0)
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++ General level settings
+new Realm The_Tank
+set Background background/night
+set Music HOTS_46.ogg
+set CameraBound -1 1 2 8
++
++ Main ground thing
+new Entity wallback 0 5
+set CollisionOff
+new Entity ground5 0 -0.5
+new Entity ground5 0 10
+new Entity wall5 -4 4.5
+new Entity wall5 4 4.5
++
++ WayPoints
+new WayPoint waypoint -2.5 0.75 -1 0 1 0
+new WayPoint waypoint 2.5 0.75 1 0 -1 0
++new WayPoint waypoint -2 1.5 0 3 1 0
++new WayPoint waypoint 2 1.5 0 2 -1 0
++
++ Units
+new Unit monster 2.1 4.1 1
+set IA Roamer 30
+set CustomValue 2
+set Boss LAST_UNIT
++

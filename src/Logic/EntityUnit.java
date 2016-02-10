@@ -1,29 +1,143 @@
 package Logic;
 
+import GUI.GUIDialog;
+import Logic.Data.Player;
+import Logic.Data.EntityDataUnit;
+import Logic.Data.EntityDataMissile;
+import Logic.Data.EntityData;
 import Graphic.GraphicMain;
+import Graphic.Model;
+import Graphic.ModelAnim;
+import Logic.Buff.Buff;
+import Logic.IA.IA;
+import Logic.Spell.Spell;
 import static Logic.Type.*;
-import java.util.ArrayList;
 import Maths.Vector2f;
-import Maths.Vector3f;
-import org.lwjgl.glfw.GLFW;
+import Maths.Vector4f;
+import Physic.PhysicMain;
+import java.util.ArrayList;
 
 public class EntityUnit extends EntityDynamic {
     protected boolean m_lookRight; //True means "look to the right"
-	protected int m_health=0;
-    protected float m_energy=0f;
-    protected float m_shield=0f;
-	protected double m_lastDamage=0;
-        protected float m_custom=0f;
-
+	protected float m_health=0.1f;
+    protected float m_energy=1f;
+    protected float m_shield=1f;
+	protected double m_shieldCooldown=0;
+	protected double m_weaponCooldown=0;
+	
+	protected double m_animTime=0;
+	protected String m_currentAnim="NAN";
+	protected int m_custom=0;
+	protected Player m_owner;
+	protected IA m_ia=null;
+	
+	// buff part
+	protected float m_buffHealthRegen=0;
+	protected float m_buffShieldRegen=0;
+	protected float m_buffEnergyRegen=0;
+	
+	protected float m_buffHealthMax=0;
+	protected float m_buffShieldMax=0;
+	protected float m_buffEnergyMax=0;
+	
+	protected ArrayList<Spell> m_spellList=new ArrayList<>();
+	protected ArrayList<Buff> m_buffList=new ArrayList<>();
+	
+	public void setOwner(Player owner) {
+		m_owner=owner;
+	}
+	public Player getOwner() {
+		return m_owner;
+	}
     /**
     * Default constructor
     */
     public EntityUnit() {
         super();
+		m_owner=null;
         m_lookRight = true;
             m_name="Batard!";
     }
-
+	public void addSpell(Spell spell) {
+		m_spellList.add(spell);
+	}
+	public ArrayList<Spell> getSpellList() {
+		return m_spellList;
+	}
+	public void useSpell(int id) {
+		if(id<m_spellList.size())
+			m_spellList.get(id).use(this);
+	}
+	
+	// buff
+	public void addBuffHealthRegen(float v) {
+		m_buffHealthRegen+=v;
+	}
+	public void addBuffShieldRegen(float v) {
+		m_buffShieldRegen+=v;
+	}
+	public void addBuffEnergyRegen(float v) {
+		m_buffEnergyRegen+=v;
+	}
+	
+	public void addBuffHealthMax(float v) {
+		m_buffHealthMax+=v;
+	}
+	public void addBuffShieldMax(float v) {
+		m_buffShieldMax+=v;
+	}
+	public void addBuffEnergyMax(float v) {
+		m_buffEnergyMax+=v;
+	}
+	
+	public void removeBuffHealthRegen(float v) {
+		m_buffHealthRegen-=v;
+	}
+	public void removeBuffShieldRegen(float v) {
+		m_buffShieldRegen-=v;
+	}
+	public void removeBuffEnergyRegen(float v) {
+		m_buffEnergyRegen-=v;
+	}
+	
+	public void removeBuffHealthMax(float v) {
+		m_buffHealthMax-=v;
+	}
+	public void removeBuffShieldMax(float v) {
+		m_buffShieldMax-=v;
+	}
+	public void removeBuffEnergyMax(float v) {
+		m_buffEnergyMax-=v;
+	}
+	
+	public void addBuff(Buff b) {
+		b.onStart(this);
+		m_buffList.add(b);
+	}
+	public void removeBuff(Buff b) {
+		b.onExpire(this);
+		m_buffList.remove(b);
+	}
+	public ArrayList<Buff> getBuffList() {
+		return m_buffList;
+	}
+	public void updateBuff() {
+		ArrayList<Buff>expire=new ArrayList<>();
+		for(Buff b:m_buffList) {
+			if(b.update(this))
+				expire.add(b);
+		}
+		for(Buff b:expire)
+			removeBuff(b);
+	}
+	@Override
+	public String getAnim() {
+		return m_currentAnim;
+	}
+	@Override
+	public double getAnimTime() {
+		return m_animTime;
+	}
     @Override
     public void setData(EntityData data) {
 		super.setData(data);
@@ -31,198 +145,304 @@ public class EntityUnit extends EntityDynamic {
 		m_energy=getMaxEnergy();
 		m_shield=getMaxShield();
     }
-	public float getShield() {
+	public void setIA(IA ia) {
+		m_ia=ia;
+	}
+	public int getCustomValue() {
+		return m_custom;
+	}
+	public void setCustomValue(int value) {
+		m_custom=value;
+	}
+	public float getPercentShield() {
 		return m_shield;
 	}
-	public float getMaxShield() {
-		if(m_data==null)
-			return 0;
-		return ((EntityDataUnit)m_data).getMaxShield();
+	public float getShield() {
+		return m_shield*getMaxShield();
 	}
 	public float getRegenShield() {
 		if(m_data==null)
 			return 0;
-		return ((EntityDataUnit)m_data).getRegenShield();
+		float regen=((EntityDataUnit)m_data).getRegenShield();
+		if(m_owner!=null)
+			regen=(1+m_owner.getShieldPower())*regen;
+		return regen+m_buffShieldRegen;
+	}
+	public float getMaxShield() {
+		if(m_data==null)
+			return 0;
+		float max=((EntityDataUnit)m_data).getMaxShield();
+		if(m_owner!=null)
+			max=(1+m_owner.getShieldPower())*max;
+		return max+m_buffShieldMax;
+	}
+	public float getPercentEnergy() {
+		return m_energy;
 	}
     public float getEnergy() {
-		return m_energy;
+		return m_energy*getMaxEnergy();
     }
     public float getRegenEnergy() {
         if(m_data==null)
             return 0;
-        return ((EntityDataUnit)m_data).getRegenEnergy();
+		float regen=((EntityDataUnit)m_data).getRegenEnergy();
+		if(m_owner!=null)
+			regen=(1+m_owner.getEnergyPower())*regen;
+        return regen+m_buffEnergyRegen;
     }
     public float getMaxEnergy() {
-	if(m_data==null)
+		if(m_data==null)
             return 0;
-	return ((EntityDataUnit)m_data).getMaxEnergy();
+		float max=((EntityDataUnit)m_data).getMaxEnergy();
+		if(m_owner!=null)
+			max=(1+m_owner.getEnergyPower())*max;
+		return max+m_buffEnergyMax;
     }
-    public int getHealth() {
-	return m_health;
+    public float getHealth() {
+		return m_health*getMaxHealth();
     }
-    public int getMaxHealth() {
-	if(m_data==null)
+    public float getPercentHealth() {
+		return m_health;
+    }
+    public float getRegenHealth() {
+        if(m_data==null)
             return 0;
-	return ((EntityDataUnit)m_data).getMaxHealth();
+		float regen=((EntityDataUnit)m_data).getRegenHealth();
+		if(m_owner!=null)
+			regen=(1+m_owner.getHealthPower())*regen;
+        return regen+m_buffHealthRegen;
+    }
+    public float getMaxHealth() {
+		if(m_data==null)
+            return 0;
+		float max=((EntityDataUnit)m_data).getMaxHealth();
+		if(m_owner!=null)
+			max=(1+m_owner.getHealthPower())*max;
+		return max+m_buffHealthMax;
     }
     public boolean getLookRight(){
         return m_lookRight;
     }
-    public void setLookRight(boolean lookRight){
+    public void setLookRight(boolean lookRight) {
         m_lookRight=lookRight;
     }
+	public void updateAnim() {
+		if(!m_contact[CONTACT_DOWN]) {
+			if(m_contact[CONTACT_LEFT]) {
+				m_currentAnim="WALL";
+				m_lookRight=false;
+			}
+			else if(m_contact[CONTACT_RIGHT]) {
+				m_currentAnim="WALL";
+				m_lookRight=true;
+			} else
+				m_currentAnim="JUMP";
+			m_animTime=0;
+		} else if(Math.abs(m_speed.x)>0.01f) {
+			if(!m_currentAnim.equals("RUN")) {
+				m_currentAnim="RUN";
+				m_animTime=0;
+			}
+		} else if(!m_currentAnim.equals("NAN")) {
+			m_currentAnim="NAN";
+			m_animTime=0;
+		}
+	}
     @Override
     public void update() {
         super.update();
-	//if(m_health<getMaxHealth())
-	//m_hp++;
-	if(m_health>getMaxHealth())
-            m_health=getMaxHealth();
-        rotate();
-        move();	
-        attack();
+		if(m_dialog==null)
+			if(Math.random()<0.01) {
+				m_dialog=new GUIDialog("Je disparait a nouveau.");
+			}
+		
+		if(m_shieldCooldown<Logic.DELTA_TIME)
+			m_shieldCooldown=0;
+		else m_shieldCooldown-=Logic.DELTA_TIME;
+		
+		m_animTime+=Logic.DELTA_TIME;
+		
+		if(m_currentAnim.equals("SHOOT")) {
+			if(m_animTime>0.25)
+				updateAnim();
+		} else updateAnim();
+		
         regen();
+		
+		for(Spell s: m_spellList)
+			s.refreshCooldown();
+		updateBuff();
+		if(m_ia!=null)
+			m_ia.execute(this);
     }
+	@Override
+	public void addSpeed(Vector2f speed) {
+		addSpeed(speed.x,speed.y);
+	}
+	@Override
+	public void addSpeed(float x,float y) {
+		super.addSpeed(x,y);
+		Vector2f max=getMaxSpeed();
+		if(Math.abs(m_speed.x)>max.x)
+			m_speed.x=max.x*Math.signum(m_speed.x);
+		if(m_speed.y<PhysicMain.FALL_SPEED_LIMIT)
+			m_speed.y=PhysicMain.FALL_SPEED_LIMIT;
+		if(m_speed.y>max.y)
+			m_speed.y=max.y*Math.signum(m_speed.x);
+	}
+	public Vector2f getMaxSpeed() {
+		if(this.getData()!=null)
+			return ((EntityDataUnit)m_data).getMaxSpeed();
+		return new Vector2f(0.05f,0.05f);
+	}
     public void kill() {
-	remove(this);
-	if(this==Logic.getPlayer())
-            Logic.killPlayer();
-        /*else {
-            Entity temp;
-            temp=EntityUnit.create();
-            temp.setData(EntityDataUnit.get("enemy"));
-            temp.setPos(7,1);*/
+		Realm.getActiveRealm().removeEntity(this);
+		if(this==Logic.getPlayer())
+			Logic.killPlayer();
     }
-    public void shoot(Vector2f target) {
-        
-	EntityMissile mis=EntityMissile.create();
-        if(m_lookRight)
-            mis.setDir(new Vector2f(1,0));
-        else
-            mis.setDir(new Vector2f(-1,0));
-	mis.setPos(m_pos.add(mis.getDir().divide(50)));
-	mis.setData(EntityDataUnit.get("missile"));
-	mis.setOwner(this);
-	mis.setTeam(getTeam());
+	public boolean spendEnergy(float energy) {
+		float percent=energy/getMaxEnergy();
+		if(m_energy<percent)
+			return false;
+		m_energy-=percent;
+		return true;
+	}
+    public boolean shoot(Vector2f target) {
+		if(spendEnergy(25)) {
+			try {
+				Audio.Audio.playSound("laser.ogg");
+				//Sound.startSound("data/audio/laser.ogg", false);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			m_weaponCooldown=Logic.CURRENT_TIME;
+			EntityMissile mis=EntityMissile.create();
+			mis.setDir(target);
+			Realm.getActiveRealm().addEntity(mis);
+			mis.setPos(getPos());
+			mis.setData(EntityDataMissile.get("missile"));
+			mis.setOwner(this);
+			mis.setTeam(getTeam());
+			m_currentAnim="SHOOT";
+			m_animTime=0;
+			return true;
+		}
+		return false;
     }
     public void jump() {
     	if(m_contact[CONTACT_DOWN])
-            setSpeed(0,0.075f);
+            setSpeed(0,0.1f);
     }
-    public void damage(int damage) {
-		m_lastDamage=GLFW.glfwGetTime();
-		if(m_shield>=damage)
-			m_shield-=damage;
+    public boolean damage(int damage) {
+		m_shieldCooldown=SHIELD_REGEN_DELAY;
+		if(getShield()>=damage)
+			m_shield-=damage/getMaxShield();
 		else {
-			float diff=damage-m_shield;
+			float diff=damage-getShield();
 			m_shield=0;
-		m_health-=diff;
-		if(m_health<=0)
-			kill();
+			m_health-=diff/getMaxHealth();
+			if(m_health<=0) {
+				kill();
+				return true;
+			}
 		}
+		return false;
     }
-    
-    public void rotate() {
-        if(m_pos.x > Logic.getPlayer().m_pos.x && m_lookRight == true) {
-            m_lookRight = false;
-        }
-        else if (m_pos.x < Logic.getPlayer().m_pos.x && m_lookRight == false) {
-            m_lookRight = true;
-        }
-    }
-    public void move() {
+	public void heal(int heal) {
+		float percent=heal/getMaxHealth();
+		m_health+=percent;
+		if(m_health>1.0f)
+			m_health=1.0f;
+	}
+    public void attack(EntityUnit target) {
+		Vector2f pos=target.getPos();
+		Vector2f size=target.getSize();
         switch(((EntityDataUnit)m_data).getType()){
             case GUNNER :
-		if(Logic.getPlayer().getPos().y > m_pos.y+Logic.getPlayer().getSize().y)
-                    jump();
-		if(Math.abs(Logic.getPlayer().getPos().x-m_pos.x)>2f) {
-                    if(m_lookRight) {
-			setSpeed(0.05f, m_speed.y);
-                    }
-                    else {
-                        setSpeed(-0.05f, m_speed.y);
-                    }
-		}
-                break;
-            case SNIPER :
-                if (Math.abs(Logic.getPlayer().getPos().x-m_pos.x)>3f) {
-                    if(m_lookRight) {
-			setSpeed(0.05f, m_speed.y);
-                    }
-                    else {
-                        setSpeed(-0.05f, m_speed.y);
-                    }
-                }
-                else if (Math.abs(Logic.getPlayer().getPos().x-m_pos.x)<2.5f) {
-                    if(m_lookRight) {
-			setSpeed(-0.05f, m_speed.y);
-                    }
-                    else {
-                        setSpeed(0.05f, m_speed.y);
-                    }
-                }
-                break;
-            default :
-                break;
-        }
-    }
-    
-    public void attack() {
-        switch(((EntityDataUnit)m_data).getType()){
-            case GUNNER :
-                if(getMaxEnergy()==m_energy)
-                    m_custom=1f; //the gunner can launch a burst with his weapon
-                if(m_custom==1f && m_energy-10>0f) { //the gunner shoot
-                    shoot(Logic.getPlayer().getPos()); 
-                    m_energy-=10; 
-                }
-                else
-                    m_custom=0f; //the weapon of the gunner is overheated and he needs to wait before launching another burst
+				if(Physic.PhysicMain.inRow(pos, size.y, getPos(), getSize().y)) {
+					if(getMaxEnergy()==m_energy)
+						m_custom=1; //the gunner can launch a burst with his weapon
+					if(m_custom==1 && m_energy-50>0f) { //the gunner shoot
+						if(m_lookRight)
+							shoot(new Vector2f(1,0));
+						else
+							shoot(new Vector2f(-1,0)); 
+					} else
+						m_custom=0; //the weapon of the gunner is overheated and he needs to wait before launching another burst
+				}
                 break;
             case SNIPER :
                 if(m_energy-50>0f) {
-                    shoot(Logic.getPlayer().getPos());
-                    m_energy-=50;
+                    shoot(getPos().subtract(pos).negate());
                 }
                 break;
             default :
                 break;
         }
     }
-    public void regen(){
-		if(m_lastDamage+1<GLFW.glfwGetTime() && m_shield<getMaxShield())
-			m_shield+=getRegenShield();
-		if(m_shield>getMaxShield())
-			m_shield=getMaxShield();
-		if(m_energy<getMaxEnergy())
-			m_energy+=getRegenEnergy();
-		if(m_energy>getMaxEnergy())
-			m_energy=getMaxEnergy();
+    public void regen() {
+		if(m_shieldCooldown<=0.000f && m_shield<1.0f)
+			m_shield+=getRegenShield()/getMaxShield();
+		if(m_shield>1.0f)
+			m_shield=1.0f;
+		if(m_energy<1.0f)
+			m_energy+=getRegenEnergy()/getMaxEnergy();
+		if(m_energy>1.0f)
+			m_energy=1.0f;
+		if(m_health<1.0f)
+			m_health+=getRegenHealth()/getMaxHealth();
+		if(m_health>1.0f)
+			m_health=1.0f;
     }
-    
+    private static final float SHIELD_REGEN_DELAY=1;
     @Override
     public void draw() {
+		if(!m_lookRight)
+			GraphicMain.setDirection(-1);
 		super.draw();
-		GraphicMain.drawString((int)getHealth()+"/"+getMaxHealth(),m_pos.add(getSize()),0.01f,new Vector3f(0,1,0));
-		GraphicMain.drawString((int)getShield()+"/"+getMaxShield(),m_pos.add(new Vector2f(getSize().x,0)),0.01f,new Vector3f(0,0,1));
-		GraphicMain.drawString((int)getEnergy()+"/"+getMaxEnergy(),m_pos.add(new Vector2f(getSize().x,-getSize().y)),0.01f,new Vector3f(1,0,1));
-		GraphicMain.drawString("/"+m_lastDamage,m_pos.add(new Vector2f(getSize().x,-getSize().y*2)),0.01f,new Vector3f(1,0,0));
+		ModelAnim shield=(ModelAnim)GraphicMain.getModel("shield");
+		
+		Vector4f color=null;
+		if(m_data!=null)
+			color=m_data.getColor();
+		if(color==null)
+			color=new Vector4f(1,1,1,1);
+		
+		color.w*=m_shield/3;
+		
+		shield.draw(m_pos, getSize().scale(1.5f),color, Logic.CURRENT_TIME, "NAN");
+		
+		if(m_shield<1.0f || m_health<1.0f) {
+			Vector2f barSize=new Vector2f(getSize().x*m_health,0.03f);
+			Vector2f barPos=new Vector2f(m_pos.x,m_pos.y+getSize().y+barSize.y);
+			Model.renderTexture("",barPos, barSize, new Vector4f(1,0,0,1));
+			
+			barSize=new Vector2f(getSize().x*m_shield,0.03f);
+			barPos=new Vector2f(m_pos.x,m_pos.y+getSize().y+barSize.y+0.06f);
+			Model.renderTexture("",barPos, barSize, new Vector4f(0,0,1,1));
+		}
+		//GraphicMain.drawString((int)getHealth()+"/"+getMaxHealth(),m_pos.add(getSize()),0.01f,new Vector4f(0,1,0,1));
+		//GraphicMain.drawString((int)getShield()+"/"+getMaxShield(),m_pos.add(new Vector2f(getSize().x,0)),0.01f,new Vector4f(0,0,1,1));
+		//GraphicMain.drawString((int)getEnergy()+"/"+getMaxEnergy(),m_pos.add(new Vector2f(getSize().x,-getSize().y)),0.01f,new Vector4f(1,0,1,1));
+		//if(m_owner!=null)
+			//GraphicMain.drawString(m_owner.getName()+" - "+m_owner.getLevel(),m_pos.add(new Vector2f(-getSize().x,getSize().y*2)),0.03f,new Vector4f(1,1,0,1));
+		GraphicMain.setDirection(1);
+		drawDialog();
 	}
-    public static EntityUnit create() {
-	EntityUnit temp=new EntityUnit();
-	add(temp);
-	return temp;
-    }
-    public static void add(EntityUnit e) {
-	EntityDynamic.add(e);
-	all.add(e);
-    }
-    public static void remove(Entity e) {
-	EntityDynamic.remove(e);
-	all.remove(e);
-    }
-    public static ArrayList getAll() {
-	return all;
-    }
-    private static ArrayList<EntityUnit> all=new ArrayList();
+	
+	/* ------------------------------------------------------------- */
+	
+	private GUIDialog m_dialog=null;
+	
+	public void drawDialog() {
+		if(m_dialog!=null) {
+			m_dialog.setPos(getPos().add(getSize().scale(1.1f)).add(new Vector2f(0,m_dialog.getSize().y)));
+			m_dialog.draw();
+			if(!m_dialog.update())
+				m_dialog=null;
+		}
+	}
+	
+	
+	
 }

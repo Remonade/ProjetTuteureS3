@@ -6,15 +6,31 @@
 
 package Graphic;
 
+import Graphic.TextRendering.TextRender;
+import GUI.GUI;
+import GUI.GUIBossBar;
+import GUI.GUIBuffBar;
+import GUI.GUICheckBox;
+import GUI.GUIPlayerBar;
+import GUI.GUISpellBar;
 import Logic.Entity;
-import Logic.EntityDynamic;
+import Logic.EntityMissile;
 import Logic.EntityParticle;
 import Logic.EntityUnit;
 import Logic.Logic;
+import Logic.Realm;
 import java.util.ArrayList;
 import java.util.HashMap;
 import Maths.Vector2f;
-import Maths.Vector3f;
+import Maths.Vector4f;
+import Tests.Main;
+import static Tests.Main.STATE_SETTING_MENU;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
 import static org.lwjgl.glfw.GLFW.*;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
@@ -24,12 +40,17 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class GraphicMain {
     public static void init(int w,int h) {
-        initGL();
-        initWindow(w,h);
-        initShader();
-        initTexture();
-        initModel();
-        camera.setBound(10.0f, -1.0f, -10f, 10f);
+		try {
+			initGL();
+			initWindow(w,h);
+			initShader();
+			//initTexture();
+			//initModel();
+			loadGraphicData("data/graphic.data");
+			//camera.setCameraBound(20.0f, -1.0f, -10f, 10f);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
     }
     private static void initGL() {
         // Initialize GLFW. Most GLFW functions will not work before doing this.
@@ -42,6 +63,8 @@ public class GraphicMain {
         // Configure our window
         glfwDefaultWindowHints(); // optional, the current window hints are already the default
         glfwWindowHint(GLFW_VISIBLE, GL_FALSE); // the window will stay hidden after creation
+        glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+        glfwWindowHint(GLFW_DECORATED, GL_FALSE);
         glfwWindowHint(GLFW_DOUBLE_BUFFER, GL_TRUE);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 1);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
@@ -49,7 +72,7 @@ public class GraphicMain {
         //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
         
         // Create the window
-        window = glfwCreateWindow(WIDTH, HEIGHT, "Shader", NULL, NULL);
+        window = glfwCreateWindow(WIDTH, HEIGHT, "GameEngine", NULL, NULL);
         if ( window == NULL )
             throw new RuntimeException("Failed to create the GLFW window");
         
@@ -58,8 +81,8 @@ public class GraphicMain {
         // Center our window
         glfwSetWindowPos(
                 window,
-                (vidmode.getWidth() - WIDTH) / 2,
-                (vidmode.getHeight() - HEIGHT) / 2
+                (vidmode.width() - WIDTH) / 2,
+                (vidmode.height() - HEIGHT) / 2
         );
         
         // Make the OpenGL context current
@@ -68,88 +91,206 @@ public class GraphicMain {
         // Enable v-sync
         glfwSwapInterval(1);
         GL.createCapabilities();
-        glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
         glEnable(GL_BLEND);
-        glEnable(GL_DEPTH_TEST);
-        glDepthFunc(GL_LESS);
+        glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+        //glEnable(GL_DEPTH_TEST);
+        //glDepthFunc(GL_LESS);
         glDepthMask(true);
         glHint(GL_PERSPECTIVE_CORRECTION_HINT,GL_NICEST);
+        //glDisable(GL_DEPTH_TEST);
+		
+        glClearColor(0.20f, 0.10f, 0.20f, 1.0f);
     }
     private static void initShader() {
         // no shader yet...
-    }
-    private static void initTexture() {
 		try {
-			textures.put("ling",Texture.loadTexture("carbot_ling.png"));
-			textures.put("background",Texture.loadTexture("dark_is_the_night.jpg"));
-			textures.put("anim_Test",TextureAnimated.loadTextureAnimated("anim_fire.png",5,0.5));
-			textures.put("repeat_Test",Texture.loadTexture("anim_Test.jpg"));//
-			textures.put("anim_fire",textures.get("anim_Test"));
-			textures.put("anim_energy",TextureAnimated.loadTextureAnimated("anim_energy.png",5,0.75));
-			textures.put("anim_thunder",TextureAnimated.loadTextureAnimated("anim_thunder.png",10,0.1));
-		} catch (Exception e) {
+			shaders.put("default",new Shader());
+			//glUseProgram(shaders.get("default").getProgramID());
+		} catch (RuntimeException e) {
 			e.printStackTrace();
 		}
     }
-    private static void initModel() {
-        models.put("default",new ModelQuad(0.75f,0.75f,0.75f));
-		models.get("default").setTexture(textures.get("ling"));
-        models.put("white",models.get("default"));
-        models.put("red",new ModelQuad(1f,0.25f,0.25f));
-        models.put("green",new ModelQuad(0.25f,1f,0.25f));
-		models.get("green").setTexture(textures.get("background"));
-        models.put("blue",new ModelQuad(0.25f,0.25f,1f));
-		models.get("blue").setTexture(textures.get("ling"));
-        models.put("fume",new Particle(0.5f,0.5f,0.5f));
-        models.put("missile",new ModelAnim(1f,1f,1f));
-		models.get("missile").setTexture(textures.get("anim_Test"));
-        models.put("anim_Test",new ModelAnim(0.5f,0.5f,0f));
-		models.get("anim_Test").setTexture(textures.get("anim_Test"));
-        models.put("fire",new ModelAnim(0.5f,0.5f,0f));
-		models.get("fire").setTexture(textures.get("anim_fire"));
-        models.put("energy",new ModelAnim(1f,1f,1f));
-		models.get("energy").setTexture(textures.get("anim_energy"));
-        models.put("thunder",new ModelAnim(1f,1f,1f));
-		models.get("thunder").setTexture(textures.get("anim_thunder"));
-        models.put("repeat",new ModelRepeat(1f,1f,1f));
-		models.get("repeat").setTexture(textures.get("repeat_Test"));
-    }
+	public static void loadGraphicData(String path) throws IOException {
+		System.out.println("Clear Current Graphic Data");
+		//clear();
+		Charset encoding=StandardCharsets.UTF_8;
+		System.out.println("Attempting to load "+path);
+		List<String> lines = Files.readAllLines(Paths.get(path), encoding);
+		System.out.println("Setting New Graphic Data");
+		createGraphicData(lines);
+		Model m=new Model();
+		models.put("defaultBar",m);
+	}
+	private static void createGraphicData(List<String> lines) {
+		Model m=null;
+		ModelAnim a=null;
+		Particle p=null;
+		Texture t=null;
+		TextureCliped c=null;
+		Animation A=null;
+		for(String l:lines) {
+			if(l.charAt(0)=='+')
+				continue;
+			String[] data = l.split(" ");
+			String action=data[0];
+			if("new".equals(action)) { // create new thing
+				String object=data[1];
+					String name=data[2];
+				if("Model".equals(object)) {
+					a=null;
+					m=new Model();
+					models.put(name,m);
+					System.out.println("new model "+name);
+				} else if("ModelRepeat".equals(object)) {
+					a=null;
+					m=new ModelRepeat();
+					models.put(name,m);
+					System.out.println("new modelRepeat "+name);
+				} else if("ModelAnim".equals(object)) {
+					a=new ModelAnim();
+					m=null;
+					models.put(name,a);
+					System.out.println("new modelAnim "+name);
+				} else if("Particle".equals(object)) {
+					p=new Particle();
+					a=null;
+					m=null;
+					models.put(name,p);
+					System.out.println("new particle "+name);
+				} else if("Texture".equals(object)) {
+					t=Texture.loadTexture(name);
+					c=null;
+					textures.put(name,t);
+					System.out.println("new texture "+name);
+				} else if("TextureCliped".equals(object)) {
+					c=TextureCliped.loadTextureCliped(name);
+					textures.put(name,c);
+					System.out.println("new textureCliped "+name);
+				} else if("Animation".equals(object)) {
+					A=new Animation();
+					if(a!=null)
+						a.setAnimation(name, A);
+					System.out.println("new animation "+name);
+				}
+			} else if("set".equals(action)) { // set stuff
+				String attribute=data[1];
+				
+				if(m!=null) {
+					if("Texture".equals(attribute)) {
+						String path=data[2];
+						m.setTexture(getTexture(path));
+					}
+				} else if(A!=null) {
+					if("Texture".equals(attribute)) {
+						String path=data[2];
+						A.setTexture(getTexture(path));
+					} else if("Duration".equals(attribute)) {
+						String duration=data[2];
+						A.setDuration(Float.valueOf(duration));
+					} else if("FrameCount".equals(attribute)) {
+						String count=data[2];
+						A.setFrameCount(Integer.valueOf(count));
+					} else if("Frame".equals(attribute)) {
+						String frame=data[2];
+						String clipID=data[3];
+						A.setFrame(Integer.valueOf(frame),Integer.valueOf(clipID));
+					}
+				} else if(c!=null) {
+					if("FrameCount".equals(attribute)) {
+						String x=data[2];
+						String y=data[3];
+						c.setFrameCount(Integer.valueOf(x),Integer.valueOf(y));
+					}
+				}
+			}
+		}
+	}
     public static Model getModel(String ref) {
         Model temp=models.get(ref);
         if(temp==null)
-            return models.get("default");
+            temp=models.get("default");
+        if(temp==null)
+			temp=new Model();
         return temp;
     }
-    public static void display() {
-        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-        camera.useCamera();
-        glEnable(GL_DEPTH_TEST);
-        LAYER=UNIT_LAYER;
-		Logic.getEntity().stream().filter((i) -> (i.isVisible() && i instanceof EntityUnit)).map((i) -> {
-			return i;
-		}).forEach((i) -> {
-			i.draw();
-		});
-        LAYER=DYNAMIC_LAYER;
-		Logic.getEntity().stream().filter((i) -> (i.isVisible() && i instanceof EntityDynamic)).map((i) -> {
-			return i;
-		}).forEach((i) -> {
-			i.draw();
-		});
-        LAYER=STATIC_LAYER;
-		Logic.getEntity().stream().filter((i) -> (i.isVisible() && i instanceof Entity)).map((i) -> {
-			return i;
-		}).forEach((i) -> {
-			i.draw();
-		});
-		
-        LAYER=PARTICLE_LAYER;
-        renderParticle();
-        camera.prepareGUICamera();
-        COUNT++;
-        drawString("x:"+(float)((int)(Logic.getPlayer().getPos().x*1000))/1000f+"\ny:"+(float)((int)(Logic.getPlayer().getPos().y*1000))/1000f,new Vector2f(0,200),2f,new Vector3f(1,1,1));
-        glfwSwapBuffers(window); // swap the color buffers
+    public static Texture getTexture(String ref) {
+        Texture temp=textures.get(ref);
+        if(temp==null)
+            return textures.get("default.png");
+        return temp;
     }
+	public static void resetScreen() {
+        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+	}
+    public static void displayRealm(Realm r) {
+		if(Logic.getPlayer()!=null) {
+			resetScreen();
+
+			camera.prepareBackgroundCamera();
+			camera.setCameraBound(r.getCameraBound());
+			Model background=r.getBackground();
+			if(background!=null) {
+				background.draw(null, null, null);
+			}
+			camera.setPos(Logic.getPlayer().getPos());
+			setCamera();
+
+			LAYER=STATIC_LAYER;
+			for(Entity i:r.getEntities())
+				i.draw();
+			for(Entity i:r.getWayPoints()) {
+				i.draw();
+			}
+
+			LAYER=UNIT_LAYER;
+			for(EntityUnit i:r.getUnits())
+				i.draw();
+			LAYER=DYNAMIC_LAYER;
+			for(EntityMissile i:r.getMissiles())
+				i.draw();
+
+			GUI gui=Main.getGameState(STATE_SETTING_MENU).getGUI("GUI_CB_PARTICLES");
+			if(gui!=null && ((GUICheckBox)gui).getValue()) {
+				LAYER=PARTICLE_LAYER;
+				for(EntityParticle i:r.getParticles())
+					i.draw();
+			}
+
+			setCameraGUI();
+			drawString(r.getName(),new Vector2f(0,400),2f,new Vector4f(0,0,0,1));
+			drawString(".-- --- ..- .-.. -.. / -.-- --- ..- / ... -- --- --- ... .... / .- / --. .... --- ... - ..--..",new Vector2f(0,0),2f,new Vector4f(0,0,0,1));
+			String info="";
+			info+="pos x:"+(float)((int)(Logic.getPlayer().getPos().x*1000))/1000f+"\n";
+			info+="pos y:"+(float)((int)(Logic.getPlayer().getPos().y*1000))/1000f+"\n";
+			//info+="speed x:"+(float)((int)(Logic.getPlayer().getSpeed().x*100000))/100000f+"\n";
+			info+="speed y:"+(float)((int)(Logic.getPlayer().getSpeed().y*100000))/100000f;
+			//System.out.println(info+"\n______________________________");
+			drawString(info,new Vector2f(0,200),2f,new Vector4f(1,1,1,1));
+
+			GUIPlayerBar.setPlayer(Logic.getPlayer());
+			GUIPlayerBar.draw();
+
+			GUIBossBar.setBoss(r.getBoss());
+			GUIBossBar.draw();
+
+			GUISpellBar.setPlayer(Logic.getPlayer());
+			GUISpellBar.draw();
+
+			GUIBuffBar.setPlayer(Logic.getPlayer());
+			GUIBuffBar.draw();
+
+			updateScreen();
+		}
+	}
+	public static void setCamera() {
+        camera.useCamera();
+	}
+	public static void setCameraGUI() {
+        camera.prepareGUICamera();
+	}
+	public static void updateScreen() {
+        glfwSwapBuffers(window); // swap the color buffers
+	}
     private static void renderParticle() {
         for(int i=0;i<particle.size();i++) {
             EntityParticle p=particle.get(i);
@@ -159,439 +300,12 @@ public class GraphicMain {
                 particle.remove(i);
         }
     }
+	public static void drawString(String s, Vector2f pos, float size, Vector4f color) {
+		TextRender.drawString(s, pos, size, color);
+	}
     public static void clear() {
         models.clear();
-    }
-    public static void drawString(String s, Vector2f pos, float size, Vector3f color) {
-        glMatrixMode(GL_MODELVIEW);
-        float line=0;
-        glLoadIdentity();
-        glTranslatef(pos.x,pos.y,0);
-        glScalef(size,size,1f);
-        glColor3f(color.x,color.y,color.z);
-        for (int c : s.toLowerCase().toCharArray()) {
-            glBegin(GL_LINES);
-            float offset=8;
-            switch (c) {
-                case 'a':
-                    glVertex3f(1f,5f, STRING_LAYER);
-                    glVertex3f(5f,5f, STRING_LAYER);
-                    glVertex3f(1f,3f, STRING_LAYER);
-                    glVertex3f(5f,3f, STRING_LAYER);
-                    glVertex3f(1f,0f, STRING_LAYER);
-                    glVertex3f(5f,0f, STRING_LAYER);
-                    
-                    glVertex3f(1f,3f, STRING_LAYER);
-                    glVertex3f(1f,0f, STRING_LAYER);
-                    glVertex3f(5f,5f, STRING_LAYER);
-                    glVertex3f(5f,0f, STRING_LAYER);
-                    offset=6;
-                    break;
-                case 'b':
-                    glVertex3f(1f,0f, STRING_LAYER);
-                    glVertex3f(1f,8f, STRING_LAYER);
-                    
-                    glVertex3f(1f,4f, STRING_LAYER);
-                    glVertex3f(5f,4f, STRING_LAYER);
-                    glVertex3f(5f,4f, STRING_LAYER);
-                    glVertex3f(5f,0f, STRING_LAYER);
-                    glVertex3f(5f,0f, STRING_LAYER);
-                    glVertex3f(1f,0f, STRING_LAYER);
-                    offset=6;
-                    break;
-                case 'c':
-                    glVertex3f(1f,0f, STRING_LAYER);
-                    glVertex3f(1f,4f, STRING_LAYER);
-                    
-                    glVertex3f(1f,4f, STRING_LAYER);
-                    glVertex3f(5f,4f, STRING_LAYER);
-                    glVertex3f(5f,0f, STRING_LAYER);
-                    glVertex3f(1f,0f, STRING_LAYER);
-                    offset=6;
-                    break;
-                case 'd':
-                    glVertex3f(5f,0f, STRING_LAYER);
-                    glVertex3f(5f,8f, STRING_LAYER);
-                    
-                    glVertex3f(5f,4f, STRING_LAYER);
-                    glVertex3f(1f,4f, STRING_LAYER);
-                    glVertex3f(1f,4f, STRING_LAYER);
-                    glVertex3f(1f,0f, STRING_LAYER);
-                    glVertex3f(1f,0f, STRING_LAYER);
-                    glVertex3f(5f,0f, STRING_LAYER);
-                    offset=6;
-                    break;
-                case 'e':
-                    glVertex3f(5f,0f, STRING_LAYER);
-                    glVertex3f(1f,0f, STRING_LAYER);
-                    glVertex3f(5f,2f, STRING_LAYER);
-                    glVertex3f(1f,2f, STRING_LAYER);
-                    glVertex3f(5f,4f, STRING_LAYER);
-                    glVertex3f(1f,4f, STRING_LAYER);
-                    
-                    glVertex3f(5f,2f, STRING_LAYER);
-                    glVertex3f(5f,4f, STRING_LAYER);
-                    glVertex3f(1f,0f, STRING_LAYER);
-                    glVertex3f(1f,4f, STRING_LAYER);
-                    offset=6;
-                    break;
-                case 'f':
-                    glVertex3f(1f,0f, STRING_LAYER);
-                    glVertex3f(1f,7f, STRING_LAYER);
-                    glVertex3f(1f,7f, STRING_LAYER);
-                    glVertex3f(2f,8f, STRING_LAYER);
-                    glVertex3f(1f,4f, STRING_LAYER);
-                    glVertex3f(3f,4f, STRING_LAYER);
-                    glVertex3f(2f,8f, STRING_LAYER);
-                    glVertex3f(4f,8f, STRING_LAYER);
-                    offset=5;
-                    break;
-                case 'g':
-                    glVertex3f(5f,4f, STRING_LAYER);
-                    glVertex3f(5f,-3f, STRING_LAYER);
-                    
-                    glVertex3f(5f,4f, STRING_LAYER);
-                    glVertex3f(1f,4f, STRING_LAYER);
-                    glVertex3f(1f,4f, STRING_LAYER);
-                    glVertex3f(1f,0f, STRING_LAYER);
-                    glVertex3f(1f,0f, STRING_LAYER);
-                    glVertex3f(5f,0f, STRING_LAYER);
-                    
-                    glVertex3f(2f,-3f, STRING_LAYER);
-                    glVertex3f(5f,-3f, STRING_LAYER);
-                    offset=6;
-                    break;
-                case 'h':
-                    glVertex3f(1f,0f, STRING_LAYER);
-                    glVertex3f(1f,8f, STRING_LAYER);
-                    glVertex3f(5f,0f, STRING_LAYER);
-                    glVertex3f(5f,4f, STRING_LAYER);
-                    
-                    glVertex3f(5f,4f, STRING_LAYER);
-                    glVertex3f(1f,4f, STRING_LAYER);
-                    offset=6;
-                    break;
-                case 'i':
-                    glVertex3f(1f,0f, STRING_LAYER);
-                    glVertex3f(1f,3f, STRING_LAYER);
-                    glVertex3f(1f,4f, STRING_LAYER);
-                    glVertex3f(1f,5f, STRING_LAYER);
-                    offset=3;
-                    break;
-                case 'j':
-                    glVertex3f(0f,-3f, STRING_LAYER);
-                    glVertex3f(1f,-1f, STRING_LAYER);
-                    glVertex3f(1f,-1f, STRING_LAYER);
-                    glVertex3f(1f,3f, STRING_LAYER);
-                    glVertex3f(1f,4f, STRING_LAYER);
-                    glVertex3f(1f,5f, STRING_LAYER);
-                    offset=3;
-                    break;
-                case 'k':
-                    glVertex3f(1f,0f, STRING_LAYER);
-                    glVertex3f(1f,8f, STRING_LAYER);
-                    glVertex3f(1f,4f, STRING_LAYER);
-                    glVertex3f(5f,7f, STRING_LAYER);
-                    glVertex3f(1f,4f, STRING_LAYER);
-                    glVertex3f(5f,0f, STRING_LAYER);
-                    offset=6;
-                    break;
-                case 'l':
-                    glVertex3f(1f,0f, STRING_LAYER);
-                    glVertex3f(1f,8f, STRING_LAYER);
-                    offset=3;
-                    break;
-                case 'm':
-                    glVertex3f(1f,0f, STRING_LAYER);
-                    glVertex3f(1f,4f, STRING_LAYER);
-                    glVertex3f(1f,4f, STRING_LAYER);
-                    glVertex3f(4f,3f, STRING_LAYER);
-                    glVertex3f(4f,0f, STRING_LAYER);
-                    glVertex3f(4f,4f, STRING_LAYER);
-                    
-                    glVertex3f(4f,4f, STRING_LAYER);
-                    glVertex3f(7f,3f, STRING_LAYER);
-                    glVertex3f(7f,0f, STRING_LAYER);
-                    glVertex3f(7f,3f, STRING_LAYER);
-                    offset=8;
-                    break;
-                case 'n':
-                    glVertex3f(1f,0f, STRING_LAYER);
-                    glVertex3f(1f,4f, STRING_LAYER);
-                    glVertex3f(1f,4f, STRING_LAYER);
-                    glVertex3f(4f,3f, STRING_LAYER);
-                    glVertex3f(4f,0f, STRING_LAYER);
-                    glVertex3f(4f,4f, STRING_LAYER);
-                    offset=5;
-                    break;
-                case 'o':
-                    glVertex3f(1f,0f, STRING_LAYER);
-                    glVertex3f(1f,4f, STRING_LAYER);
-                    glVertex3f(1f,4f, STRING_LAYER);
-                    glVertex3f(4f,4f, STRING_LAYER);
-                    glVertex3f(4f,0f, STRING_LAYER);
-                    glVertex3f(4f,4f, STRING_LAYER);
-                    glVertex3f(1f,0f, STRING_LAYER);
-                    glVertex3f(4f,0f, STRING_LAYER);
-                    offset=5;
-                    break;
-                case 'p':
-                    glVertex3f(1f,-4f, STRING_LAYER);
-                    glVertex3f(1f,4f, STRING_LAYER);
-                    glVertex3f(1f,4f, STRING_LAYER);
-                    glVertex3f(4f,4f, STRING_LAYER);
-                    glVertex3f(4f,0f, STRING_LAYER);
-                    glVertex3f(4f,4f, STRING_LAYER);
-                    glVertex3f(1f,0f, STRING_LAYER);
-                    glVertex3f(4f,0f, STRING_LAYER);
-                    offset=5;
-                    break;
-                case 'q':
-                    glVertex3f(1f,0f, STRING_LAYER);
-                    glVertex3f(1f,4f, STRING_LAYER);
-                    glVertex3f(1f,4f, STRING_LAYER);
-                    glVertex3f(4f,4f, STRING_LAYER);
-                    glVertex3f(4f,-4f, STRING_LAYER);
-                    glVertex3f(4f,4f, STRING_LAYER);
-                    glVertex3f(1f,0f, STRING_LAYER);
-                    glVertex3f(4f,0f, STRING_LAYER);
-                    offset=5;
-                    break;
-                case 'r':
-                    glVertex3f(1f,0f, STRING_LAYER);
-                    glVertex3f(1f,4f, STRING_LAYER);
-                    glVertex3f(1f,3f, STRING_LAYER);
-                    glVertex3f(4f,4f, STRING_LAYER);
-                    offset=5;
-                    break;
-                case 's':
-                    glVertex3f(4f,5f, STRING_LAYER);
-                    glVertex3f(1f,5f, STRING_LAYER);
-                    glVertex3f(1f,5f, STRING_LAYER);
-                    glVertex3f(1f,2.5f, STRING_LAYER);
-                    glVertex3f(1f,2.5f, STRING_LAYER);
-                    glVertex3f(4f,2.5f, STRING_LAYER);
-                    glVertex3f(4f,2.5f, STRING_LAYER);
-                    glVertex3f(4f,0f, STRING_LAYER);
-                    glVertex3f(4f,0f, STRING_LAYER);
-                    glVertex3f(1f,0f, STRING_LAYER);
-                    offset=5;
-                    break;
-                case 't':
-                    glVertex3f(1f,8f, STRING_LAYER);
-                    glVertex3f(1f,1f, STRING_LAYER);
-                    glVertex3f(1f,1f, STRING_LAYER);
-                    glVertex3f(2f,0f, STRING_LAYER);
-                    glVertex3f(2f,0f, STRING_LAYER);
-                    glVertex3f(3f,0f, STRING_LAYER);
-                    glVertex3f(1f,5f, STRING_LAYER);
-                    glVertex3f(3f,5f, STRING_LAYER);
-                    offset=5;
-                    break;
-                case 'u':
-                    glVertex3f(1f,4f, STRING_LAYER);
-                    glVertex3f(1f,0f, STRING_LAYER);
-                    glVertex3f(1f,0f, STRING_LAYER);
-                    glVertex3f(4f,0f, STRING_LAYER);
-                    glVertex3f(4f,0f, STRING_LAYER);
-                    glVertex3f(4f,4f, STRING_LAYER);
-                    offset=5;
-                    break;
-                case 'v':
-                    glVertex3f(1f,4f, STRING_LAYER);
-                    glVertex3f(2.5f,0f, STRING_LAYER);
-                    glVertex3f(2.5f,0f, STRING_LAYER);
-                    glVertex3f(4f,4f, STRING_LAYER);
-                    offset=5;
-                    break;
-                case 'w':
-                    glVertex3f(1f,4f, STRING_LAYER);
-                    glVertex3f(2.5f,0f, STRING_LAYER);
-                    glVertex3f(2.5f,0f, STRING_LAYER);
-                    glVertex3f(4f,4f, STRING_LAYER);
-                    glVertex3f(4f,4f, STRING_LAYER);
-                    glVertex3f(5.5f,0f, STRING_LAYER);
-                    glVertex3f(5.5f,0f, STRING_LAYER);
-                    glVertex3f(7f,4f, STRING_LAYER);
-                    offset=8;
-                    break;
-                case 'x':
-                    glVertex3f(1f,4f, STRING_LAYER);
-                    glVertex3f(4f,0f, STRING_LAYER);
-                    glVertex3f(4f,4f, STRING_LAYER);
-                    glVertex3f(1f,0f, STRING_LAYER);
-                    offset=5;
-                    break;
-                case 'y':
-                    glVertex3f(1f,4f, STRING_LAYER);
-                    glVertex3f(2.5f,0f, STRING_LAYER);
-                    glVertex3f(1f,-4f, STRING_LAYER);
-                    glVertex3f(4f,4f, STRING_LAYER);
-                    offset=5;
-                    break;
-                case 'z':
-                    glVertex3f(4f,4f, STRING_LAYER);
-                    glVertex3f(1f,4f, STRING_LAYER);
-                    glVertex3f(1f,0f, STRING_LAYER);
-                    glVertex3f(4f,4f, STRING_LAYER);
-                    glVertex3f(4f,0f, STRING_LAYER);
-                    glVertex3f(1f,0f, STRING_LAYER);
-                    offset=5;
-                    break;
-                case '.':
-                    glVertex3f(1f,0f, STRING_LAYER);
-                    glVertex3f(1f,1f, STRING_LAYER);
-                    offset=3;
-                    break;
-                case '!':
-                    glVertex3f(1f,0f, STRING_LAYER);
-                    glVertex3f(1f,1f, STRING_LAYER);
-                    glVertex3f(1f,2f, STRING_LAYER);
-                    glVertex3f(1f,8f, STRING_LAYER);
-                    offset=3;
-                    break;
-                case '/':
-                    glVertex3f(1f,0f, STRING_LAYER);
-                    glVertex3f(5f,8f, STRING_LAYER);
-                    offset=6;
-                    break;
-                case '-':
-                    glVertex3f(1f,2f, STRING_LAYER);
-                    glVertex3f(3f,2f, STRING_LAYER);
-                    offset=4;
-                    break;
-                case '0':
-                    glVertex3f(1f,0f, STRING_LAYER);
-                    glVertex3f(4f,0f, STRING_LAYER);
-                    glVertex3f(4f,0f, STRING_LAYER);
-                    glVertex3f(4f,8f, STRING_LAYER);
-                    glVertex3f(4f,8f, STRING_LAYER);
-                    glVertex3f(1f,8f, STRING_LAYER);
-                    glVertex3f(1f,8f, STRING_LAYER);
-                    glVertex3f(1f,0f, STRING_LAYER);
-                    offset=5;
-                    break;
-                case '1':
-                    glVertex3f(3f,0f, STRING_LAYER);
-                    glVertex3f(3f,8f, STRING_LAYER);
-                    glVertex3f(1f,6f, STRING_LAYER);
-                    glVertex3f(3f,8f, STRING_LAYER);
-                    offset=4;
-                    break;
-                case '2':
-                    glVertex3f(4f,0f, STRING_LAYER);
-                    glVertex3f(1f,0f, STRING_LAYER);
-                    glVertex3f(1f,0f, STRING_LAYER);
-                    glVertex3f(1f,4f, STRING_LAYER);
-                    glVertex3f(4f,4f, STRING_LAYER);
-                    glVertex3f(1f,4f, STRING_LAYER);
-                    glVertex3f(4f,4f, STRING_LAYER);
-                    glVertex3f(4f,8f, STRING_LAYER);
-                    glVertex3f(4f,8f, STRING_LAYER);
-                    glVertex3f(1f,8f, STRING_LAYER);
-                    offset=5;
-                    break;
-                case '3':
-                    glVertex3f(4f,0f, STRING_LAYER);
-                    glVertex3f(1f,0f, STRING_LAYER);
-                    glVertex3f(4f,0f, STRING_LAYER);
-                    glVertex3f(4f,8f, STRING_LAYER);
-                    glVertex3f(4f,4f, STRING_LAYER);
-                    glVertex3f(1f,4f, STRING_LAYER);
-                    glVertex3f(4f,8f, STRING_LAYER);
-                    glVertex3f(1f,8f, STRING_LAYER);
-                    offset=5;
-                    break;
-                case '4':
-                    glVertex3f(1f,3f, STRING_LAYER);
-                    glVertex3f(3f,8f, STRING_LAYER);
-                    glVertex3f(4f,0f, STRING_LAYER);
-                    glVertex3f(4f,4f, STRING_LAYER);
-                    glVertex3f(1f,3f, STRING_LAYER);
-                    glVertex3f(3f,3f, STRING_LAYER);
-                    offset=5;
-                    break;
-                case '5':
-                    glVertex3f(1f,8f, STRING_LAYER);
-                    glVertex3f(4f,8f, STRING_LAYER);
-                    glVertex3f(1f,8f, STRING_LAYER);
-                    glVertex3f(1f,4f, STRING_LAYER);
-                    glVertex3f(1f,4f, STRING_LAYER);
-                    glVertex3f(4f,4f, STRING_LAYER);
-                    glVertex3f(4f,4f, STRING_LAYER);
-                    glVertex3f(4f,0f, STRING_LAYER);
-                    glVertex3f(1f,0f, STRING_LAYER);
-                    glVertex3f(4f,0f, STRING_LAYER);
-                    offset=5;
-                    break;
-                case '6':
-                    glVertex3f(1f,8f, STRING_LAYER);
-                    glVertex3f(4f,8f, STRING_LAYER);
-                    glVertex3f(1f,8f, STRING_LAYER);
-                    glVertex3f(1f,0f, STRING_LAYER);
-                    glVertex3f(1f,4f, STRING_LAYER);
-                    glVertex3f(4f,4f, STRING_LAYER);
-                    glVertex3f(4f,4f, STRING_LAYER);
-                    glVertex3f(4f,0f, STRING_LAYER);
-                    glVertex3f(1f,0f, STRING_LAYER);
-                    glVertex3f(4f,0f, STRING_LAYER);
-                    offset=5;
-                    break;
-                case '7':
-                    glVertex3f(1f,8f, STRING_LAYER);
-                    glVertex3f(4f,8f, STRING_LAYER);
-                    glVertex3f(4f,8f, STRING_LAYER);
-                    glVertex3f(1f,0f, STRING_LAYER);
-                    offset=5;
-                    break;
-                case '8':
-                    glVertex3f(1f,0f, STRING_LAYER);
-                    glVertex3f(4f,0f, STRING_LAYER);
-                    glVertex3f(4f,0f, STRING_LAYER);
-                    glVertex3f(4f,8f, STRING_LAYER);
-                    glVertex3f(4f,8f, STRING_LAYER);
-                    glVertex3f(1f,8f, STRING_LAYER);
-                    glVertex3f(1f,8f, STRING_LAYER);
-                    glVertex3f(1f,0f, STRING_LAYER);
-                    glVertex3f(1f,4f, STRING_LAYER);
-                    glVertex3f(4f,4f, STRING_LAYER);
-                    offset=5;
-                    break;
-                case '9':
-                    glVertex3f(1f,0f, STRING_LAYER);
-                    glVertex3f(4f,0f, STRING_LAYER);
-                    glVertex3f(4f,0f, STRING_LAYER);
-                    glVertex3f(4f,8f, STRING_LAYER);
-                    glVertex3f(4f,8f, STRING_LAYER);
-                    glVertex3f(1f,8f, STRING_LAYER);
-                    glVertex3f(1f,8f, STRING_LAYER);
-                    glVertex3f(1f,4f, STRING_LAYER);
-                    glVertex3f(1f,4f, STRING_LAYER);
-                    glVertex3f(4f,4f, STRING_LAYER);
-                    offset=5;
-                    break;
-                case ' ':
-                    offset=4;
-                    break;
-                case'\n':
-                    glEnd();
-                    line--;
-                    offset=0;
-                    glLoadIdentity();
-                    glTranslatef(pos.x,pos.y,0);
-                    glScalef(size,size,1f);
-                    glTranslatef(0,10*line,0);
-                    glBegin(GL_LINES);
-                    break;
-                default:
-                    offset=0;
-                    break;
-            }
-            //System.out.print((char)c);
-            glEnd();
-            glTranslatef(offset,0,0);
-        }
-        //System.out.println("-Done");
+        textures.clear();
     }
     public static HashMap<String,Model> models=new HashMap();
     public static HashMap<String,Texture> textures=new HashMap();
@@ -607,4 +321,8 @@ public class GraphicMain {
     public static int UNIT_LAYER=2;
     public static int DYNAMIC_LAYER=1;
     public static int STATIC_LAYER=0;
+	public static int DIRECTION=1;
+	public static void setDirection(int d) {
+		DIRECTION=d;
+	}
 }

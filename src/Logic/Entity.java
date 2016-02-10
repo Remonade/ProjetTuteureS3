@@ -1,14 +1,28 @@
 package Logic;
 
+import Logic.Data.EntityData;
 import Graphic.Model;
 import Graphic.ModelAnim;
 import Graphic.ModelRepeat;
 import java.util.ArrayList;
 import Maths.Vector2f;
+import Maths.Vector4f;
 
 public class Entity {
 	public Entity() {
+		m_contact = new boolean[4];
+		for(boolean i:m_contact)
+			i=false;
 		this.m_pos=new Vector2f(0,0);
+	}
+	public boolean getContact(int contact) {
+		if(contact>-1 && contact<4)
+			return m_contact[contact];
+		return false;
+	}
+	public void setContact(int contact, boolean value) {
+		if(contact>-1 && contact<4)
+			m_contact[contact]=value;
 	}
 	public void setData(EntityData data) {
 		m_data=data;
@@ -37,15 +51,38 @@ public class Entity {
 				return null;
 		return m_data.getModel();
 	}
+	public Vector4f getColor() {
+		if(m_data==null)
+				return null;
+		return m_data.getColor();
+	}
+	public String getAnim() {
+		if(this instanceof EntityUnit)
+			return ((EntityUnit)this).getAnim();
+		return "NAN";
+	}
+	public double getAnimTime() {
+		return Logic.CURRENT_TIME;
+	}
 	public void draw() {
-		if(getModel()!=null) {
-			if(getModel() instanceof ModelAnim)
-				((ModelAnim)getModel()).draw(m_pos,getSize(),Logic.CURRENT_TIME%((ModelAnim)getModel()).getAnimDuration());
-			else if(getModel() instanceof ModelRepeat)
-				((ModelRepeat)getModel()).draw(m_pos,getSize());
-			else
-				getModel().draw(m_pos,getSize());
+		Model model=getModel();
+		if(model!=null) {
+			if(model instanceof ModelAnim) {
+				((ModelAnim)model).draw(m_pos,getSize(),getColor(),getAnimTime(),getAnim());
+			} else if(getModel() instanceof ModelRepeat) {
+				((ModelRepeat)model).draw(m_pos,getSize(),getColor());
+			} else
+				model.draw(m_pos,getSize(),getColor());
 		}
+		String contact="";
+		/*if(m_contact[CONTACT_UP])
+			GraphicMain.drawString("u", m_pos.add(new Vector2f(0,getSize().y)), 0.01f, getColor());
+		if(m_contact[CONTACT_DOWN])
+			GraphicMain.drawString("d", m_pos.add(new Vector2f(0,-getSize().y)), 0.01f, getColor());
+		if(m_contact[CONTACT_RIGHT])
+			GraphicMain.drawString("r", m_pos.add(new Vector2f(getSize().x,0)), 0.01f, getColor());
+		if(m_contact[CONTACT_LEFT])
+			GraphicMain.drawString("l", m_pos.add(new Vector2f(-getSize().x,0)), 0.01f, getColor());*/
 	}
 	public void setCollide(boolean value) {
 		m_collide=value;
@@ -63,7 +100,12 @@ public class Entity {
 	protected Vector2f m_pos;
 	protected boolean m_collide=true;
 	protected boolean m_visible=true;
+	protected boolean m_contact[];
 	private static ArrayList<Entity> all=new ArrayList();
+	public static final int CONTACT_UP=0;
+	public static final int CONTACT_DOWN=1;
+	public static final int CONTACT_LEFT=2;
+	public static final int CONTACT_RIGHT=3;
 	
 	public static ArrayList getAll() {
 		return all;

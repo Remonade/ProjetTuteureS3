@@ -10,34 +10,37 @@ public class Shader {
         m_programID=glCreateProgram(); // génère un ID de programme
         
         CharSequence sourceVertex=
-                "// Version du GLSL\n" +
                 "#version 150 core\n" +
-                "// Entrées\n" +
-                "in vec2 in_Vertex;\n" +
-                "in vec3 in_Color;\n" +
-                "// Sortie\n" +
-                "out vec3 color;\n" +
-                "// Fonction main\n" +
-                "void main()\n" +
-                "{\n" +
-                "    // Position finale du vertex\n" +
-                "    gl_Position = vec4(in_Vertex, 0.0, 1.0);\n" +
-                "    // Envoi de la couleur au Fragment Shader\n" +
-                "    color = in_Color;\n" +
-                "}";
+				"\n" +
+				"in vec3 in_Vertex;\n" +
+				"in vec2 in_TexCoord0;\n" +
+				"\n" +
+				"uniform mat4 projection;\n" +
+				"uniform mat4 modelview;\n" +
+				"\n" +
+				"out vec2 coordTexture;\n" +
+				"\n" +
+				"void main()\n" +
+				"{\n" +
+				"    gl_Position = projection * modelview * vec4(in_Vertex, 1.0);\n" +
+				"    coordTexture = in_TexCoord0;\n" +
+				"}";
         CharSequence sourceFragment=
-                "// Version du GLSL\n" +
                 "#version 150 core\n" +
-                "// Entrée\n" +
-                "in vec3 color;\n" +
-                "// Sortie \n" +
-                "out vec4 out_Color;\n" +
-                "// Fonction main\n" +
-                "void main()\n" +
-                "{\n" +
-                "    // Couleur finale du pixel\n" +
-                "    out_Color = vec4(color, 1.0);\n" +
-                "}";
+				"\n" +
+				"in vec2 coordTexture;\n" +
+				"\n" +
+				"uniform sampler2D texture;\n" +
+				"\n" +
+				"out vec4 out_Color;\n" +
+				"\n" +
+				"void main()\n" +
+				"{\n" +
+				"    vec4 tex=texture2D(texture, coordTexture);\n" +
+				"    if(tex.w<0.5)\n" +
+				"        discard;\n" +
+				"    out_Color = tex;\n" +
+				"}";
         // vertex shader
         m_vertex=glCreateShader(GL_VERTEX_SHADER); // génère un id de Vertex Shader
         glShaderSource(m_vertex,sourceVertex); // indique le code du shader

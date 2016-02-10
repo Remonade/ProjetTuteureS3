@@ -1,0 +1,24 @@
++ This file is used to describe world data
++ Everything is created in the last edited realm. Be sure to create at least one!
++ To create an StringData:
++	"new StringData"
++		"set Name [name=string]"
++		"set Content [content=string]"
++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++ default entity, will be used if datas are missing - !! NEED A DEFAULT ENTITY TO SECURE ENGINE !!
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+
+
+
+
+
+
+
+
+
+
+

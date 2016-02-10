@@ -1,16 +1,11 @@
 package Tests;
 
 import Graphic.GraphicMain;
-import Logic.EntityDataUnit;
-import Logic.EntityDynamic;
-import Logic.EntityParticle;
 import Logic.Logic;
-import Physic.PhysicMain;
-import Maths.Vector2f;
+import static Logic.Logic.updateTime;
 
-import org.lwjgl.Sys;
+import org.lwjgl.Version;
 import org.lwjgl.glfw.*;
-import org.lwjgl.glfw.GLFWKeyCallback;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
@@ -18,183 +13,99 @@ import static org.lwjgl.opengl.GL11.*;
 public class Main { 
     // We need to strongly reference callback instances.
     private GLFWErrorCallback errorCallback;
-    private GLFWKeyCallback   keyCallback;
  
     // The window handle
     private long window;
-    private final float m_mouseX=0;
-    private final float m_mouseY=0;
     //private Camera2D camera;
     private final int WIDTH = 800;
     private final int HEIGHT = 600;
 
-    private boolean LEFT;
-    private boolean RIGHT;
-    private boolean UP;
-    private boolean DOWN;
+	public static int GAME_STATE=0;
+	public static void setGameState(int state) {
+		m_gameState[GAME_STATE].onLeave();
+		GAME_STATE=state;
+		m_gameState[GAME_STATE].onEnter();
+	}
+	public static final int STATE_MAIN_MENU=0;
+	public static final int STATE_LOADING_MENU=1;
+	public static final int STATE_LEVEL=2;
+	public static final int STATE_IN_GAME_MENU=3;
+	public static final int STATE_SAVING_MENU=4;
+	public static final int STATE_SETTING_MENU=5;
+	public static final int STATE_BINDING=6;
+	public static final int STATE_GAME_OVER=7;
+	
+	private static GameState[] m_gameState=new GameState[8];
+	
+	public static GameState getGameState(int state) {
+		return m_gameState[state];
+	}
+	public static GameState getGameState() {
+		return m_gameState[GAME_STATE];
+	}
 	
     public void run() {
-        System.out.println("Hello LWJGL " + Sys.getVersion() + "!");
+        System.out.println("Hello LWJGL " + Version.getVersion() + "!");
         try {
             init();
+			//Sound.startSound("data/audio/backgroundMusic.ogg", true);
+			//Audio.Audio.playMusic("backgroundMusic.ogg", true);
             loop();
-            quit();
             // Release window and window callbacks
-            glfwDestroyWindow(GraphicMain.window);
-            keyCallback.release();
-        } finally {
+        } catch(Exception e) {
+		} finally {
+            quit();
             // Terminate GLFW and release the GLFWErrorCallback
             glfwTerminate();
             errorCallback.release();
         }
     }
-    
+   
     private void init() {
-        initGL();
+		glfwSetErrorCallback(errorCallback = GLFWErrorCallback.createPrint(System.err));
+		m_gameState[STATE_LEVEL]=new GameStateLevel();
+		m_gameState[STATE_MAIN_MENU]=new GameStateMainMenu();
+		m_gameState[STATE_SETTING_MENU]=new GameStateSettingMenu();
+		m_gameState[STATE_BINDING]=new GameStateBinding();
+		m_gameState[STATE_GAME_OVER]=new GameStateGameOver();
+		Input.defaultBinding();
+		Input.initKeyName();
+		Audio.Audio.init();
         GraphicMain.init(WIDTH,HEIGHT);
         Logic.init();
-        initKeyCallback();
+        Input.initInput();
         // Make the window visible
         glfwShowWindow(GraphicMain.window);
         System.out.println("Init successful");
     }
     
-    private void initGL() {
-        // Setup an error callback. The default implementation
-        // will print the error message in System.err.
-        glfwSetErrorCallback(errorCallback = GLFWErrorCallback.createPrint(System.err));
-    }
-    
-    private void initKeyCallback() {
-        // Setup a key callback. It will be called every time a key is pressed, repeated or released.
-        glfwSetKeyCallback(GraphicMain.window, keyCallback = new GLFWKeyCallback() {
-            @Override
-            public void invoke(long window, int key, int scancode, int action, int mods) {
-                if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
-                        glfwSetWindowShouldClose(window, GL_TRUE); // We will detect this in our rendering loop
-                if ( key == GLFW_KEY_LEFT && action == GLFW_PRESS )
-                        LEFT=true;
-                if ( key == GLFW_KEY_LEFT && action == GLFW_RELEASE )
-                        LEFT=false;
-                if ( key == GLFW_KEY_RIGHT && action == GLFW_PRESS )
-                        RIGHT=true;
-                if ( key == GLFW_KEY_RIGHT && action == GLFW_RELEASE )
-                        RIGHT=false;
-                if ( key == GLFW_KEY_UP && action == GLFW_PRESS )
-                        UP=true;
-                if ( key == GLFW_KEY_UP && action == GLFW_RELEASE )
-                        UP=false;
-                if ( key == GLFW_KEY_DOWN && action == GLFW_PRESS )
-                        DOWN=true;
-                if ( key == GLFW_KEY_DOWN && action == GLFW_RELEASE )
-                        DOWN=false;
-                if ( key == GLFW_KEY_KP_ADD && action == GLFW_PRESS )
-                        GraphicMain.camera.setZoom(GraphicMain.camera.getZoom()-1);
-                if ( key == GLFW_KEY_KP_SUBTRACT && action == GLFW_PRESS )
-                        GraphicMain.camera.setZoom(GraphicMain.camera.getZoom()+1);
-
-                /*if ( key == GLFW_KEY_SPACE && action == GLFW_REPEAT ){
-                        EntityParticle temp;
-                        for(int i=0;i<1;i++) {
-                                temp=new EntityParticle(1.0f,1.0f,(float)Math.random()*0);
-                                temp.setModel(m_particle);
-                                m_entityParticle.add(temp);
-                        }
-                }*/
-            }
-        });
-    }
-    
     private void loop() {
-        // This line is critical for LWJGL's interoperation with GLFW's
-        // OpenGL context, or any context that is managed externally.
-        // LWJGL detects the context that is current in the current thread,
-        // creates the GLCapabilities instance and makes the OpenGL
-        // bindings available for use.
- 
-        // Set the clear color
-        glClearColor(0.20f, 0.15f, 0.20f, 1.0f);
-		
-	float angle=0.0f;
         while(glfwWindowShouldClose(GraphicMain.window) == GL_FALSE) {
-            /*if(Math.random()<0.75) {
-                    EntityParticle temp;
-                    for(int i=0;i<3;i++) {
-                            temp=new EntityParticle(1.0f,1.0f,(float)Math.random()*360);
-                            temp.setModel(GraphicMain.getModel("fume"));
-                            GraphicMain.particle.add(temp);
-                            temp=null;
-                    }
-            }*/
-			
-            // Poll for window events. The key callback above will only be
-            // invoked during this call.
-            glfwPollEvents();
-            if(UP) {
-                if(Logic.getPlayer().getContact(EntityDynamic.CONTACT_LEFT) && LEFT) {
-                    Logic.getPlayer().setSpeed(-0.1f,0.075f);
-                    EntityParticle temp;
-                    for(int i=0;i<5;i++) {
-                            temp=new EntityParticle(1.5f,((float)Math.random()*50)-25+225);
-                            temp.setData(EntityDataUnit.get("particle"));
-                            temp.setPos(Logic.getPlayer().getPos().x+Logic.getPlayer().getSize().x/2,Logic.getPlayer().getPos().y-Logic.getPlayer().getSize().y);
-                            GraphicMain.particle.add(temp);
-                    }
-                }
-                else if(Logic.getPlayer().getContact(EntityDynamic.CONTACT_RIGHT) && RIGHT) {
-                    Logic.getPlayer().setSpeed(0.1f,0.075f);
-                    EntityParticle temp;
-                    for(int i=0;i<5;i++) {
-                            temp=new EntityParticle(1.5f,((float)Math.random()*50)-25+315);
-                            temp.setData(EntityDataUnit.get("particle"));
-                            temp.setPos(Logic.getPlayer().getPos().x+Logic.getPlayer().getSize().x/2,Logic.getPlayer().getPos().y+Logic.getPlayer().getSize().y);
-                            GraphicMain.particle.add(temp);
-                    }
-                } else if(Logic.getPlayer().getContact(EntityDynamic.CONTACT_DOWN)){
-                    Logic.getPlayer().jump();
-                }
-            }
-            if(LEFT && !RIGHT) {
-                Logic.getPlayer().addSpeed(-0.010f,0);
-                EntityParticle temp;
-                if(Logic.getPlayer().getContact(EntityDynamic.CONTACT_DOWN) && Math.random()<0.2) {
-                    temp=new EntityParticle(1.5f,((float)Math.random()*50)-25+0);
-                    temp.setData(EntityDataUnit.get("particle"));
-                    temp.setPos(Logic.getPlayer().getPos().x+Logic.getPlayer().getSize().x/2,Logic.getPlayer().getPos().y-Logic.getPlayer().getSize().y);
-                    GraphicMain.particle.add(temp);
-                }
-            }
-            else if(RIGHT && !LEFT) {
-                Logic.getPlayer().addSpeed(0.010f,0);
-                EntityParticle temp;
-                if(Logic.getPlayer().getContact(EntityDynamic.CONTACT_DOWN) && Math.random()<0.2) {
-                    temp=new EntityParticle(1.5f,((float)Math.random()*50)-25+180);
-                    temp.setData(EntityDataUnit.get("particle"));
-                    temp.setPos(Logic.getPlayer().getPos().x-Logic.getPlayer().getSize().x/2,Logic.getPlayer().getPos().y-Logic.getPlayer().getSize().y);
-                    GraphicMain.particle.add(temp);
-                }
-            }
-            else Logic.getPlayer().setSpeed(Logic.getPlayer().getSpeed().x*0.8f,Logic.getPlayer().getSpeed().y);
-            if(DOWN) {
-                    Logic.getPlayer().shoot(Logic.getPlayer().getPos().add(new Vector2f(-1,0)));
-                    Logic.getPlayer().shoot(Logic.getPlayer().getPos().add(new Vector2f(1,0)));
-            }
-            // draw to screen.
             try {
-                    Logic.update();
-                    PhysicMain.update();
-                    Logic.execute();
-                    GraphicMain.camera.setPos(Logic.getPlayer().getPos());
-                    //GraphicMain.camera.move(0,0.01f);
-                    GraphicMain.display();
+				updateTime();
+				//Audio.Audio.setGeneralVolume(Audio.Audio.getGeneralVolume()-0.001f);
+				execute();
             } catch (Exception e) {
-
+				e.printStackTrace();
             }
         }
     }
-    
+    private void execute() {
+		if(m_gameState[GAME_STATE]!=null) {
+			m_gameState[GAME_STATE].execute();
+		} else setGameState(STATE_MAIN_MENU);
+	}
     private void quit() {
-        GraphicMain.clear();
+		try {
+			glfwDestroyWindow(GraphicMain.window);
+			Input.keyCallback.release();
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			Audio.Audio.clear();
+			GraphicMain.clear();
+			Logic.clear();
+		}
     }
     
     public static void main(String[] args) {

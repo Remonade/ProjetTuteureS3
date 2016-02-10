@@ -1,0 +1,141 @@
++ This file is used to describe world data
++ Everything is created in the last edited realm. Be sure to create at least one!
++ To create an EntityData:
++	"new EntityData [name:String] "
++ 	"set Size [size X:double] [size Y:double]"
++	"set Model [tile name:String]"
++
++ To create an EntityDataUnit:
++	"new EntityDataUnit [name:String] "
++	"set Health [max:double] [regen:double]"
++	"set Shield [max:double] [regen:double]"
++	"set Energy [max:double] [regen:double]"
++
++ To create an EntityDataMissile:
++	"new EntityDataMissile [name:String] "
++	"set Speed [speed:double]"
++	"set Damage [damage:int]"
++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++ default entity, will be used if datas are missing - !! NEED A DEFAULT ENTITY TO SECURE ENGINE !!
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+new EntityData default
+set Size 0.1 0.1
+set Model default
++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++ basic terrain data
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+new EntityData ground2.5
+set Size 2.5 1
+set Model vaisseau
++
+new EntityData ground5x0.5
+set Size 5 0.5
+set Model vaisseau
++
+new EntityData wall2.5
+set Size 1 2.5
+set Model vaisseau
++
+new EntityData wall0.5x5
+set Size 0.5 5
+set Model vaisseau
++
++
++
+new EntityData ground5
+set Size 5 1
+set Model vaisseau
++
+new EntityData ground10
+set Size 10 1
+set Model vaisseau
++
+new EntityData wall5
+set Size 1 5
+set Model vaisseau
++
+new EntityData wall10
+set Size 1 10
+set Model vaisseau
++
++
++
+new EntityData wall20
+set Size 1 20
+set Model vaisseau
++
+new EntityData block
+set Size 0.25 0.25
+set Model vaisseau
++
+new EntityData block5x1
+set Size 1.25 0.25
+set Model vaisseau
++
+new EntityData block10x1
+set Size 2.5 0.25
+set Model vaisseau
++
+new EntityData block1x5
+set Size 0.25 1.25
+set Model vaisseau
++
+new EntityData block1x10
+set Size 0.25 2.5
+set Model vaisseau
++
+new EntityData waypoint
+set Size 0.25 0.25
+set Model teleporter
+set Color 0.5 0.5 1 1
++
+new EntityData wallback
+set Size 5 5
+set Model wall
++
+new EntityData wall3back
+set Size 5 5
+set Model wall3
++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++ unit data
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+new EntityDataUnit enemy
+set Size 0.1 0.1
+set Model Player
+set Health 50 0
+set Shield 100 0.5
+set Energy 100 0.15
++
+new EntityDataUnit player
+set Size 0.15 0.15
+set Model Player
+set Health 600 0
+set Shield 400 5
+set Energy 50 0.3
++
+new EntityDataUnit boss
+set Size 0.35 0.35
+set Model Player
+set Health 500 0
+set Shield 200 0.5
+set Energy 100 2
++
+new EntityDataUnit monster
+set Size 0.5 0.5
+set Model monster
+set Health 1000 0.05
+set Shield 100 1
+set Energy 100 0.15
+set Type Sniper
++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++ missile data
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+new EntityDataMissile missile
+set Size 0.1 0.1
+set Model missile
+set Speed 1
+set Damage 100

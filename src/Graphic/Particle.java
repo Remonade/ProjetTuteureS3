@@ -1,5 +1,6 @@
 package Graphic;
 
+import Maths.Vector4f;
 import java.nio.FloatBuffer;
 import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
 import static org.lwjgl.opengl.GL11.glLoadIdentity;
@@ -10,14 +11,13 @@ import static org.lwjgl.opengl.GL11.glTranslatef;
 
 
 public class Particle extends Model{
-    public Particle(float r,float g,float b) {
+    public Particle() {
         super();
         m_size=0.05f;
         System.out.println("New ModelQuad instance");
         m_verticeCount=6;
         m_vertice=FloatBuffer.allocate(m_verticeCount*2);
         m_textures=FloatBuffer.allocate(m_verticeCount*2);
-        m_colors=FloatBuffer.allocate(m_verticeCount*3);
         
         // init vertice cord
         m_vertice.put(m_size*-0.5f);m_vertice.put(m_size*-0.5f);
@@ -35,21 +35,13 @@ public class Particle extends Model{
         m_textures.put(0);m_textures.put(2.0f);
         m_textures.put(2.0f);m_textures.put(2.0f);
         
-        // init colors
-        for(int i=0;i<m_verticeCount;i++) {
-            m_colors.put(r);
-            m_colors.put(g);
-            m_colors.put(b);
-        }
-        
         // flipping buffer
         m_vertice.flip();
         m_textures.flip();
-        m_colors.flip();
     }
-    public void draw(float x,float y,float angle,float time) {
+    public void draw(float x,float y,Vector4f colors,float angle,float time) {
         startRender(x,y,angle,time);
-        render();
+        render(colors);
         endRender();
     }
     public void startRender(float x,float y,float a,float t) {

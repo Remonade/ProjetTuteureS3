@@ -1,11 +1,11 @@
 package Graphic;
 
+import Maths.Vector2f;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import org.lwjgl.BufferUtils;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL13.GL_CLAMP_TO_BORDER;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.stb.STBImage.*;
@@ -52,6 +52,17 @@ public class Texture {
     public void destroy() {
         glDeleteTextures(id);
     }
+	public Vector2f getCoordinate(int corner, int clip) {
+		Vector2f pos=new Vector2f();
+		corner=corner%4;
+		pos.x=0;
+		pos.y=0;
+		if(corner==1 || corner==2)
+			pos.x+=1;
+		if(corner==2 || corner==3)
+			pos.y+=1;
+		return pos;
+	}
     
     public static Texture loadTexture(String path) {
         /* Prepare image buffers */
@@ -61,10 +72,10 @@ public class Texture {
 
         /* Load image */
         stbi_set_flip_vertically_on_load(1);
-        ByteBuffer image = stbi_load(path, w, h, comp, 4);
+        ByteBuffer image = stbi_load("data/graphic/"+path, w, h, comp, 4);
         if (image == null) {
             throw new RuntimeException("Failed to load a texture file!"
-                    + System.lineSeparator() + stbi_failure_reason() + path);
+				+ System.lineSeparator() + stbi_failure_reason() + path);
         }
 
         /* Get width and height of image */
@@ -73,4 +84,5 @@ public class Texture {
 
         return new Texture(width, height, image);
     }
+
 }

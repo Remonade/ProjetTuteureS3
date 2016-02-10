@@ -31,7 +31,7 @@ public class EntityParticle extends Entity {
 	public void draw() {
 		Particle model=(Particle)getModel();
 		if(model!=null)
-			model.draw(m_pos.x, m_pos.y, m_angle, m_time);
+			model.draw(m_pos.x, m_pos.y, getColor(), m_angle, m_time);
 	}
 	private float m_time;
 	private float m_lifetime;
