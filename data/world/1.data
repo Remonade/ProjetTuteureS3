@@ -15,7 +15,7 @@
 + General level settings
 new Realm The_Enemy
 set Background background/night
-set Music HOTS_46.ogg
+set Music Music/HOTS_46.ogg
 set CameraBound -1 1 2 8
 +
 + Main ground thing

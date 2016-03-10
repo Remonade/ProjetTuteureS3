@@ -108,6 +108,7 @@ set Model Player
 set Health 50 0
 set Shield 100 0.5
 set Energy 100 0.15
+set Sound death Unit/Wscream.ogg
 +
 new EntityDataUnit player
 set Size 0.15 0.15
@@ -115,6 +116,7 @@ set Model Player
 set Health 600 0
 set Shield 400 5
 set Energy 50 0.3
+set Sound death Unit/Wscream.ogg
 +
 new EntityDataUnit boss
 set Size 0.35 0.35
@@ -122,6 +124,7 @@ set Model Player
 set Health 500 0
 set Shield 200 0.5
 set Energy 100 2
+set Sound death Unit/Wscream.ogg
 +
 new EntityDataUnit monster
 set Size 0.5 0.5
@@ -130,6 +133,7 @@ set Health 1000 0.05
 set Shield 100 1
 set Energy 100 0.15
 set Type Sniper
+set Sound death Unit/Wscream.ogg
 +
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 + missile data
@@ -137,5 +141,36 @@ set Type Sniper
 new EntityDataMissile missile
 set Size 0.1 0.1
 set Model missile
-set Speed 1
-set Damage 100
+set Speed 0.05
+set Damage 10
+set Sound explode Effect/EnergyExplosion.ogg
+new EntityDataMissile explosive
+set Size 0.15 0.15
+set Model Pexplosion
+set Speed 0.035
+set Damage 50
+set Radius 1
+set Sound explode Effect/Explosion.ogg
++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++ particle data
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+new EntityDataParticle particule
+set Size 0.05 0.05
+set Model Pheal
+set Duration 0.35
+set Speed 0.5
+new EntityDataParticle EDPheal
+set Color 0 1 0 0.25
+set Size 0.05 0.05
+set Model Pheal
+set Duration 0.5
+set Speed 0.5
+set Rotation 5
+set Type 1
+new EntityDataParticle EDPexplosion
+set Color 1 0.75 0 1
+set Size 0.25 0.25
+set Model Pexplosion
+set Duration 0.1
+set Speed 10

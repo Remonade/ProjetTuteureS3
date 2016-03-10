@@ -15,7 +15,7 @@
 + General level settings
 new Realm The_Fall
 set Background background/hangar
-set Music HOTS_46.ogg
+set Music Music/HOTS_46.ogg
 +
 + Main ground thing
 new Entity ground5 0 0

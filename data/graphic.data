@@ -31,16 +31,30 @@
 new Texture default.png
 new Texture carbot_ling.png
 new Texture block.jpg
++++++++++++++++++++++++++++++++++++++++++++++++++++++++ OTHER
+new Texture haltere_monster.png
++++++++++++++++++++++++++++++++++++++++++++++++++++++++ HUD
 new Texture HUD/button.jpg
 new Texture HUD/dialog.png
-new Texture texture_vaisseau.png
+new Texture HUD/loadingScreenLeft.png
+new Texture HUD/loadingScreenRight.png
++++++++++++++++++++++++++++++++++++++++++++++++++++++++ backgrounds
 new Texture background/night.jpg
 new Texture background/hangar.jpg
 new Texture background/ice.png
 new Texture background/echoes.jpg
-new Texture haltere_texture.png
-new Texture haltere_monster.png
-new Texture wall3.png
++++++++++++++++++++++++++++++++++++++++++++++++++++++++ walls
+new Texture wall/haltere_texture.png
+new Texture wall/texture_vaisseau.png
+new Texture wall/wall3.png
++++++++++++++++++++++++++++++++++++++++++++++++++++++++ particles
++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++ icones
+new Texture icone/heal.png
+new Texture icone/dash.png
+new Texture icone/berzerker.png
+new Texture icone/spread.png
+new Texture icone/summon.png
 +
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 + TextureCliped
@@ -49,6 +63,9 @@ new TextureCliped thingF2.png
 set FrameCount 10 2
 +
 new TextureCliped robot.png
+set FrameCount 2 5
++
+new TextureCliped blader_robot.png
 set FrameCount 2 5
 +
 new TextureCliped anim_fire.png
@@ -69,6 +86,9 @@ set FrameCount 2 2
 new TextureCliped teleporter.png
 set FrameCount 4 1
 +
+new TextureCliped particle/heal.png
+set FrameCount 5 1
++
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 + Model
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -76,45 +96,53 @@ new Model default
 set Texture default.png
 +
 new Model quad
-+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++ OTHER
 new Model monster
 set Texture haltere_monster.png
-+
-new ModelRepeat repeat
-set Texture block.jpg
-+
-new ModelRepeat vaisseau
-set Texture texture_vaisseau.png
-+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++ HUD
 new Model button
 set Texture HUD/button.jpg
-+
 new Model dialog
 set Texture HUD/dialog.png
-+
+new Model loadingScreenLeft
+set Texture HUD/loadingScreenLeft.png
+new Model loadingScreenRight
+set Texture HUD/loadingScreenRight.png
++++++++++++++++++++++++++++++++++++++++++++++++++++++++ backgrounds
 new Model background/night
 set Texture background/night.jpg
-+
 new Model background/hangar
 set Texture background/hangar.jpg
-+
 new Model background/ice
 set Texture background/ice.png
-+
 new Model background/echoes
 set Texture background/echoes.jpg
-+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++ walls
 new ModelRepeat wall
-set Texture haltere_texture.png
-+
+set Texture wall/haltere_texture.png
 new ModelRepeat wall3
-set Texture wall3.png
+set Texture wall/wall3.png
+new ModelRepeat vaisseau
+set Texture wall/texture_vaisseau.png
++++++++++++++++++++++++++++++++++++++++++++++++++++++++ particules
++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++ icones
+new Model Iheal
+set Texture icone/heal.png
+new Model Idash
+set Texture icone/dash.png
+new Model Iberzerker
+set Texture icone/berzerker.png
+new Model Ispread
+set Texture icone/spread.png
+new Model Isummon
+set Texture icone/summon.png
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 + ModelAnim
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 new ModelAnim Player
 new Animation NAN
-set Texture robot.png
+set Texture blader_robot.png
 set FrameCount 15
 set Duration 6
 set Frame 0 2
@@ -134,26 +162,26 @@ set Frame 13 2
 set Frame 14 2
 +
 new Animation RUN
-set Texture robot.png
+set Texture blader_robot.png
 set FrameCount 2
 set Duration 0.5
 set Frame 0 1
 set Frame 1 5
 +
 new Animation JUMP
-set Texture robot.png
+set Texture blader_robot.png
 set FrameCount 1
 set Duration 1
 set Frame 0 5
 +
 new Animation WALL
-set Texture robot.png
+set Texture blader_robot.png
 set FrameCount 1
 set Duration 1
 set Frame 0 8
 +
 new Animation SHOOT
-set Texture robot.png
+set Texture blader_robot.png
 set FrameCount 5
 set Duration 0.5
 set Frame 0 7
@@ -182,6 +210,27 @@ set Frame 2 2
 set Frame 3 3
 set Frame 4 4
 +
+new ModelAnim Pheal
+new Animation NAN
+set Texture particle/heal.png
+set FrameCount 5
+set Duration 0.15
+set Frame 0 0
+set Frame 1 1
+set Frame 2 2
+set Frame 3 3
+set Frame 4 4
++
+new ModelAnim Pexplosion
+new Animation NAN
+set Texture anim_fire.png
+set FrameCount 5
+set Duration 1
+set Frame 0 0
+set Frame 1 1
+set Frame 2 2
+set Frame 3 3
+set Frame 4 4
 +
 new ModelAnim teleporter
 new Animation NAN
@@ -192,9 +241,4 @@ set Frame 0 0
 set Frame 1 1
 set Frame 2 2
 set Frame 3 3
-+
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-+ Particle
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-new Particle fume
 +
