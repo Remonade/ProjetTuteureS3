@@ -56,6 +56,11 @@ public class Entity {
 				return null;
 		return m_data.getColor();
 	}
+	public String getSound(String name) {
+		if(m_data==null)
+				return "";
+		return m_data.getSound(name);
+	}
 	public String getAnim() {
 		if(this instanceof EntityUnit)
 			return ((EntityUnit)this).getAnim();

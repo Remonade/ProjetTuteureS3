@@ -61,7 +61,8 @@ public class EntityWayPoint extends Entity {
 		return m_realm;
 	}
 	public void moveToWayPoint(Entity e) {
-		e.setPos(getPos().add(m_out));
+		if(e!=null)
+			e.setPos(getPos().add(m_out));
 	}
 	
 	private static ArrayList<EntityWayPoint> all=new ArrayList<EntityWayPoint>();

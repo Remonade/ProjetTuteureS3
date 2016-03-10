@@ -37,16 +37,16 @@ public class GUIBindingButton extends GUIButton {
 	}
 	@Override
 	public boolean draw() {
-		if(super.draw()) {
+		if(m_visible) {
 			int mode=0;
 			if(m_hover)
 				mode=1;
 			if(m_model==null && !m_modelName.equals(""))
 				m_model=GraphicMain.getModel(m_modelName);
 			if(m_model!=null)
-				m_model.draw(m_position,m_size,m_modelColor[mode]);
+				m_model.draw(getPos(),getSize(),m_modelColor[mode]);
 			if(!m_labelText.equals("")) {
-				drawStringCentered(m_labelText+" : "+this.getKeyName(),m_position,m_labelSize,m_labelColor[mode]);
+				drawStringCentered(m_labelText+" : "+this.getKeyName(),getPos(),getLabelSize(),m_labelColor[mode]);
 				//drawString(this.getKeyName(),getPos(),m_labelSize,m_labelColor[mode]);
 			}
 			drawHelp();

@@ -27,25 +27,25 @@ public class GUILabel extends GUI{
 	
 	@Override
 	public boolean draw() {
-		if(super.draw()) {
+		if(m_visible) {
 			int mode=0;
 			if(m_model==null && !m_modelName.equals(""))
 				m_model=GraphicMain.getModel(m_modelName);
 			if(m_model!=null)
-				m_model.draw(m_position,m_size,m_modelColor[mode]);
+				m_model.draw(getPos(),getSize(),m_modelColor[mode]);
 			if(!m_labelText.equals("")) {
 				switch(m_textAlign) {
 					case ALIGN_RIGHT:
-						drawStringRight(m_labelText,m_position,m_labelSize,m_labelColor[mode]);
+						drawStringRight(m_labelText,getPos(),getLabelSize(),m_labelColor[mode]);
 						break;
 					case ALIGN_CENTER:
-						drawStringCentered(m_labelText,m_position,m_labelSize,m_labelColor[mode]);
+						drawStringCentered(m_labelText,getPos(),getLabelSize(),m_labelColor[mode]);
 						break;
 					case ALIGN_JUSTIFY:
-						drawStringJustify(m_labelText,m_position,m_labelSize,m_labelColor[mode],m_size.x*2);
+						drawStringJustify(m_labelText,getPos(),getLabelSize(),m_labelColor[mode],getSize().x*2);
 						break;
 					default:
-						drawStringLeft(m_labelText,m_position,m_labelSize,m_labelColor[mode]);
+						drawStringLeft(m_labelText,getPos(),getLabelSize(),m_labelColor[mode]);
 						break;
 				}
 			}

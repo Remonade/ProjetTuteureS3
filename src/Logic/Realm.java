@@ -151,24 +151,21 @@ public class Realm {
 			m.update();
 			for(int j=0;j<m_entities.size();j++) {
 				Entity e=m_entities.get(j);
-				if(e.getCollide() && PhysicMain.collisionEE(m, e))
+				if(e.getCollide() && e!=m.getOwner() && PhysicMain.collisionEE(m, e))
 					m.explode(e);
 			}
 			for(int j=0;j<m_units.size();j++) {
 				EntityUnit u=m_units.get(j);
-				if(PhysicMain.collisionEE(m, u))
+				if(u.getCollide() && u!=m.getOwner() && PhysicMain.collisionEE(m, u))
 					m.explode(u);
 			}
 		}
 	}
 	private void updateParticle() {
-		getParticles();
         for(int i=0;i<m_particles.size();i++) {
             EntityParticle p=m_particles.get(i);
-            p.updateTime(0.05f);
-            if(p.updateTime(0.05f)) {
+            if(p.updateTime()) {
                 m_particles.remove(i);
-				removeEntity(p);
 			}
         }
 	}
@@ -181,6 +178,8 @@ public class Realm {
 	
 	private static ArrayList<Realm> realmList=new ArrayList<Realm>();
 	private static Realm m_activeRealm=null;
+	private static int m_activeRealmID=-1;
+	
 	public static int createRealm(String name) {
 		Realm r=new Realm(name);
 		int count=getRealmCount();
@@ -199,18 +198,52 @@ public class Realm {
 	public static Realm getActiveRealm() {
 		if(m_activeRealm!=null)
 			return m_activeRealm;
-		changeRealm(0);
 		return m_activeRealm;
 	}
 	
-	public static void changeRealm(int realm) {
+	public static int getActiveRealmID() {
+		return m_activeRealmID;
+	}
+	public static void setRealm(int realm) {
+		System.out.println("change realm: "+m_activeRealmID+" to "+realm);
 		Realm r=getRealm(realm);
 		if(r!=null) {
-			m_activeRealm=getRealm(realm);
+			if(realm<m_activeRealmID) {
+				System.out.println("spawn at end");
+				r.getWayPoints().get(1).moveToWayPoint(Logic.getPlayer());
+			} else {
+				System.out.println("spawn at start");
+				r.getWayPoints().get(0).moveToWayPoint(Logic.getPlayer());
+			}
+			m_activeRealm=r;
 			m_activeRealm.addEntity(Logic.getPlayer());
 			String musicPath=m_activeRealm.getMusic();
+			m_activeRealmID=realm;
 			if(!musicPath.equals(""))
 				Audio.Audio.playMusic(musicPath,true);
+		} else {
+			System.out.println("Realm: "+m_activeRealmID+" not found");
+		}
+	}
+	public static void changeRealm(int realm) {
+		System.out.println("change realm: "+m_activeRealmID+" to "+realm);
+		Realm r=getRealm(realm);
+		if(r!=null) {
+			if(realm<m_activeRealmID) {
+				System.out.println("spawn at end");
+				r.getWayPoints().get(1).moveToWayPoint(Logic.getPlayer());
+			} else {
+				System.out.println("spawn at start");
+				r.getWayPoints().get(0).moveToWayPoint(Logic.getPlayer());
+			}
+			m_activeRealm=r;
+			m_activeRealm.addEntity(Logic.getPlayer());
+			String musicPath=m_activeRealm.getMusic();
+			m_activeRealmID=realm;
+			if(!musicPath.equals(""))
+				Audio.Audio.playMusic(musicPath,true);
+		} else {
+			System.out.println("Realm: "+m_activeRealmID+" not found");
 		}
 	}
 	public static void clearAll() {

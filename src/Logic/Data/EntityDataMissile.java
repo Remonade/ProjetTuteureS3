@@ -13,17 +13,24 @@ public class EntityDataMissile extends EntityData {
 	// champs
     private int m_damage=0;
 	private float m_speed=0.05f;
+	private float m_radius=0f;
 	
     // base
     public EntityDataMissile() {
         super();
     }
 	// damage part
-    public void setDamage(int max) {
-        m_damage=max;
+    public void setDamage(int damage) {
+        m_damage=damage;
     }
     public int getDamage() {
         return m_damage;
+    }
+    public void setRadius(float radius) {
+        m_radius=radius;
+    }
+    public float getRadius() {
+        return m_radius;
     }
 	// movement part
     public void setMaxSpeed(float speed) {

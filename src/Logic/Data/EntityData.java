@@ -19,6 +19,9 @@ public class EntityData {
     private Vector2f m_size=new Vector2f();
     private Model m_model=null;
 	private Vector4f m_color=null;
+	
+	private HashMap<String,String>m_sounds=new HashMap<>();
+	
 	// base
     /**
      * Vous ne devez instancier manuelement cette classe!
@@ -47,7 +50,9 @@ public class EntityData {
 		}
 	}
 	public Vector4f getColor() {
-		return m_color;
+		if(m_color==null)
+			m_color=new Vector4f(1,1,1,1);
+		return m_color.add(new Vector4f(0,0,0,0));
 	}
 	// physic part
     public void setSize(Vector2f size) {
@@ -60,6 +65,18 @@ public class EntityData {
     public Vector2f getSize() {
         return m_size;
     }
+	// audio part
+	public void setSound(String key,String path) {
+		if(m_sounds.containsKey(key))
+			m_sounds.remove(key);
+		m_sounds.putIfAbsent(key, path);
+	}
+	public String getSound(String key) {
+		if(m_sounds.containsKey(key))
+			return m_sounds.get(key);
+		else
+			return "";
+	}
     // fonctions de création
     protected static HashMap<String,EntityData> all=new HashMap();
     public static EntityData create(String key) {

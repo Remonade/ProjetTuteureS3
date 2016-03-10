@@ -6,6 +6,8 @@
 
 package Logic.Spell;
 
+import static Graphic.GraphicMain.getModel;
+import Graphic.Model;
 import Logic.Buff.Buff;
 import Logic.EntityUnit;
 
@@ -14,14 +16,14 @@ public class Spell {
 	protected float m_baseCooldown=0;
 	protected float m_currentCooldown=0;
 	protected String m_name="";
-	protected String m_icone="";
+	protected Model m_icone=null;
 	protected int m_charge=-1;
 	
 	public Spell(String name, float cost, float cooldown) {
 		m_energyCost=cost;
 		m_baseCooldown=cooldown;
 		m_name=name;
-		m_icone="icone/berzerker.png";
+		m_icone=getModel("Iberzerker");
 	}
 	
 	public Spell(String name, float cost, float cooldown, int charge) {
@@ -29,12 +31,12 @@ public class Spell {
 		m_baseCooldown=cooldown;
 		m_name=name;
 		m_charge=charge;
-		m_icone="icone/berzerker.png";
+		m_icone=getModel("Iberzerker");
 	}
 	public String getName() {
 		return m_name;
 	}
-	public String getIcone() {
+	public Model getIcone() {
 		return m_icone;
 	}
 	public float getEnergyCost() {

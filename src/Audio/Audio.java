@@ -65,8 +65,10 @@ public class Audio {
 		return s;
 	}
 	public static void playSound(String path) {
-		SoundData s=loadSoundData(path);
-		playSound(s);
+		if(!path.equals("")) {
+			SoundData s=loadSoundData(path);
+			playSound(s);
+		}
 	}
 	public static void playSound(SoundData s) {
 		if(s!=null) {

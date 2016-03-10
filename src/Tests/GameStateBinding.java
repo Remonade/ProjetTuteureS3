@@ -7,9 +7,6 @@
 package Tests;
 
 import GUI.GUILabel;
-import static Graphic.GraphicMain.resetScreen;
-import static Graphic.GraphicMain.setCameraGUI;
-import static Graphic.GraphicMain.updateScreen;
 import static Tests.Input.BIND;
 import static Tests.Main.setGameState;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_LAST;
@@ -42,16 +39,6 @@ public class GameStateBinding extends GameState {
 			BIND[m_binding]=bind;
 			setGameState(5);
 		}
-	}
-	
-	@Override
-	public void execute() {
-		inputHandler();
-		resetScreen();
-		setCameraGUI();
-		drawGUI();
-		
-		updateScreen();
 	}
 	@Override
 	public void inputHandler() {

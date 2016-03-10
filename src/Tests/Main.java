@@ -1,10 +1,11 @@
 package Tests;
 
 import Graphic.GraphicMain;
+import static Graphic.GraphicMain.resetScreen;
+import static Graphic.GraphicMain.updateScreen;
 import Logic.Logic;
 import static Logic.Logic.updateTime;
 
-import org.lwjgl.Version;
 import org.lwjgl.glfw.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -17,14 +18,22 @@ public class Main {
     // The window handle
     private long window;
     //private Camera2D camera;
-    private final int WIDTH = 800;
+    private final int WIDTH = 900;
     private final int HEIGHT = 600;
 
 	public static int GAME_STATE=0;
 	public static void setGameState(int state) {
+		System.out.println("Set GameState: "+state);
 		m_gameState[GAME_STATE].onLeave();
 		GAME_STATE=state;
 		m_gameState[GAME_STATE].onEnter();
+	}
+	public static void changeGameState(int state) {
+		System.out.println("Set previous GameState: "+GAME_STATE);
+		((GameStateTransition)m_gameState[STATE_TRANSITION]).setPrev(GAME_STATE);
+		System.out.println("Set next GameState: "+state);
+		((GameStateTransition)m_gameState[STATE_TRANSITION]).setNext(state);
+		setGameState(STATE_TRANSITION);
 	}
 	public static final int STATE_MAIN_MENU=0;
 	public static final int STATE_LOADING_MENU=1;
@@ -34,8 +43,9 @@ public class Main {
 	public static final int STATE_SETTING_MENU=5;
 	public static final int STATE_BINDING=6;
 	public static final int STATE_GAME_OVER=7;
+	public static final int STATE_TRANSITION=8;
 	
-	private static GameState[] m_gameState=new GameState[8];
+	private static GameState[] m_gameState=new GameState[9];
 	
 	public static GameState getGameState(int state) {
 		return m_gameState[state];
@@ -45,11 +55,8 @@ public class Main {
 	}
 	
     public void run() {
-        System.out.println("Hello LWJGL " + Version.getVersion() + "!");
         try {
             init();
-			//Sound.startSound("data/audio/backgroundMusic.ogg", true);
-			//Audio.Audio.playMusic("backgroundMusic.ogg", true);
             loop();
             // Release window and window callbacks
         } catch(Exception e) {
@@ -68,12 +75,13 @@ public class Main {
 		m_gameState[STATE_SETTING_MENU]=new GameStateSettingMenu();
 		m_gameState[STATE_BINDING]=new GameStateBinding();
 		m_gameState[STATE_GAME_OVER]=new GameStateGameOver();
+		m_gameState[STATE_TRANSITION]=new GameStateTransition();
 		Input.defaultBinding();
 		Input.initKeyName();
+        Input.initInput();
 		Audio.Audio.init();
         GraphicMain.init(WIDTH,HEIGHT);
         Logic.init();
-        Input.initInput();
         // Make the window visible
         glfwShowWindow(GraphicMain.window);
         System.out.println("Init successful");
@@ -83,22 +91,27 @@ public class Main {
         while(glfwWindowShouldClose(GraphicMain.window) == GL_FALSE) {
             try {
 				updateTime();
-				//Audio.Audio.setGeneralVolume(Audio.Audio.getGeneralVolume()-0.001f);
-				execute();
+				if(m_gameState[GAME_STATE]!=null) {
+					execute();
+					resetScreen();
+					draw();
+					updateScreen();
+				} else setGameState(STATE_MAIN_MENU);
             } catch (Exception e) {
 				e.printStackTrace();
             }
         }
     }
     private void execute() {
-		if(m_gameState[GAME_STATE]!=null) {
-			m_gameState[GAME_STATE].execute();
-		} else setGameState(STATE_MAIN_MENU);
+		m_gameState[GAME_STATE].execute();
+	}
+    private void draw() {
+		m_gameState[GAME_STATE].draw();
 	}
     private void quit() {
 		try {
 			glfwDestroyWindow(GraphicMain.window);
-			Input.keyCallback.release();
+			// Input.keyCallback.release();
 		} catch(Exception e) {
 			e.printStackTrace();
 		} finally {

@@ -6,9 +6,12 @@
 
 package Logic.Buff;
 
+import Logic.Data.EntityDataParticle;
 import Logic.Entity;
+import Logic.EntityParticle;
 import Logic.EntityUnit;
 import Logic.Realm;
+import static Logic.Realm.getActiveRealm;
 import Maths.Vector2f;
 import Physic.PhysicMain;
 import java.util.ArrayList;
@@ -24,7 +27,7 @@ public class BuffDash extends Buff {
 	public BuffDash(String name, float duration, float range) {
 		super(name,duration);
 		m_range=range;
-		m_icone="icone/spread.png";
+		m_icone="icone/dash.png";
 	}
 	
 	@Override
@@ -36,6 +39,12 @@ public class BuffDash extends Buff {
 	
 	@Override
 	public void onUpdate(EntityUnit u) {
+		EntityParticle temp;
+			temp=new EntityParticle(/*0.35f,((float)Math.random()*50)-25+180*/);
+			temp.setData(EntityDataParticle.get("EDPheal"));
+			temp.setPos(u.getPos().x,u.getPos().y);
+			getActiveRealm().addEntity(temp);
+			
 		float distance=(float)(m_range*(Logic.Logic.DELTA_TIME/m_maxDuration)*m_direction);
 		m_speed.x=distance;
 		m_distance+=Math.abs(distance);
@@ -63,9 +72,8 @@ public class BuffDash extends Buff {
 			if(t instanceof EntityUnit) {
 				EntityUnit unit=(EntityUnit)t;
 				unit.setSpeed(m_speed.x,unit.getSpeed().y);
-				if(unit!=u) {
-					unit.damage(2);
-				}
+				//if(unit!=u && !unit.isStun()) {
+				//}
 			}
 		}
 		
@@ -77,7 +85,7 @@ public class BuffDash extends Buff {
 			if(t instanceof EntityUnit) {
 				EntityUnit unit=(EntityUnit)t;
 				if(unit!=u) {
-					unit.damage(200);
+					unit.damage(50);
 				}
 			}
 		}

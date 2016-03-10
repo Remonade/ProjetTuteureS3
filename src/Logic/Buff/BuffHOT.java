@@ -6,7 +6,10 @@
 
 package Logic.Buff;
 
+import Logic.Data.EntityDataParticle;
+import Logic.EntityParticle;
 import Logic.EntityUnit;
+import static Logic.Realm.getActiveRealm;
 
 public class BuffHOT extends Buff {
 	protected float m_delay;
@@ -32,6 +35,12 @@ public class BuffHOT extends Buff {
 	}
 	@Override
 	public void onUpdate(EntityUnit u) {
+		EntityParticle temp;
+			temp=new EntityParticle(/*0.35f,((float)Math.random()*50)-25+180*/);
+			temp.setData(EntityDataParticle.get("EDPheal"));
+			temp.setPos(u.getPos().x,u.getPos().y);
+			getActiveRealm().addEntity(temp);
+				
 		if(m_activation>0 && m_delay*m_activation>=m_remainingDuration) {
 			m_activation--;
 			u.heal(m_amount);

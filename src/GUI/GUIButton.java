@@ -26,11 +26,11 @@ public class GUIButton extends GUI {
 	}
 	@Override
 	public void onClick() {
-		Audio.Audio.playSound("couic.ogg");
+		Audio.Audio.playSound("GUI/ButtonClick.ogg");
 	}
 	@Override
 	public void onHover() {
-		Audio.Audio.playSound("tic.ogg");
+		Audio.Audio.playSound("GUI/ButtonHover.ogg");
 	}
 	public void drawHelp() {
 		if(m_help!=null && m_hover && m_hoverTime>APPARITION_DELAY) {

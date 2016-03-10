@@ -8,9 +8,6 @@ package Tests;
 
 import GUI.GUI;
 import GUI.GUIMenuButton;
-import static Graphic.GraphicMain.resetScreen;
-import static Graphic.GraphicMain.setCameraGUI;
-import static Graphic.GraphicMain.updateScreen;
 import static Graphic.GraphicMain.window;
 import Logic.Logic;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_1;
@@ -22,7 +19,6 @@ public class GameStateGameOver  extends GameState {
 	
 	public GameStateGameOver() {
 		super();
-		m_showCursor=false;
 		GUI g=new GUI();
 		g.setPos(400,500);
 		g.setSize(400,75);
@@ -49,20 +45,11 @@ public class GameStateGameOver  extends GameState {
 	public void onEnter() {
 		Logic.generateRun(15);
 	}
-	
-	@Override
-	public void execute() {
-		inputHandler();
-		resetScreen();
-		setCameraGUI();
-		drawGUI();
-		updateScreen();
-	}
 	@Override
 	public void inputHandler() {
 		super.inputHandler();
 		if(Input.isPushed(GLFW_KEY_1))
-			Main.setGameState(Main.STATE_LEVEL);
+			Main.changeGameState(Main.STATE_LEVEL);
 		if(Input.isPushed(GLFW_KEY_2))
 			glfwSetWindowShouldClose(window, GL_TRUE);
 	}

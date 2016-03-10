@@ -8,11 +8,7 @@ package Graphic;
 
 import Graphic.TextRendering.TextRender;
 import GUI.GUI;
-import GUI.GUIBossBar;
-import GUI.GUIBuffBar;
 import GUI.GUICheckBox;
-import GUI.GUIPlayerBar;
-import GUI.GUISpellBar;
 import Logic.Entity;
 import Logic.EntityMissile;
 import Logic.EntityParticle;
@@ -95,7 +91,7 @@ public class GraphicMain {
         glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
         //glEnable(GL_DEPTH_TEST);
         //glDepthFunc(GL_LESS);
-        glDepthMask(true);
+        //glDepthMask(true);
         glHint(GL_PERSPECTIVE_CORRECTION_HINT,GL_NICEST);
         //glDisable(GL_DEPTH_TEST);
 		
@@ -224,16 +220,15 @@ public class GraphicMain {
 	}
     public static void displayRealm(Realm r) {
 		if(Logic.getPlayer()!=null) {
-			resetScreen();
-
-			camera.prepareBackgroundCamera();
+			LAYER=BACKGROUND_LAYER;
+			setCameraBackground();
 			camera.setCameraBound(r.getCameraBound());
 			Model background=r.getBackground();
 			if(background!=null) {
 				background.draw(null, null, null);
 			}
 			camera.setPos(Logic.getPlayer().getPos());
-			setCamera();
+			setCameraLevel();
 
 			LAYER=STATIC_LAYER;
 			for(Entity i:r.getEntities())
@@ -255,38 +250,16 @@ public class GraphicMain {
 				for(EntityParticle i:r.getParticles())
 					i.draw();
 			}
-
-			setCameraGUI();
-			drawString(r.getName(),new Vector2f(0,400),2f,new Vector4f(0,0,0,1));
-			drawString(".-- --- ..- .-.. -.. / -.-- --- ..- / ... -- --- --- ... .... / .- / --. .... --- ... - ..--..",new Vector2f(0,0),2f,new Vector4f(0,0,0,1));
-			String info="";
-			info+="pos x:"+(float)((int)(Logic.getPlayer().getPos().x*1000))/1000f+"\n";
-			info+="pos y:"+(float)((int)(Logic.getPlayer().getPos().y*1000))/1000f+"\n";
-			//info+="speed x:"+(float)((int)(Logic.getPlayer().getSpeed().x*100000))/100000f+"\n";
-			info+="speed y:"+(float)((int)(Logic.getPlayer().getSpeed().y*100000))/100000f;
-			//System.out.println(info+"\n______________________________");
-			drawString(info,new Vector2f(0,200),2f,new Vector4f(1,1,1,1));
-
-			GUIPlayerBar.setPlayer(Logic.getPlayer());
-			GUIPlayerBar.draw();
-
-			GUIBossBar.setBoss(r.getBoss());
-			GUIBossBar.draw();
-
-			GUISpellBar.setPlayer(Logic.getPlayer());
-			GUISpellBar.draw();
-
-			GUIBuffBar.setPlayer(Logic.getPlayer());
-			GUIBuffBar.draw();
-
-			updateScreen();
 		}
 	}
-	public static void setCamera() {
+	public static void setCameraLevel() {
         camera.useCamera();
 	}
 	public static void setCameraGUI() {
         camera.prepareGUICamera();
+	}
+	public static void setCameraBackground() {
+        camera.prepareBackgroundCamera();
 	}
 	public static void updateScreen() {
         glfwSwapBuffers(window); // swap the color buffers
@@ -294,10 +267,7 @@ public class GraphicMain {
     private static void renderParticle() {
         for(int i=0;i<particle.size();i++) {
             EntityParticle p=particle.get(i);
-            p.updateTime(0.05f);
-            p.draw();
-            if(p.updateTime(0.05f))
-                particle.remove(i);
+			p.draw();
         }
     }
 	public static void drawString(String s, Vector2f pos, float size, Vector4f color) {
@@ -315,12 +285,13 @@ public class GraphicMain {
     public static long window;
     public static int HEIGHT, WIDTH;
     public static int LAYER=0;
-    public static int COUNT=0;
-    public static int STRING_LAYER=4;
-    public static int PARTICLE_LAYER=3;
-    public static int UNIT_LAYER=2;
-    public static int DYNAMIC_LAYER=1;
-    public static int STATIC_LAYER=0;
+    public static int STRING_LAYER=6;
+    public static int GUI_LAYER=5;
+    public static int PARTICLE_LAYER=4;
+    public static int UNIT_LAYER=3;
+    public static int DYNAMIC_LAYER=2;
+    public static int STATIC_LAYER=1;
+    public static int BACKGROUND_LAYER=0;
 	public static int DIRECTION=1;
 	public static void setDirection(int d) {
 		DIRECTION=d;

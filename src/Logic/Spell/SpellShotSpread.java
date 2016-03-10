@@ -42,10 +42,10 @@ public class SpellShotSpread extends SpellShot {
 			
 			for(int i=0;i<m_missileCount;i++) {
 				mis=new EntityMissile();
+				mis.setData(EntityDataMissile.get("explosive"));
 				mis.setDir(new Vector2f(0.75f*speed,spreadValue-spreedOffset*i));
 				Realm.getActiveRealm().addEntity(mis);
 				mis.setPos(u.getPos());
-				mis.setData(EntityDataMissile.get("missile"));
 				mis.setOwner(u);
 				mis.setTeam(u.getTeam());
 			}

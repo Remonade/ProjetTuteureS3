@@ -1,6 +1,7 @@
 
 package Logic.Spell;
 
+import static Graphic.GraphicMain.getModel;
 import Logic.Buff.BuffDash;
 import Logic.EntityUnit;
 
@@ -15,7 +16,7 @@ public class SpellDash extends Spell {
 		m_energyCost=cost;
 		m_baseCooldown=cooldown;
 		m_name=name;
-		m_icone="icone/berzerker.png";
+		m_icone=getModel("Idash");
 	}
 	
 	public SpellDash(String name, float cost, float cooldown, int charge) {
@@ -24,7 +25,7 @@ public class SpellDash extends Spell {
 		m_baseCooldown=cooldown;
 		m_name=name;
 		m_charge=charge;
-		m_icone="icone/berzerker.png";
+		m_icone=getModel("Idash");
 	}
 	
 	@Override

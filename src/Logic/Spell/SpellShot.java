@@ -6,6 +6,7 @@
 
 package Logic.Spell;
 
+import static Graphic.GraphicMain.getModel;
 import Logic.Data.EntityDataMissile;
 import Logic.EntityMissile;
 import Logic.EntityUnit;
@@ -15,12 +16,12 @@ import Maths.Vector2f;
 public class SpellShot  extends Spell {
 	public SpellShot(String name, float cost, float cooldown) {
 		super(name,cost,cooldown);
-		m_icone="icone/spread.png";
+		m_icone=getModel("Ispread");
 	}
 	
 	public SpellShot(String name, float cost, float cooldown, int charge) {
 		super(name,cost,cooldown,charge);
-		m_icone="icone/spread.png";
+		m_icone=getModel("Ispread");
 	}
 	@Override
 	public void script(EntityUnit u) {
@@ -33,10 +34,10 @@ public class SpellShot  extends Spell {
 		EntityMissile mis;
 		
 		mis=new EntityMissile();
+		mis.setData(EntityDataMissile.get("missile"));
 		mis.setDir(new Vector2f(0.75f*speed,0f));
 		Realm.getActiveRealm().addEntity(mis);
 		mis.setPos(u.getPos());
-		mis.setData(EntityDataMissile.get("missile"));
 		mis.setOwner(u);
 		mis.setTeam(u.getTeam());
 	}

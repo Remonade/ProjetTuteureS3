@@ -40,8 +40,14 @@ public class EntityUnit extends EntityDynamic {
 	protected float m_buffShieldMax=0;
 	protected float m_buffEnergyMax=0;
 	
+	protected int m_buffStun;
+	
 	protected ArrayList<Spell> m_spellList=new ArrayList<>();
 	protected ArrayList<Buff> m_buffList=new ArrayList<>();
+	
+	public boolean isStun() {
+		return m_buffStun>0;
+	}
 	
 	public void setOwner(Player owner) {
 		m_owner=owner;
@@ -89,6 +95,9 @@ public class EntityUnit extends EntityDynamic {
 	public void addBuffEnergyMax(float v) {
 		m_buffEnergyMax+=v;
 	}
+	public void addBuffStun() {
+		m_buffStun++;
+	}
 	
 	public void removeBuffHealthRegen(float v) {
 		m_buffHealthRegen-=v;
@@ -108,6 +117,11 @@ public class EntityUnit extends EntityDynamic {
 	}
 	public void removeBuffEnergyMax(float v) {
 		m_buffEnergyMax-=v;
+	}
+	
+	public void removeBuffStun() {
+		if(m_buffStun>0)
+			m_buffStun--;
 	}
 	
 	public void addBuff(Buff b) {
@@ -251,10 +265,10 @@ public class EntityUnit extends EntityDynamic {
     @Override
     public void update() {
         super.update();
-		if(m_dialog==null)
+		/*if(m_dialog==null)
 			if(Math.random()<0.01) {
-				talk("Je disparait a nouveau.");
-			}
+				talk("Je disparais a nouveau.");
+			}*/
 		
 		if(m_shieldCooldown<Logic.DELTA_TIME)
 			m_shieldCooldown=0;
@@ -296,6 +310,7 @@ public class EntityUnit extends EntityDynamic {
 		return new Vector2f(0.05f,0.05f);
 	}
     public void kill() {
+		Audio.Audio.playSound(getSound("death"));
 		Realm.getActiveRealm().removeEntity(this);
 		if(this==Logic.getPlayer())
 			Logic.killPlayer();
@@ -308,19 +323,13 @@ public class EntityUnit extends EntityDynamic {
 		return true;
 	}
     public boolean shoot(Vector2f target) {
-		if(spendEnergy(25)) {
-			try {
-				Audio.Audio.playSound("laser.ogg");
-				//Sound.startSound("data/audio/laser.ogg", false);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+		if(!isStun() && spendEnergy(25)) {
 			m_weaponCooldown=Logic.CURRENT_TIME;
 			EntityMissile mis=EntityMissile.create();
+			mis.setData(EntityDataMissile.get("missile"));
 			mis.setDir(target);
 			Realm.getActiveRealm().addEntity(mis);
 			mis.setPos(getPos());
-			mis.setData(EntityDataMissile.get("missile"));
 			mis.setOwner(this);
 			mis.setTeam(getTeam());
 			m_currentAnim="SHOOT";
@@ -330,8 +339,10 @@ public class EntityUnit extends EntityDynamic {
 		return false;
     }
     public void jump() {
-    	if(m_contact[CONTACT_DOWN])
+    	if(!isStun() && m_contact[CONTACT_DOWN]) {
+			Audio.Audio.playSound(getSound("jump"));
             setSpeed(0,0.1f);
+		}
     }
     public boolean damage(int damage) {
 		m_shieldCooldown=SHIELD_REGEN_DELAY;
@@ -344,7 +355,7 @@ public class EntityUnit extends EntityDynamic {
 			if(m_health<=0) {
 				kill();
 				return true;
-			}
+			} else Audio.Audio.playSound(getSound("hurt"));
 		}
 		return false;
     }
@@ -355,30 +366,32 @@ public class EntityUnit extends EntityDynamic {
 			m_health=1.0f;
 	}
     public void attack(EntityUnit target) {
-		Vector2f pos=target.getPos();
-		Vector2f size=target.getSize();
-        switch(((EntityDataUnit)m_data).getType()){
-            case GUNNER :
-				if(Physic.PhysicMain.inRow(pos, size.y, getPos(), getSize().y)) {
-					if(getMaxEnergy()==m_energy)
-						m_custom=1; //the gunner can launch a burst with his weapon
-					if(m_custom==1 && m_energy-50>0f) { //the gunner shoot
-						if(m_lookRight)
-							shoot(new Vector2f(1,0));
-						else
-							shoot(new Vector2f(-1,0)); 
-					} else
-						m_custom=0; //the weapon of the gunner is overheated and he needs to wait before launching another burst
-				}
-                break;
-            case SNIPER :
-                if(m_energy-50>0f) {
-                    shoot(getPos().subtract(pos).negate());
-                }
-                break;
-            default :
-                break;
-        }
+		if(!isStun()) {
+			Vector2f pos=target.getPos();
+			Vector2f size=target.getSize();
+			switch(((EntityDataUnit)m_data).getType()){
+				case GUNNER :
+					if(Physic.PhysicMain.inRow(pos, size.y, getPos(), getSize().y)) {
+						if(getMaxEnergy()==m_energy)
+							m_custom=1; //the gunner can launch a burst with his weapon
+						if(m_custom==1 && m_energy-50>0f) { //the gunner shoot
+							if(m_lookRight)
+								shoot(new Vector2f(1,0));
+							else
+								shoot(new Vector2f(-1,0)); 
+						} else
+							m_custom=0; //the weapon of the gunner is overheated and he needs to wait before launching another burst
+					}
+					break;
+				case SNIPER :
+					if(m_energy-50>0f) {
+						shoot(getPos().subtract(pos).negate());
+					}
+					break;
+				default :
+					break;
+			}
+		}
     }
     public void regen() {
 		if(m_shieldCooldown<=0.000f && m_shield<1.0f)
@@ -433,7 +446,10 @@ public class EntityUnit extends EntityDynamic {
 	/* ------------------------------------------------------------- */
 	
 	private GUIDialog m_dialog=null;
-	
+	public void talk(String speach) {
+		Audio.Audio.playSound(getSound("talk"));
+		m_dialog=new GUIDialog(speach);
+	}
 	public void drawDialog() {
 		if(m_dialog!=null) {
 			m_dialog.setPos(getPos().add(getSize().scale(1.1f)).add(new Vector2f(0,m_dialog.getSize().y)));
@@ -441,9 +457,6 @@ public class EntityUnit extends EntityDynamic {
 			if(!m_dialog.update())
 				m_dialog=null;
 		}
-	}
-	public void talk(String text) {
-		m_dialog=new GUIDialog(text);
 	}
 	
 	

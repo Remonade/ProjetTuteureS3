@@ -113,8 +113,8 @@ set Sound death Unit/Wscream.ogg
 new EntityDataUnit player
 set Size 0.15 0.15
 set Model Player
-set Health 600 0
-set Shield 400 5
+set Health 300 0
+set Shield 200 5
 set Energy 50 0.3
 set Sound death Unit/Wscream.ogg
 +
@@ -129,11 +129,11 @@ set Sound death Unit/Wscream.ogg
 new EntityDataUnit monster
 set Size 0.5 0.5
 set Model monster
-set Health 1000 0.05
+set Health 100 0.05
 set Shield 100 1
 set Energy 100 0.15
 set Type Sniper
-set Sound death Unit/Wscream.ogg
+set Sound death Unit/MonsterDeath.ogg
 +
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 + missile data
@@ -144,6 +144,7 @@ set Model missile
 set Speed 0.05
 set Damage 10
 set Sound explode Effect/EnergyExplosion.ogg
++
 new EntityDataMissile explosive
 set Size 0.15 0.15
 set Model Pexplosion
@@ -160,6 +161,7 @@ set Size 0.05 0.05
 set Model Pheal
 set Duration 0.35
 set Speed 0.5
++
 new EntityDataParticle EDPheal
 set Color 0 1 0 0.25
 set Size 0.05 0.05
@@ -168,6 +170,7 @@ set Duration 0.5
 set Speed 0.5
 set Rotation 5
 set Type 1
++
 new EntityDataParticle EDPexplosion
 set Color 1 0.75 0 1
 set Size 0.25 0.25

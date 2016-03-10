@@ -12,11 +12,9 @@ import Maths.Vector2f;
 import java.nio.DoubleBuffer;
 import org.lwjgl.BufferUtils;
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.glfw.GLFW.glfwSetKeyCallback;
-import org.lwjgl.glfw.GLFWKeyCallback;
 
 public class Input {
-    public static GLFWKeyCallback   keyCallback;
+    // public static GLFWKeyCallback   keyCallback;
 	private static boolean[] press=new boolean[GLFW_KEY_LAST];
 	private static boolean[] push=new boolean[GLFW_KEY_LAST];
 	private static boolean[] click=new boolean[GLFW_MOUSE_BUTTON_8];
@@ -70,8 +68,10 @@ public class Input {
 	public static int BIND_SPELL_1=6;
 	public static int BIND_SPELL_2=7;
 	public static int BIND_SPELL_3=8;
+	public static int BIND_SPELL_4=9;
+	public static int BIND_SPELL_5=10;
 	
-	public final static int BIND_MENU=9;
+	public final static int BIND_MENU=11;
 	
 	public static int[] BIND=new int[BIND_MENU+1];
 	
@@ -85,10 +85,12 @@ public class Input {
 		BIND[BIND_RIGHT]=GLFW_KEY_D;
 		
 		BIND[BIND_JUMP]=GLFW_KEY_W;
-		BIND[BIND_SHOOT]=GLFW_KEY_E;
-		BIND[BIND_SPELL_1]=GLFW_KEY_1;
+		BIND[BIND_SHOOT]=GLFW_KEY_SPACE;
+		BIND[BIND_SPELL_1]=GLFW_KEY_E;
 		BIND[BIND_SPELL_2]=GLFW_KEY_2;
 		BIND[BIND_SPELL_3]=GLFW_KEY_3;
+		BIND[BIND_SPELL_4]=GLFW_KEY_4;
+		BIND[BIND_SPELL_5]=GLFW_KEY_5;
 		
 		BIND[BIND_MENU]=GLFW_KEY_ESCAPE;
 	}
@@ -111,7 +113,7 @@ public class Input {
 	}
 	public static void initInput() {
         // Setup a key callback. It will be called every time a key is pressed, repeated or released.
-        glfwSetKeyCallback(GraphicMain.window, keyCallback = new GLFWKeyCallback() {
+		/* glfwSetKeyCallback(GraphicMain.window, keyCallback = new GLFWKeyCallback() {
             @Override
             public void invoke(long window, int key, int scancode, int action, int mods) {
                 if (action == GLFW_PRESS ) {
@@ -120,7 +122,7 @@ public class Input {
 				} else if (action == GLFW_RELEASE )
 					press[key]=false;
 			}
-		});
+		});*/
 	}
 	public static void updateInput() {
 		for(int i=0;i<GLFW_KEY_LAST;i++)
@@ -129,11 +131,22 @@ public class Input {
 			click[i]=false;
 		}
         glfwPollEvents();
+		for(int i=0;i<GLFW_KEY_LAST;i++) {
+			if(glfwGetKey(window,i)==GLFW_PRESS) {
+				if(!press[i]) {
+					push[i]=true;
+					//System.out.println("Pressed: "+getKeyName(i));
+				}
+				press[i]=true;
+			} else press[i]=false;
+		}
 		updateMouseCoordinate();
 		for(int i=0;i<GLFW_MOUSE_BUTTON_8;i++) {
-			if(glfwGetMouseButton(window,i)==1) {
-				if(!down[i])
+			if(glfwGetMouseButton(window,i)==GLFW_PRESS) {
+				if(!down[i]) {
 					click[i]=true;
+					//System.out.println("Clicked: "+i);
+				}
 				down[i]=true;
 			} else down[i]=false;
 		}

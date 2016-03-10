@@ -7,7 +7,6 @@
 package Tests;
 
 import GUI.GUI;
-import static Graphic.GraphicMain.resetScreen;
 import static Graphic.GraphicMain.setCameraGUI;
 import static Graphic.GraphicMain.window;
 import static Tests.Input.BIND_MOUSE;
@@ -29,11 +28,16 @@ public class GameState {
 		return null;
 	}
 	public GameState() {
-		m_showCursor=true;
 		m_GUI=new ArrayList<>();
 	}
 	public void execute() {
+		inputHandler();
+	}
+	public void draw() {
+		drawCore();
 		drawGUI();
+	}
+	public void drawCore() {
 	}
 	public void inputHandler() {
 		Input.updateInput();
@@ -41,27 +45,24 @@ public class GameState {
 			glfwSetWindowShouldClose(window, GL_TRUE);
 		for(GUI g:m_GUI)
 			g.tryHover();
-		if(Input.isClicked(BIND_MOUSE))
+		if(Input.isClicked(BIND_MOUSE)) {
 			for(GUI g:m_GUI)
 				g.tryClick();
+		}
 	}
 	public void destroy() {
 		
 	}
 	public void onEnter() {
-		//glShowCursor();
 	
 	}
 	public void onLeave() {
-		//glShowCursor();
 	
 	}
 	public void drawGUI() {
-		resetScreen();
 		setCameraGUI();
 		for(GUI g:m_GUI)
 			g.draw();
 	}
-	protected boolean m_showCursor;
 	protected ArrayList<GUI> m_GUI;
 }

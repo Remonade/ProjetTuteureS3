@@ -136,4 +136,22 @@ public class Camera2D {
         m_BL=min(bound.y,bound.x);
         m_BR=max(bound.y,bound.x);
     }
+	public final boolean isInScreen(Vector2f pos) {
+		float x=getInCameraX(pos.x);
+		if(Math.abs(x)>1)
+			return false;
+		float y=getInCameraY(pos.y);
+		if(Math.abs(y)>1)
+			return false;
+		return true;
+	}
+	public float getInCameraX(float posX) {
+		float x=posX*GraphicMain.WIDTH/2;
+		//float x=(posX*GraphicMain.WIDTH-0.5f)/(2*GraphicMain.camera.getZoom());
+		return x;
+	}
+	public float getInCameraY(float posY) {
+		float y=-(posY*GraphicMain.HEIGHT-0.5f)/(2*GraphicMain.camera.getZoom()/GraphicMain.camera.getRatio());
+		return y;
+	}
 }

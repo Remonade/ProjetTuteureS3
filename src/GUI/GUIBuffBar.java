@@ -10,7 +10,6 @@ import Graphic.GraphicMain;
 import Graphic.Model;
 import Logic.Buff.Buff;
 import Logic.EntityUnit;
-import Logic.Spell.Spell;
 import Maths.Vector2f;
 import Maths.Vector4f;
 import java.util.ArrayList;
@@ -34,7 +33,7 @@ public class GUIBuffBar {
 		for(int i=0;i<spellCount;i++) {
 			Buff b=buffs.get(i);
 			
-			Vector4f color=new Vector4f(1,1,1,0.75f);
+			Vector4f color=new Vector4f(1,1,1,1);
 			
 			Vector2f bPos=new Vector2f(pos.x,pos.y-i*(offsetY+5));
 			Model.renderTexture(b.getIcone(), bPos, size, color);

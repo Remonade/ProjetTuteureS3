@@ -19,7 +19,7 @@ public class GUIDialog extends GUIHelp {
 		setLabelText(label);
 		setSize(0.75f,0);
 		setLabelSize(0.015f);
-		m_padding=getRenderedSize(" ",m_labelSize).x;
+		m_padding=getRenderedSize(" ",getLabelSize()).x;
 	}
 	@Override
 	public String getLabelText() {

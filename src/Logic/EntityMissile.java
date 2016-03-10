@@ -9,7 +9,9 @@ package Logic;
 import Logic.Data.EntityDataMissile;
 import Graphic.Model;
 import Graphic.ModelAnim;
+import Logic.Data.EntityDataParticle;
 import Logic.Data.Player;
+import static Logic.Realm.getActiveRealm;
 import java.util.ArrayList;
 import Maths.Vector2f;
 
@@ -42,26 +44,51 @@ public class EntityMissile extends EntityDynamic {
 	@Override
 	public void update() {
 		m_pos=m_pos.add(m_speed);
-		m_time+=0.05f;
+		m_time+=Logic.DELTA_TIME;
 		if(m_time>10) {
 			Realm r=Realm.getActiveRealm();
 			if(r!=null)
 				r.removeEntity(this);
+			Audio.Audio.playSound(getSound("fade"));
 		}
 	}
 	public void explode(Entity target) {
-		if(target!=m_owner) {
-			if(target instanceof EntityUnit && getTeam()!=((EntityUnit)target).getTeam()) {
-				boolean kill=((EntityUnit)target).damage(getDamage());
-				if(kill && m_owner instanceof EntityUnit) {
-					Player p=((EntityUnit)m_owner).getOwner();
-					if(p!=null)
-						p.addXP((int)((EntityUnit)target).getMaxHealth());
+		Realm r=Realm.getActiveRealm();
+		if(r!=null)
+			r.removeEntity(this);
+		
+		Audio.Audio.playSound(getSound("explode"));
+		
+		ArrayList<EntityUnit> targets=new ArrayList<>();
+		if(getRadius()>0) {
+			for(int i=0;i<30;i++) {
+				EntityParticle temp;
+					temp=new EntityParticle(/*0.35f,((float)Math.random()*50)-25+180*/);
+					temp.setData(EntityDataParticle.get("EDPexplosion"));
+					temp.setPos(getPos());
+					getActiveRealm().addEntity(temp);
+			}
+			if(r!=null) {
+				ArrayList<EntityUnit> units=r.getUnits();
+				for(EntityUnit u:units) {
+					if(u!=m_owner && getTeam()!=u.getTeam()) {
+						float distance=u.getPos().subtract(getPos()).length()+u.getSize().length();
+						if(distance<=getRadius())
+							targets.add(u);
+					}
 				}
 			}
-			Realm r=Realm.getActiveRealm();
-			if(r!=null)
-				r.removeEntity(this);
+		}
+		if(target instanceof EntityUnit)
+			targets.add((EntityUnit)target);
+
+		for(EntityUnit u:targets) {
+			boolean kill=u.damage(getDamage());
+			if(kill && m_owner instanceof EntityUnit) {
+				Player p=((EntityUnit)m_owner).getOwner();
+				if(p!=null)
+					p.addXP((int)u.getMaxHealth());
+			}
 		}
 	}
 
@@ -77,6 +104,11 @@ public class EntityMissile extends EntityDynamic {
 			return getMissileData().getMaxSpeed();
 		return 0.05f;
 	}
+	public float getRadius() {
+		if(m_data!=null)
+			return getMissileData().getRadius();
+		return 0;
+	}
 	public int getDamage() {
 		if(m_data!=null)
 			return getMissileData().getDamage();
@@ -84,6 +116,9 @@ public class EntityMissile extends EntityDynamic {
 	}
 	public void setOwner(Entity owner) {
 		m_owner=owner;
+	}
+	public Entity getOwner() {
+		return m_owner;
 	}
 	@Override
     public void draw() {
@@ -95,7 +130,7 @@ public class EntityMissile extends EntityDynamic {
 	}
 	
 	private Vector2f m_direction=new Vector2f();
-	private float m_time;
+	private float m_time=1;
 	private Entity m_owner;
 	private float m_angle;
 	
@@ -110,9 +145,6 @@ public class EntityMissile extends EntityDynamic {
 		EntityMissile temp=new EntityMissile();
 		temp.setDir(new Vector2f());
 		temp.setTime(0.0f);
-		//all.add(temp);
-		//EntityDynamic.getAll().add(temp);
-		//Entity.getAll().add(temp);
 		return temp;
 	}
 	public static void remove(Entity e) {

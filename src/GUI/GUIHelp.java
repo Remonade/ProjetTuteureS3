@@ -21,28 +21,28 @@ public class GUIHelp extends GUI{
 	@Override
 	public void setLabelText(String text) {
 		super.setLabelText(text);
-		ArrayList<Object[]> lines=TextRender.getLines(m_labelText,m_labelSize,m_size.x*2);
+		ArrayList<Object[]> lines=TextRender.getLines(m_labelText,getLabelSize(),getSize().x*2);
 		if(lines!=null) {
 			m_lineCount=lines.size();
-			m_size.y=m_lineCount*m_labelSize*TextRender.LINE_HEIGHT;
+			m_size.y=m_lineCount*getLabelSize()*TextRender.LINE_HEIGHT;
 		}
 	}
 	@Override
 	public void setSize(float w, float h) {
 		super.setSize(w,h);
-		ArrayList<Object[]> lines=TextRender.getLines(m_labelText,m_labelSize,m_size.x*2);
+		ArrayList<Object[]> lines=TextRender.getLines(m_labelText,getLabelSize(),getSize().x*2);
 		if(lines!=null) {
 			m_lineCount=lines.size();
-			m_size.y=m_lineCount*m_labelSize*TextRender.LINE_HEIGHT;
+			m_size.y=m_lineCount*getLabelSize()*TextRender.LINE_HEIGHT;
 		}
 	}
 	@Override
 	public void setLabelSize(float size) {
 		super.setLabelSize(size);
-		ArrayList<Object[]> lines=TextRender.getLines(m_labelText,m_labelSize,m_size.x*2);
+		ArrayList<Object[]> lines=TextRender.getLines(m_labelText,getLabelSize(),getSize().x*2);
 		if(lines!=null) {
 			m_lineCount=lines.size();
-			m_size.y=m_lineCount*m_labelSize*TextRender.LINE_HEIGHT;
+			m_size.y=m_lineCount*getLabelSize()*TextRender.LINE_HEIGHT;
 		}
 	}
 	@Override
@@ -53,11 +53,11 @@ public class GUIHelp extends GUI{
 				m_model=GraphicMain.getModel(m_modelName);
 			if(m_model!=null) {
 				Vector2f modelSize=m_size.add(new Vector2f(m_padding,0));
-				m_model.draw(m_position,modelSize,m_modelColor[mode]);
+				m_model.draw(getPos(),modelSize,m_modelColor[mode]);
 			}
 			if(m_lineCount!=0) {
-				Vector2f labelPos=m_position.add(new Vector2f(0,m_size.y/2));
-				TextRender.drawStringJustify(getLabelText(),labelPos,m_labelSize,m_labelColor[mode],m_size.x*2);
+				Vector2f labelPos=getPos().add(new Vector2f(0,m_size.y/2));
+				TextRender.drawStringJustify(getLabelText(),labelPos,getLabelSize(),m_labelColor[mode],m_size.x*2);
 			}
 			return true;
 		}

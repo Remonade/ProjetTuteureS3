@@ -7,27 +7,25 @@
 package Tests;
 
 import GUI.GUIBindingButton;
+import GUI.GUICheckBox;
 import GUI.GUIMenuButton;
-import static Graphic.GraphicMain.resetScreen;
-import static Graphic.GraphicMain.setCameraGUI;
-import static Graphic.GraphicMain.updateScreen;
 import static Tests.Input.*;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
 
 public class GameStateSettingMenu extends GameState {
 	public GameStateSettingMenu() {
 		super();
-		m_showCursor=true;
 		
-		/*GUICheckBox cb;
+		GUICheckBox cb;
 		cb=new GUICheckBox();
 		cb.setPos(600,350);
 		cb.setSize(150,15);
 		cb.setLabelSize(2);
+		cb.setValue(true);
 		//cb.setLabelColor(0,0,1,0,1);
 		cb.setLabelText("Particle: ");
 		cb.setRef("GUI_CB_PARTICLES");
-		m_GUI.add(cb);*/
+		m_GUI.add(cb);
 		
 		int h=20;
 		int w=150;
@@ -109,6 +107,22 @@ public class GameStateSettingMenu extends GameState {
 		b.setLabelText("Spell 3");
 		m_GUI.add(b);
 		
+		b=new GUIBindingButton(BIND_SPELL_4);
+		b.setPos(x,y-=50);
+		b.setSize(w,h);
+		b.setLabelSize(2);
+		//b.setLabelColor(0,0,1,0,1);
+		b.setLabelText("Spell 5");
+		m_GUI.add(b);
+		
+		b=new GUIBindingButton(BIND_SPELL_5);
+		b.setPos(x,y-=50);
+		b.setSize(w,h);
+		b.setLabelSize(2);
+		//b.setLabelColor(0,0,1,0,1);
+		b.setLabelText("Spell 3");
+		m_GUI.add(b);
+		
 		GUIMenuButton m=new GUIMenuButton(Main.STATE_MAIN_MENU);
 		m.setLabelText("retour");
 		m.setPos(600,50);
@@ -116,21 +130,10 @@ public class GameStateSettingMenu extends GameState {
 		m.setLabelSize(4);
 		m_GUI.add(m);
 	}
-	
-	@Override
-	public void execute() {
-		inputHandler();
-		resetScreen();
-		setCameraGUI();
-		
-		drawGUI();
-		
-		updateScreen();
-	}
 	@Override
 	public void inputHandler() {
 		super.inputHandler();
 		if(Input.isPushed(GLFW_KEY_ESCAPE))
-			Main.setGameState(Main.STATE_MAIN_MENU);
+			Main.changeGameState(Main.STATE_MAIN_MENU);
 	}
 }

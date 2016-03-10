@@ -41,6 +41,7 @@ public class Buffer {
      * @throws IOException if an IO error occurs
      */
     public static ByteBuffer ioResourceToByteBuffer(String resource, int bufferSize) throws IOException {
+		System.out.println("Now loading audio file: "+resource);
         ByteBuffer buffer;
 
         URL url = Thread.currentThread().getContextClassLoader().getResource(resource);

@@ -7,6 +7,7 @@
 package GUI;
 
 import static Graphic.GraphicMain.HEIGHT;
+import static Graphic.GraphicMain.WIDTH;
 import static Graphic.GraphicMain.window;
 import Graphic.Model;
 import Maths.Vector2f;
@@ -58,7 +59,14 @@ public class GUI {
 		m_modelColor[0]=new Vector4f(0.5f,0.5f,0.5f,1);
 	}
 	public Vector2f getPos() {
-		return m_position.add(new Vector2f(-m_size.x/2,-m_size.y/2));
+		Vector2f out=new Vector2f();
+		if(m_position.x<=1)
+			out.x=m_position.x*WIDTH;
+		else out.x=m_position.x;
+		if(m_position.y<=1)
+			out.y=m_position.y*HEIGHT;
+		else out.y=m_position.y;
+		return out;
 	}
 	public Vector2f getPosLabel() {
 		return m_position.subtract(new Vector2f(getSize().x,0));
@@ -73,7 +81,14 @@ public class GUI {
 		m_position=new Vector2f(x,y);
 	}
 	public Vector2f getSize() {
-		return m_size;
+		Vector2f out=new Vector2f();
+		if(m_size.x<=1)
+			out.x=m_size.x*WIDTH;
+		else out.x=m_size.x;
+		if(m_size.y<=1)
+			out.y=m_size.y*HEIGHT;
+		else out.y=m_size.y;
+		return out;
 	}
 	public void setSize(Vector2f size) {
 		setSize(size.x,size.y);
@@ -88,6 +103,8 @@ public class GUI {
 		m_labelSize=size;
 	}
 	public float getLabelSize() {
+		if(m_labelSize<=1)
+			return m_labelSize*getSize().y;
 		return m_labelSize;
 	}
 	public void setLabelColor(int mode,float r,float g,float b,float a) {
@@ -131,7 +148,7 @@ public class GUI {
 		
 		glfwGetCursorPos(window, b1, b2);
 		
-        Vector2f pos1 = m_position;
+        Vector2f pos1 = getPos();
         Vector2f pos2 = new Vector2f((float)b1.get(0),HEIGHT-(float)b2.get(0));
         Vector2f size1 = getSize();
 		

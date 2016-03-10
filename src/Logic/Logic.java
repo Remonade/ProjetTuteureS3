@@ -11,6 +11,7 @@ import Logic.Data.EntityDataUnit;
 import Logic.Data.EntityDataMissile;
 import Logic.Data.EntityData;
 import Graphic.GraphicMain;
+import Logic.Data.EntityDataParticle;
 import Logic.IA.IA;
 import Logic.IA.IARoamer;
 import Logic.Spell.Spell;
@@ -71,7 +72,6 @@ public class Logic {
 				Realm.getRealm(i).removeEntity(PLAYER);
 			}
 			PLAYER=null;
-			Audio.Audio.playSound("Wscream.ogg");
 			Main.setGameState(Main.STATE_GAME_OVER);
 		} catch (Exception ex) {
 			Logger.getLogger(Logic.class.getName()).log(Level.SEVERE, null, ex);
@@ -81,6 +81,7 @@ public class Logic {
 		try{
 			loadEntityData("data/entity.data");
 			generateRun(0);
+			Realm.changeRealm(0);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -116,6 +117,7 @@ public class Logic {
 		EntityData e=null;
 		EntityDataUnit u=null;
 		EntityDataMissile m=null;
+		EntityDataParticle p=null;
 		for(String l:lines) {
 			if(l.charAt(0)=='+')
 				continue;
@@ -127,18 +129,27 @@ public class Logic {
 				if("EntityData".equals(object)) {
 					u=null;
 					m=null;
+					p=null;
 					e=EntityData.create(name);
 					System.out.println("new EntityData "+name);
 				} else if("EntityDataUnit".equals(object)) {
 					u=EntityDataUnit.create(name);
 					m=null;
+					p=null;
 					e=u;
 					System.out.println("new EntityDataUnit "+name);
 				} else if("EntityDataMissile".equals(object)) {
 					u=null;
 					m=EntityDataMissile.create(name);
+					p=null;
 					e=m;
 					System.out.println("new EntityDataMissile "+name);
+				} else if("EntityDataParticle".equals(object)) {
+					u=null;
+					m=null;
+					p=EntityDataParticle.create(name);
+					e=p;
+					System.out.println("new EntityDataParticle "+name);
 				}
 			} else if("set".equals(action) && e!=null) { // set stuff
 				String attribute=data[1];
@@ -155,6 +166,10 @@ public class Logic {
 					String b=data[4];
 					String a=data[5];
 					e.setColor(Float.valueOf(r),Float.valueOf(g),Float.valueOf(b),Float.valueOf(a));
+				} else if("Sound".equals(attribute)) {
+					String key=data[2];
+					String path=data[3];
+					e.setSound(key,path);
 				}
 				if(u!=null) {
 					if("Health".equals(attribute)) {
@@ -183,6 +198,23 @@ public class Logic {
 					} else if("Damage".equals(attribute)) {
 						String damage=data[2];
 						m.setDamage(Integer.valueOf(damage));
+					} else if("Radius".equals(attribute)) {
+						String radius=data[2];
+						m.setRadius(Float.valueOf(radius));
+					}
+				} else if(p!=null) {
+					if("Speed".equals(attribute)) {
+						String speed=data[2];
+						p.setSpeed(Float.valueOf(speed));
+					} else if("Rotation".equals(attribute)) {
+						String rotation=data[2];
+						p.setRotation(Float.valueOf(rotation));
+					} else if("Duration".equals(attribute)) {
+						String duration=data[2];
+						p.setDuration(Float.valueOf(duration));
+					} else if("Type".equals(attribute)) {
+						String type=data[2];
+						p.setType(Integer.valueOf(type));
 					}
 				}
 			}

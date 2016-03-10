@@ -31,12 +31,14 @@ public class GUISpellBar {
 		for(int i=0;i<spellCount;i++) {
 			Spell s=spells.get(i);
 			
-			Vector4f color=new Vector4f(1,1,1,0.75f);
+			Vector4f color;
 			if(s.getEnergyCost()>PLAYER.getEnergy())
-				color=new Vector4f(0.25f,0,0.5f,0.75f);
+				color=new Vector4f(0.25f,0,0.5f,1f);
+			else
+				color=new Vector4f(1,1,1,1f);
 			
 			Vector2f sPos=new Vector2f(pos.x+i*size.x+i*offsetX,pos.y);
-			Model.renderTexture(s.getIcone(), sPos, size, color);
+			s.getIcone().draw(sPos, size, color);
 			GraphicMain.drawString(s.getName(), sPos.subtract(new Vector2f(size.x,-size.y/2)), 1, new Vector4f(0,0,0,1));
 			
 			int charge=s.getCharge();
