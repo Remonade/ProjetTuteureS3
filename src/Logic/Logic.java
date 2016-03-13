@@ -157,6 +157,10 @@ public class Logic {
 					String sizeX=data[2];
 					String sizeY=data[3];
 					e.setSize(Float.valueOf(sizeX),Float.valueOf(sizeY));
+				} else if("ModelSize".equals(attribute)) {
+					String sizeX=data[2];
+					String sizeY=data[3];
+					e.setModelSize(Float.valueOf(sizeX),Float.valueOf(sizeY));
 				} else if("Model".equals(attribute)) {
 					String model=data[2];
 					e.setModel(GraphicMain.getModel(model));

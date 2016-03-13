@@ -1,13 +1,10 @@
- /**
-  * Class utilisée pour stocker les données communes aux entités
-  * En particulier: taille et model.
-  * Pour
-  * Ex: des ennemis d'un même type ont le même nombre de PV max, le même model,
-  * la même taille...
-  *
+
+
+/**
+  * Class utilisée pour stocker les données communes aux entités.
+  * En particulier: taille hitbox/model, coleur, et model.
   */
 package Logic.Data;
-
 
 import Graphic.Model;
 import java.util.HashMap;
@@ -17,6 +14,7 @@ import Maths.Vector4f;
 public class EntityData {
 	// champs
     private Vector2f m_size=new Vector2f();
+    private Vector2f m_modelSize=null;
     private Model m_model=null;
 	private Vector4f m_color=null;
 	
@@ -25,7 +23,7 @@ public class EntityData {
 	// base
     /**
      * Vous ne devez instancier manuelement cette classe!
-     * Utilisez seulement EntityData.create(...), qui renvoit l'instance nouvelement créé.
+     * Utilisez seulement EntityData.create(...), qui renvoit l'instance nouvellement créée.
      */
     public EntityData() {
     }
@@ -54,16 +52,36 @@ public class EntityData {
 			m_color=new Vector4f(1,1,1,1);
 		return m_color.add(new Vector4f(0,0,0,0));
 	}
+    public void setModelSize(Vector2f size) {
+        setModelSize(size.x,size.y);
+    }
+    public void setModelSize(float w, float h) {
+		if(m_modelSize==null)
+			m_modelSize=new Vector2f();
+        m_modelSize.x=w;
+		m_modelSize.y=h;
+    }
+    public Vector2f getModelSize() {
+		if(m_modelSize!=null)
+			return m_modelSize;
+		else
+			return getSize();
+    }
 	// physic part
     public void setSize(Vector2f size) {
-        m_size=size;
+        setSize(size.x,size.y);
     }
     public void setSize(float w, float h) {
+		if(m_size==null)
+			m_size=new Vector2f();
         m_size.x=w;
 		m_size.y=h;
     }
     public Vector2f getSize() {
-        return m_size;
+		if(m_size!=null)
+			return m_size;
+		else
+			return new Vector2f(0.1f,0.1f);
     }
 	// audio part
 	public void setSound(String key,String path) {

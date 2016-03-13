@@ -124,9 +124,9 @@ public class EntityMissile extends EntityDynamic {
     public void draw() {
 		Model model=getModel();
 		if(model instanceof ModelAnim)
-			((ModelAnim)model).draw(m_pos,getSize(),getColor(),m_angle,Logic.CURRENT_TIME,"NAN");
+			((ModelAnim)model).draw(m_pos,getModelSize(),getColor(),m_angle,Logic.CURRENT_TIME,"NAN");
 		else
-			model.draw(m_pos,getSize(),getColor(),m_angle);
+			model.draw(m_pos,getModelSize(),getColor(),m_angle);
 	}
 	
 	private Vector2f m_direction=new Vector2f();

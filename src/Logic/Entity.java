@@ -46,6 +46,11 @@ public class Entity {
 				return new Vector2f(0.0f,0.0f);
 		return m_data.getSize();
 	}
+	public Vector2f getModelSize() {
+		if(m_data==null)
+				return new Vector2f(0.0f,0.0f);
+		return m_data.getModelSize();
+	}
 	public Model getModel() {
 		if(m_data==null)
 				return null;
@@ -73,21 +78,12 @@ public class Entity {
 		Model model=getModel();
 		if(model!=null) {
 			if(model instanceof ModelAnim) {
-				((ModelAnim)model).draw(m_pos,getSize(),getColor(),getAnimTime(),getAnim());
+				((ModelAnim)model).draw(m_pos,getModelSize(),getColor(),getAnimTime(),getAnim());
 			} else if(getModel() instanceof ModelRepeat) {
-				((ModelRepeat)model).draw(m_pos,getSize(),getColor());
+				((ModelRepeat)model).draw(m_pos,getModelSize(),getColor());
 			} else
-				model.draw(m_pos,getSize(),getColor());
+				model.draw(m_pos,getModelSize(),getColor());
 		}
-		String contact="";
-		/*if(m_contact[CONTACT_UP])
-			GraphicMain.drawString("u", m_pos.add(new Vector2f(0,getSize().y)), 0.01f, getColor());
-		if(m_contact[CONTACT_DOWN])
-			GraphicMain.drawString("d", m_pos.add(new Vector2f(0,-getSize().y)), 0.01f, getColor());
-		if(m_contact[CONTACT_RIGHT])
-			GraphicMain.drawString("r", m_pos.add(new Vector2f(getSize().x,0)), 0.01f, getColor());
-		if(m_contact[CONTACT_LEFT])
-			GraphicMain.drawString("l", m_pos.add(new Vector2f(-getSize().x,0)), 0.01f, getColor());*/
 	}
 	public void setCollide(boolean value) {
 		m_collide=value;

@@ -50,9 +50,9 @@ public class EntityParticle extends Entity {
 			
 			Model model=getData().getModel();
 			if(model instanceof ModelAnim)
-				((ModelAnim)model).draw(m_pos.subtract(mod),getSize(),color,0,m_time,"NAN");
+				((ModelAnim)model).draw(m_pos.subtract(mod),getModelSize(),color,0,m_time,"NAN");
 			else
-				model.draw(m_pos.subtract(mod),getSize(),color,m_angle);
+				model.draw(m_pos.subtract(mod),getModelSize(),color,m_angle);
 		}
 	}
 	

@@ -423,7 +423,7 @@ public class EntityUnit extends EntityDynamic {
 		
 		color.w*=m_shield/3;
 		
-		shield.draw(m_pos, getSize().scale(1.5f),color, Logic.CURRENT_TIME, "NAN");
+		shield.draw(m_pos,getSize().scale(1.5f),color, Logic.CURRENT_TIME, "NAN");
 		
 		if(m_shield<1.0f || m_health<1.0f) {
 			Vector2f barSize=new Vector2f(getSize().x*m_health,0.03f);

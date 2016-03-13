@@ -14,25 +14,30 @@
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 + General level settings
 new Realm The_Entrance
-set Background background/night
+set Background background/echoes
 set Music Music/HOTS_46.ogg
-set CameraBound -1 1 2 8
-+
-+ Main ground thing
-new Entity wall3back 0 5
-set CollisionOff
-new Entity ground5 0 -0.5
-new Entity ground5 0 10
-new Entity wall5 -4 4.5
-new Entity wall5 4 4.5
+set CameraBound -4 20 -11 16
 +
 + Other blocks
-new Entity block1x5 -1.5 1.5
-new Entity block1x5 1 1.5
+new Entity wallback 0 5
+set CollisionOff
++new Entity wallback 0 20
++set CollisionOff
+new Entity ground5 0 0
+new Entity ground5 0 8
+new Entity wall5 -6 4
+new Entity wall0.5x5 4.5 7
+new Entity wall0.5x5 4.5 -4 (pit left wall)
+new Entity block5x1 7.5 0 (over pit block)
+new Entity wall0.5x5 10.5 -4 (pit right wall)
+new Entity ground2.5 7.5 -8 (pit ground)
 +
 + WayPoints
-new WayPoint waypoint -2.5 0.75 -1 0 1 0
-new WayPoint waypoint 2.5 0.75 1 0 -1 0.15
-+new WayPoint waypoint -2 1.5 0 3 1 0
-+new WayPoint waypoint 2 1.5 0 2 -1 0
+new WayPoint waypoint -3 1.25 -1 0 1 0
+new WayPoint waypoint 36 8 1 0 -1 0
+new WayPoint waypoint 7.5 -6.75 0 0 0 0
 +
++ Unit
++new Unit boss 1 2 1
++new Unit boss 7.5 2 1
++set Boss LAST_UNIT

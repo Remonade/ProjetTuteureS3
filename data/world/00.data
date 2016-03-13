@@ -13,24 +13,29 @@
 + Creating initial realm (0)
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 + General level settings
-new Realm The_Boss
-set CameraBound -1 1 2 7
+new Realm The_Entrance
 set Background background/night
 set Music Music/HOTS_46.ogg
+set CameraBound -4 4 2 8
++
++ background thing
+new Entity wall3back 0 5
+set CollisionOff
 +
 + Main ground thing
-new Entity ground5 0 -0.5
+new Entity ground5 0 0
 new Entity ground5 0 10
-new Entity wall5 -4 4.5
-new Entity wall5 4 4.5
+new Entity wall5 -6 5
+new Entity wall5 6 5
 +
 + Other blocks
-new Entity block1x10 -1 4.5
-new Entity block1x10 1 4.5
+new Entity block1x5 -3 2.25
+new Entity block1x5 -1 2.25
+new Entity block1x5 1 2.25
+new Entity block1x5 3 2.25
+new Entity block5x1 0 3.25
 +
 + WayPoints
-new WayPoint waypoint -2.5 1.25 -1 0 1 0
-new WayPoint waypoint 2.5 1.25 1 0 -1 0
+new WayPoint waypoint -4.5 1.25 -1 0 1 0
+new WayPoint waypoint 4.5 1.25 1 0 -1 0.15
 +
-new Unit boss 1 2 1
-set Boss LAST_UNIT
