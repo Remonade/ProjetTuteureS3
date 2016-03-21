@@ -28,63 +28,63 @@ set Model default
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 new EntityData ground2.5
 set Size 2.5 1
-set Model vaisseau
+set Model wall3
 +
 new EntityData ground5x0.5
 set Size 5 0.5
-set Model vaisseau
+set Model wall3
 +
 new EntityData wall2.5
 set Size 1 2.5
-set Model vaisseau
+set Model wall3
 +
 new EntityData wall0.5x5
 set Size 0.5 5
-set Model vaisseau
+set Model wall3
 +
 +
 +
 new EntityData ground5
 set Size 5 1
-set Model vaisseau
+set Model wall3
 +
 new EntityData ground10
 set Size 10 1
-set Model vaisseau
+set Model wall3
 +
 new EntityData wall5
 set Size 1 5
-set Model vaisseau
+set Model wall3
 +
 new EntityData wall10
 set Size 1 10
-set Model vaisseau
+set Model wall3
 +
 +
 +
 new EntityData wall20
 set Size 1 20
-set Model vaisseau
+set Model wall3
 +
 new EntityData block
 set Size 0.25 0.25
-set Model vaisseau
+set Model wall3
 +
 new EntityData block5x1
 set Size 1.25 0.25
-set Model vaisseau
+set Model wall3
 +
 new EntityData block10x1
 set Size 2.5 0.25
-set Model vaisseau
+set Model wall3
 +
 new EntityData block1x5
 set Size 0.25 1.25
-set Model vaisseau
+set Model wall3
 +
 new EntityData block1x10
 set Size 0.25 2.5
-set Model vaisseau
+set Model wall3
 +
 new EntityData waypoint
 set Size 0.25 0.25
@@ -97,6 +97,7 @@ set Model wall
 +
 new EntityData wall3back
 set Size 5 5
+set Color 0.25 0.25 0.25 1
 set Model wall3
 +
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -104,7 +105,7 @@ set Model wall3
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 new EntityDataUnit enemy
 set Size 0.1 0.1
-set Model Player
+set Model Enemy
 set Health 50 0
 set Shield 100 0.5
 set Energy 100 0.15
@@ -112,16 +113,16 @@ set Sound death Unit/Wscream.ogg
 +
 new EntityDataUnit player
 set Size 0.15 0.15
-set ModelSize 0.30 0.30
+set ModelSize 0.35 0.35
 set Model Player
 set Health 300 0
 set Shield 200 5
-set Energy 50 0.3
+set Energy 25 0.9
 set Sound death Unit/Wscream.ogg
 +
 new EntityDataUnit boss
 set Size 0.35 0.35
-set Model Player
+set Model Enemy
 set Health 500 0
 set Shield 200 0.5
 set Energy 100 2
@@ -142,16 +143,26 @@ set Sound death Unit/MonsterDeath.ogg
 new EntityDataMissile missile
 set Size 0.1 0.1
 set Model missile
-set Speed 0.05
+set Speed 6
+set Range 3
 set Damage 10
 set Sound explode Effect/EnergyExplosion.ogg
++
+new EntityDataMissile strike
+set Size 0.10 0.15
+set Model missile
+set Speed 10
+set Range 0.35
+set Damage 75
+set Sound explode Effect/Explosion.ogg
 +
 new EntityDataMissile explosive
 set Size 0.15 0.15
 set Model Pexplosion
-set Speed 0.035
-set Damage 50
-set Radius 1
+set Speed 5
+set Range 2.5
+set Damage 5
+set Radius 0.5
 set Sound explode Effect/Explosion.ogg
 +
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -177,4 +188,4 @@ set Color 1 0.75 0 1
 set Size 0.25 0.25
 set Model Pexplosion
 set Duration 0.1
-set Speed 10
+set Speed 5

@@ -13,6 +13,7 @@ import static java.lang.Math.max;
 import static java.lang.Math.min;
 import Maths.Vector2f;
 import Maths.Vector4f;
+import static Physic.PhysicMain.inSquare;
 import static org.lwjgl.opengl.GL11.GL_PROJECTION;
 import static org.lwjgl.opengl.GL11.glLoadIdentity;
 import static org.lwjgl.opengl.GL11.glMatrixMode;
@@ -137,21 +138,6 @@ public class Camera2D {
         m_BR=max(bound.y,bound.x);
     }
 	public final boolean isInScreen(Vector2f pos) {
-		float x=getInCameraX(pos.x);
-		if(Math.abs(x)>1)
-			return false;
-		float y=getInCameraY(pos.y);
-		if(Math.abs(y)>1)
-			return false;
-		return true;
-	}
-	public float getInCameraX(float posX) {
-		float x=posX*GraphicMain.WIDTH/2;
-		//float x=(posX*GraphicMain.WIDTH-0.5f)/(2*GraphicMain.camera.getZoom());
-		return x;
-	}
-	public float getInCameraY(float posY) {
-		float y=-(posY*GraphicMain.HEIGHT-0.5f)/(2*GraphicMain.camera.getZoom()/GraphicMain.camera.getRatio());
-		return y;
+		return inSquare(pos,new Vector2f(m_posX,m_posY),new Vector2f(m_zoom,m_zoom/getRatio()));
 	}
 }

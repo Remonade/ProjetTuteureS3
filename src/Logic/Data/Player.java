@@ -5,9 +5,10 @@ import Logic.Logic;
 import Logic.Spell.SpellDash;
 import Logic.Spell.SpellHeal;
 import Logic.Spell.SpellShotSpread;
+import java.io.Serializable;
 
 
-public class Player {
+public class Player implements Serializable {
 	public Player() {
 		m_level=1;
 		m_exp=0;
@@ -102,7 +103,7 @@ public class Player {
 		player.setOwner(this);
 		player.setData(EntityDataUnit.get("player"));
 		player.setTeam(0);
-		player.addSpell(new SpellShotSpread("Spread",10,0.30f,2));
+		player.addSpell(new SpellShotSpread("Spread",4,0.05f,2));
 		player.addSpell(new SpellDash("Dash",10,1));
 		player.addSpell(new SpellHeal("Heal",10,0.5f,-1,250));
 		//player.addSpell(new Spell("Health",10,0.35f,20));

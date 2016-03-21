@@ -199,6 +199,9 @@ public class Logic {
 					if("Speed".equals(attribute)) {
 						String speed=data[2];
 						m.setMaxSpeed(Float.valueOf(speed));
+					} else if("Range".equals(attribute)) {
+						String range=data[2];
+						m.setRange(Float.valueOf(range));
 					} else if("Damage".equals(attribute)) {
 						String damage=data[2];
 						m.setDamage(Integer.valueOf(damage));

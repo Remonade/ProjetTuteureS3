@@ -14,6 +14,7 @@ public class EntityDataMissile extends EntityData {
     private int m_damage=0;
 	private float m_speed=0.05f;
 	private float m_radius=0f;
+	private float m_range=0f;
 	
     // base
     public EntityDataMissile() {
@@ -38,6 +39,12 @@ public class EntityDataMissile extends EntityData {
     }
     public float getMaxSpeed() {
         return m_speed;
+    }
+    public void setRange(float range) {
+        m_range=range;
+    }
+    public float getRange() {
+        return m_range;
     }
     // fonction de création
     public static EntityDataMissile create(String key) {

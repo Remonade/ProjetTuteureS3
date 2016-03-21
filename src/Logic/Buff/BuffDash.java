@@ -7,7 +7,6 @@
 package Logic.Buff;
 
 import Logic.Data.EntityDataParticle;
-import Logic.Entity;
 import Logic.EntityParticle;
 import Logic.EntityUnit;
 import Logic.Realm;
@@ -22,7 +21,7 @@ public class BuffDash extends Buff {
 	protected int m_direction=-1;
 	protected Vector2f m_speed=new Vector2f(0,0);
 	
-	protected ArrayList<Entity> m_touch=new ArrayList<>();
+	protected ArrayList<EntityUnit> m_touch=new ArrayList<>();
 	
 	public BuffDash(String name, float duration, float range) {
 		super(name,duration);
@@ -52,13 +51,12 @@ public class BuffDash extends Buff {
 		if(m_distance>m_range)
 			m_remainingDuration=-1;
 		
-		ArrayList<Entity> all=(ArrayList<Entity>)Realm.getActiveRealm().getUnits().clone();
-		//all.addAll(Realm.getActiveRealm().getEntities());
+		ArrayList<EntityUnit> all=(ArrayList<EntityUnit>)Realm.getActiveRealm().getUnits().clone();
 		
-		ArrayList<Entity> touched=new ArrayList<>();
+		ArrayList<EntityUnit> touched=new ArrayList<>();
 		
-		for(Entity t:m_touch) {
-			for(Entity e:all) {
+		for(EntityUnit t:m_touch) {
+			for(EntityUnit e:all) {
 				if(e!=t && e!=u && !m_touch.contains(e)) {
 					if(PhysicMain.contact(t,e))
 						touched.add(e);
@@ -68,25 +66,16 @@ public class BuffDash extends Buff {
 		
 		m_touch.addAll(touched);
 		
-		for(Entity t:m_touch) {
-			if(t instanceof EntityUnit) {
-				EntityUnit unit=(EntityUnit)t;
-				unit.setSpeed(m_speed.x,unit.getSpeed().y);
-				//if(unit!=u && !unit.isStun()) {
-				//}
-			}
+		for(EntityUnit t:m_touch) {
+				t.setSpeed(m_speed.x,t.getSpeed().y);
 		}
-		
 	}
 	
 	@Override
 	public void onExpire(EntityUnit u) {
-		for(Entity t:m_touch) {
-			if(t instanceof EntityUnit) {
-				EntityUnit unit=(EntityUnit)t;
-				if(unit!=u) {
-					unit.damage(50);
-				}
+		for(EntityUnit t:m_touch) {
+				if(t!=u) {
+					t.damage(50);
 			}
 		}
 	}

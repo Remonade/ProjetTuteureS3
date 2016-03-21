@@ -6,6 +6,7 @@
 
 package Logic.IA;
 
+import static Graphic.GraphicMain.camera;
 import Logic.Entity;
 import Logic.EntityUnit;
 import Logic.Realm;
@@ -63,9 +64,19 @@ public class IA {
 		if(target!=null) {
 			Vector2f pos=target.getPos();
 			Vector2f size=target.getSize();
-			if(lineOfSight(u,target))
+			if(lineOfSight(u,target)) {
+				if(!u.isTalking() && Math.random()<0.05) {
+					u.talk("Je te vois!");
+				}
 				if(u.shoot(u.getPos().subtract(pos).negate()))
 					m_actionCount++;
+			}
+			if(!u.isTalking() && Math.random()<0.05) {
+				if(u.getPercentHealth()<0.5f) {
+					u.talk("Oh, ça ce n'est pas gentil...");
+					Audio.Audio.playSound("Unit/Nasty.ogg");
+				}
+			}
 		}
 	}
 	public static EntityUnit getTarget(EntityUnit u) {
@@ -75,7 +86,9 @@ public class IA {
 				return unit;
 		return null;
 	}
-	
+	public static boolean isInScreen(EntityUnit u) {
+		return camera.isInScreen(u.getPos());
+	}
 	public static EntityUnit getNearestEnemy(EntityUnit u) {
 		Realm r=Logic.Realm.getActiveRealm();
 		EntityUnit closest=null;
@@ -91,26 +104,30 @@ public class IA {
 		return closest;
 	}
 	public static boolean lineOfSight(EntityUnit u1, EntityUnit u2) {
-		Vector2f pos1=u1.getPos();
-		Vector2f pos2=u2.getPos();
+		if(!isInScreen(u1) || !isInScreen(u2))
+			return false;
 		
-		EntityUnit temp=new EntityUnit();
-		temp.setPos(pos1);
+		Vector2f LOS=u2.getPos().subtract(u1.getPos());
 		
-		Vector2f vect=pos1.subtract(pos2);
-		Vector2f dest=pos1.subtract(pos2);
+		EntityUnit u=new EntityUnit();
+		u.setPos(u1.getPos());
+		u.setSpeed(LOS);
+		
+		Vector2f pos1=u.getPos();
+		Vector2f dest=pos1.add(u.getSpeed());
 		
 		ArrayList<Entity> all=(ArrayList<Entity>) Realm.getActiveRealm().getEntities().clone();
-		all.addAll(Realm.getActiveRealm().getUnits());
 		
 		for(Entity e:all)
-			if(u1!=e && u2!=e && e.getCollide())
-				dest=entityCollide(temp,dest,e);
+			if(u1!=e && e.getCollide()) // si pas lui même
+				dest=entityCollide(u,dest,e);
 		
-		if(vect.length()<dest.length()+0.01f)
-			return true;
+		Vector2f speed=dest.subtract(pos1);
 		
-		return false;
+		if(speed.length()+0.01f<LOS.length())
+			return false;
+		
+		return true;
 	}
 	
 }

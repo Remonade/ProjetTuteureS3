@@ -7,15 +7,27 @@
 package GUI;
 
 import static Graphic.TextRendering.TextRender.getRenderedSize;
+import Maths.Vector2f;
 
 public class GUIDialog extends GUIHelp {
-	
+	@Override
+	public Vector2f getPos() {
+		return m_position;
+	}
+	@Override
+	public Vector2f getSize() {
+		return m_size;
+	}
+	@Override
+	public float getLabelSize() {
+		return m_labelSize;
+	}
 	protected float m_timer;
 	protected int m_letters=0;
 	public GUIDialog(String label) {
 		super();
 		m_modelName="dialog";
-		m_timer=0.75f+label.length()*0.05f;
+		m_timer=0.75f+label.length()*0.1f;
 		setLabelText(label);
 		setSize(0.75f,0);
 		setLabelSize(0.015f);

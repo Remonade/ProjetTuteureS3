@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 package Audio;
 
@@ -29,9 +24,11 @@ public class Audio {
 	private static final int MUSIC_PLAYING=1;
 	private static final int MUSIC_PAUSED=2;
 	
+	private static int CHANNEL_COUNT=16;
+	
 	private static int musicState=MUSIC_STOPED;
 	private static Channel musicChannel;
-	private static float musicVolume=1.0f;
+	private static float musicVolume=1f;
 	private static SoundData currentMusic=null;
 	
 	
@@ -45,8 +42,8 @@ public class Audio {
 				throw new IllegalStateException("Failed to open the default device.");
 			context = ALContext.create(device);
 			
-			soundChannels=new Channel[8];
-			for(int i=0;i<8;i++) {
+			soundChannels=new Channel[CHANNEL_COUNT];
+			for(int i=0;i<CHANNEL_COUNT;i++) {
 				soundChannels[i]=new Channel();
 				soundChannels[i].setVolume(generalVolume*soundVolume);
 			}

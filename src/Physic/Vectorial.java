@@ -37,13 +37,13 @@ public class Vectorial {
 				contactEE(u,e);
 		
 			if(u.getContact(Entity.CONTACT_DOWN)) { // ralentissement au sol
-				u.setSpeed(u.getSpeed().x*0.9f,u.getSpeed().y);
+				u.setSpeed(u.getSpeed().x*0.85f,0);
 			}
 			if(u.getContact(Entity.CONTACT_UP)) { // bloquage plafond
 				u.setSpeed(u.getSpeed().x,0);
 			}
 			if(u.getContact(Entity.CONTACT_LEFT) || u.getContact(Entity.CONTACT_RIGHT)) {
-				u.setSpeed(u.getSpeed().x,u.getSpeed().y*0.9f);  // ralentissement sur mur
+				u.setSpeed(0,u.getSpeed().y*0.90f);  // ralentissement sur mur
 			}
 		}
     }

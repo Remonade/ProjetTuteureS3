@@ -43,13 +43,14 @@ public class EntityMissile extends EntityDynamic {
 	}
 	@Override
 	public void update() {
-		m_pos=m_pos.add(m_speed);
-		m_time+=Logic.DELTA_TIME;
-		if(m_time>10) {
+		if(m_distance>getRange()) {
 			Realm r=Realm.getActiveRealm();
 			if(r!=null)
 				r.removeEntity(this);
 			Audio.Audio.playSound(getSound("fade"));
+		} else {
+			m_pos=m_pos.add(m_speed.scale((float)Logic.DELTA_TIME));
+			m_distance+=Logic.DELTA_TIME*getMaxSpeed();
 		}
 	}
 	public void explode(Entity target) {
@@ -79,7 +80,7 @@ public class EntityMissile extends EntityDynamic {
 				}
 			}
 		}
-		if(target instanceof EntityUnit)
+		if(target!=null && target instanceof EntityUnit)
 			targets.add((EntityUnit)target);
 
 		for(EntityUnit u:targets) {
@@ -92,17 +93,18 @@ public class EntityMissile extends EntityDynamic {
 		}
 	}
 
-	public float getTime() {
-		return m_time;
-	}
-
-	public void setTime(float time) {
-		this.m_time = time;
+	public float getDistance() {
+		return m_distance;
 	}
 	public float getMaxSpeed() {
 		if(m_data!=null)
 			return getMissileData().getMaxSpeed();
 		return 0.05f;
+	}
+	public float getRange() {
+		if(m_data!=null)
+			return getMissileData().getRange();
+		return 0.00f;
 	}
 	public float getRadius() {
 		if(m_data!=null)
@@ -123,15 +125,17 @@ public class EntityMissile extends EntityDynamic {
 	@Override
     public void draw() {
 		Model model=getModel();
-		if(model instanceof ModelAnim)
-			((ModelAnim)model).draw(m_pos,getModelSize(),getColor(),m_angle,Logic.CURRENT_TIME,"NAN");
-		else
-			model.draw(m_pos,getModelSize(),getColor(),m_angle);
+		if(model!=null) {
+			if(model instanceof ModelAnim)
+				((ModelAnim)model).draw(m_pos,getModelSize(),getColor(),m_angle,Logic.CURRENT_TIME,"NAN");
+			else
+				model.draw(m_pos,getModelSize(),getColor(),m_angle);
+		}
 	}
 	
 	private Vector2f m_direction=new Vector2f();
-	private float m_time=1;
-	private Entity m_owner;
+	private float m_distance=0;
+	private Entity m_owner=null;
 	private float m_angle;
 	
 	
@@ -144,7 +148,6 @@ public class EntityMissile extends EntityDynamic {
 	public static EntityMissile create() {
 		EntityMissile temp=new EntityMissile();
 		temp.setDir(new Vector2f());
-		temp.setTime(0.0f);
 		return temp;
 	}
 	public static void remove(Entity e) {

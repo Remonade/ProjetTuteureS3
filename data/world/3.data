@@ -14,35 +14,34 @@
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 + General level settings
 new Realm The_Fall
+set CameraBound -1 1 2 8
 set Background background/hangar
 set Music Music/HOTS_46.ogg
 +
 + Main ground thing
 new Entity ground5 0 0
-new Entity ground5 0 19.5
-new Entity wall10 -4 1.5
-new Entity wall10 4 1.5
+new Entity ground5 0 10
+new Entity wall10 -4 5
+new Entity wall10 4 5
 +
 + Other blocks
-new Entity block5x1 -2 2
-new Entity block5x1 2 2
-new Entity block5x1 -2 3
-new Entity block5x1 2 3
-new Entity block5x1 -2 4
-new Entity block5x1 2 4
-new Entity block5x1 -2 5
-new Entity block5x1 2 5
-new Entity block5x1 -2 6
-new Entity block5x1 2 6
-new Entity block5x1 -2 7
-new Entity block5x1 2 7
-new Entity block5x1 -2 8
-new Entity block5x1 2 8
+new Entity block5x1 2.25 2
+new Entity block5x1 -2.25 2.5
+new Entity block5x1 2.25 3
+new Entity block5x1 -2.25 3.5
+new Entity block5x1 2.25 4
+new Entity block5x1 -2.25 4.5
+new Entity block5x1 2.25 5
+new Entity block5x1 -2.25 5.5
+new Entity block5x1 2.25 6
+new Entity block5x1 -2.25 6.5
+new Entity block5x1 2.25 7
+new Entity block5x1 -2.25 7.5
 +
 + WayPoints
-new WayPoint waypoint 0 9.5 -1 0 0 -1
-new WayPoint waypoint 2.25 1.25 1 0 -1 0
+new WayPoint waypoint -2.75 1.25 -1 0 1 0
+new WayPoint waypoint 2.75 7.75 1 0 -1 0
 +
 + Units
-new Unit enemy 0 5 1
+new Unit enemy 0 1.15 1
 +

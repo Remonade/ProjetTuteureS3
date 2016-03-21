@@ -6,7 +6,7 @@
 
 package Tests;
 
-import GUI.GUI;
+import GUI.GUILabel;
 import GUI.GUIMenuButton;
 import static Graphic.GraphicMain.window;
 import Logic.Logic;
@@ -19,25 +19,25 @@ public class GameStateGameOver  extends GameState {
 	
 	public GameStateGameOver() {
 		super();
-		GUI g=new GUI();
-		g.setPos(400,500);
-		g.setSize(400,75);
+		GUILabel g=new GUILabel(GUILabel.ALIGN_CENTER);
 		g.setLabelText("Game Over");
-		g.setLabelSize(10);
+		g.setPos(0.5f,0.8f);
+		g.setSize(0,0.1f);
+		g.setLabelSize(0.2f);
 		m_GUI.add(g);
 		
 		GUIMenuButton m=new GUIMenuButton(Main.STATE_LEVEL);
 		m.setLabelText("recommencer");
-		m.setPos(400,400);
-		m.setSize(175,30);
-		m.setLabelSize(3);
+		m.setPos(0.5f,0.5f);
+		m.setSize(0.2f,0.05f);
+		m.setLabelSize(0.1f);
 		m_GUI.add(m);
 		
 		m=new GUIMenuButton(-1);
 		m.setLabelText("quitter");
-		m.setPos(400,200);
-		m.setSize(175,30);
-		m.setLabelSize(3);
+		m.setPos(0.5f,0.3f);
+		m.setSize(0.2f,0.05f);
+		m.setLabelSize(0.1f);
 		m_GUI.add(m);
 	}
 	

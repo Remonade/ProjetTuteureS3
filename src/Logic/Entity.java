@@ -13,7 +13,7 @@ public class Entity {
 		m_contact = new boolean[4];
 		for(boolean i:m_contact)
 			i=false;
-		this.m_pos=new Vector2f(0,0);
+		m_pos=new Vector2f(0,0);
 	}
 	public boolean getContact(int contact) {
 		if(contact>-1 && contact<4)
@@ -97,8 +97,8 @@ public class Entity {
 	public void setVisible(boolean value) {
 		m_visible=value;
 	}
-	protected EntityData m_data;
-	protected Vector2f m_pos;
+	protected EntityData m_data=null;
+	protected Vector2f m_pos=null;
 	protected boolean m_collide=true;
 	protected boolean m_visible=true;
 	protected boolean m_contact[];

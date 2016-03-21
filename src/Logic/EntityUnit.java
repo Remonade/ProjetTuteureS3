@@ -4,7 +4,6 @@ import GUI.GUIDialog;
 import Logic.Data.Player;
 import Logic.Data.EntityDataUnit;
 import Logic.Data.EntityDataMissile;
-import Logic.Data.EntityData;
 import Graphic.GraphicMain;
 import Graphic.Model;
 import Graphic.ModelAnim;
@@ -19,7 +18,7 @@ import java.util.ArrayList;
 
 public class EntityUnit extends EntityDynamic {
     protected boolean m_lookRight; //True means "look to the right"
-	protected float m_health=0.1f;
+	protected float m_health=1f;
     protected float m_energy=1f;
     protected float m_shield=1f;
 	protected double m_shieldCooldown=0;
@@ -152,13 +151,6 @@ public class EntityUnit extends EntityDynamic {
 	public double getAnimTime() {
 		return m_animTime;
 	}
-    @Override
-    public void setData(EntityData data) {
-		super.setData(data);
-		m_health=getMaxHealth();
-		m_energy=getMaxEnergy();
-		m_shield=getMaxShield();
-    }
 	public void setIA(IA ia) {
 		m_ia=ia;
 	}
@@ -446,19 +438,19 @@ public class EntityUnit extends EntityDynamic {
 	/* ------------------------------------------------------------- */
 	
 	private GUIDialog m_dialog=null;
+	public boolean isTalking() {
+		return m_dialog!=null;
+	}
 	public void talk(String speach) {
 		Audio.Audio.playSound(getSound("talk"));
 		m_dialog=new GUIDialog(speach);
 	}
 	public void drawDialog() {
 		if(m_dialog!=null) {
-			m_dialog.setPos(getPos().add(getSize().scale(1.1f)).add(new Vector2f(0,m_dialog.getSize().y)));
+			m_dialog.setPos(getPos().add(new Vector2f(0,m_dialog.getSize().y+getSize().y+0.12f)));
 			m_dialog.draw();
 			if(!m_dialog.update())
 				m_dialog=null;
 		}
 	}
-	
-	
-	
 }

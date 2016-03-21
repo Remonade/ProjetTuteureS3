@@ -37,6 +37,12 @@ public class ModelRepeat extends Model {
         glEnd();
     }
     public void sendTextures(int offset,float[]data,Vector2f size) {
-        glTexCoord2f(Math.round(data[offset*2]*size.x*2)*GraphicMain.DIRECTION,Math.round(data[offset*2+1]*size.y*2));
+		float x,y;
+		float t=1;
+		while(size.x>t*0.25f && size.y>t*0.25f && t<2)
+			t++;
+		x=size.x/(0.25f*t);
+		y=size.y/(0.25f*t);
+        glTexCoord2f(data[offset*2]*x*GraphicMain.DIRECTION,data[offset*2+1]*y);
     }
 }

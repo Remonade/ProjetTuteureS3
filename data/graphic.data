@@ -45,7 +45,6 @@ new Texture background/ice.png
 new Texture background/echoes.jpg
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++ walls
 new Texture wall/haltere_texture.png
-new Texture wall/texture_vaisseau.png
 new Texture wall/wall3.png
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++ particles
 +
@@ -66,6 +65,9 @@ new TextureCliped robot.png
 set FrameCount 2 5
 +
 new TextureCliped blader_robot.png
+set FrameCount 2 5
++
+new TextureCliped megaman_noir_fini.png
 set FrameCount 2 5
 +
 new TextureCliped anim_fire.png
@@ -122,8 +124,6 @@ new ModelRepeat wall
 set Texture wall/haltere_texture.png
 new ModelRepeat wall3
 set Texture wall/wall3.png
-new ModelRepeat vaisseau
-set Texture wall/texture_vaisseau.png
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++ particules
 +
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++ icones
@@ -142,7 +142,7 @@ set Texture icone/summon.png
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 new ModelAnim Player
 new Animation NAN
-set Texture blader_robot.png
+set Texture megaman_noir_fini.png
 set FrameCount 15
 set Duration 6
 set Frame 0 2
@@ -162,28 +162,76 @@ set Frame 13 2
 set Frame 14 2
 +
 new Animation RUN
-set Texture blader_robot.png
+set Texture megaman_noir_fini.png
 set FrameCount 2
 set Duration 0.5
 set Frame 0 1
 set Frame 1 5
 +
 new Animation JUMP
-set Texture blader_robot.png
+set Texture megaman_noir_fini.png
 set FrameCount 1
 set Duration 1
 set Frame 0 5
 +
 new Animation WALL
-set Texture blader_robot.png
+set Texture megaman_noir_fini.png
 set FrameCount 1
 set Duration 1
 set Frame 0 8
 +
 new Animation SHOOT
-set Texture blader_robot.png
-set FrameCount 5
+set Texture megaman_noir_fini.png
+set FrameCount 3
+set Duration 0.25
+set Frame 0 6
+set Frame 1 7
+set Frame 2 7
++
+new ModelAnim Enemy
+new Animation NAN
+set Texture robot.png
+set FrameCount 15
+set Duration 6
+set Frame 0 2
+set Frame 1 2
+set Frame 2 2
+set Frame 3 0
+set Frame 4 4
+set Frame 5 4
+set Frame 6 4
+set Frame 7 4
+set Frame 8 0
+set Frame 9 2
+set Frame 10 2
+set Frame 11 2
+set Frame 12 2
+set Frame 13 2
+set Frame 14 2
++
+new Animation RUN
+set Texture robot.png
+set FrameCount 2
 set Duration 0.5
+set Frame 0 1
+set Frame 1 5
++
+new Animation JUMP
+set Texture robot.png
+set FrameCount 1
+set Duration 1
+set Frame 0 5
++
+new Animation WALL
+set Texture robot.png
+set FrameCount 1
+set Duration 1
+set Frame 0 8
++
+new Animation SHOOT
+set Texture robot.png
+set FrameCount 5
+set Duration 0.25
 set Frame 0 7
 set Frame 1 7
 set Frame 2 6
