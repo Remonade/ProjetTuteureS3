@@ -34,7 +34,7 @@ new WayPoint waypoint 2.5 0.75 1 0 -1 0
 +
 + Units
 new Unit monster 2.1 4.1 1
-set IA Roamer 30
+set IA roamer 30
 set CustomValue 2
 set Boss LAST_UNIT
 +

@@ -70,6 +70,10 @@ new EntityData block
 set Size 0.25 0.25
 set Model wall3
 +
+new EntityData block4x1
+set Size 1 0.25
+set Model wall3
++
 new EntityData block5x1
 set Size 1.25 0.25
 set Model wall3

@@ -39,6 +39,6 @@ new WayPoint waypoint 7.5 -6.75 0 0 0 0
 +
 + Unit
 new Unit boss 1 2 1
-+set IA Null
 +new Unit boss 7.5 2 1
+set IA default
 set Boss LAST_UNIT

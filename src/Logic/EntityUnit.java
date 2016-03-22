@@ -8,6 +8,7 @@ import Graphic.GraphicMain;
 import Graphic.Model;
 import Graphic.ModelAnim;
 import Logic.Buff.Buff;
+import Logic.Data.EntityDataParticle;
 import Logic.IA.IA;
 import Logic.Spell.Spell;
 import static Logic.Type.*;
@@ -30,6 +31,63 @@ public class EntityUnit extends EntityDynamic {
 	protected Player m_owner;
 	protected IA m_ia=null;
 	
+	// input
+	protected boolean[] m_inputs=new boolean[5];
+	public static final int INPUT_LEFT=0;
+	public static final int INPUT_RIGHT=1;
+	public static final int INPUT_UP=2;
+	public static final int INPUT_DOWN=3;
+	public static final int INPUT_JUMP=4;
+	
+	public void resetInput() {
+		for(int i=0;i<m_inputs.length;i++)
+			m_inputs[i]=false;
+	}
+	public void setInput(int input, boolean value) {
+		if(input>-1 && input<m_inputs.length)
+			m_inputs[input]=value;
+	}
+	public boolean getInput(int input) {
+		if(input>-1 && input<m_inputs.length)
+			return m_inputs[input];
+		return false;
+	}
+	public void move() {
+		Realm r=Realm.getActiveRealm();
+		if(getInput(INPUT_JUMP)) {
+			jump();
+		}
+		if(getInput(INPUT_LEFT) && !getInput(INPUT_RIGHT)) {
+			if(getSpeed().x>-0.075f)
+				setSpeed(-0.075f,getSpeed().y);
+			setLookRight(false);
+			EntityParticle temp;
+			if(getContact(CONTACT_DOWN) && Math.random()<0.2) {
+				temp=new EntityParticle(((float)Math.random()*50)-25+0);
+				temp.setData(EntityDataParticle.get("particle"));
+				temp.setPos(getPos().x+getSize().x/2,getPos().y-getSize().y);
+				r.addEntity(temp);
+			}
+		} else if(getInput(INPUT_RIGHT) && !getInput(INPUT_LEFT)) {
+			if(getSpeed().x<0.075f)
+				setSpeed(0.075f,getSpeed().y);
+			setLookRight(true);
+			EntityParticle temp;
+			if(getContact(CONTACT_DOWN) && Math.random()<0.2) {
+				temp=new EntityParticle(((float)Math.random()*50)-25+180);
+				temp.setData(EntityDataParticle.get("particle"));
+				temp.setPos(getPos().x-getSize().x/2,getPos().y-getSize().y);
+				r.addEntity(temp);
+			}
+		} else setSpeed(getSpeed().x*0.5f,getSpeed().y);
+		/*if(getInput(INPUT_UP) && !getInput(INPUT_DOWN)) {
+			if(getSpeed().x>-0.075f)
+				setSpeed(getSpeed().x,0.075f);
+		} else if(getInput(INPUT_DOWN) && !getInput(INPUT_UP)) {
+			if(getSpeed().x<0.075f)
+				setSpeed(getSpeed().x,-0.075f);
+		}*/
+	}
 	// buff part
 	protected float m_buffHealthRegen=0;
 	protected float m_buffShieldRegen=0;
@@ -257,6 +315,7 @@ public class EntityUnit extends EntityDynamic {
     @Override
     public void update() {
         super.update();
+		move();
 		/*if(m_dialog==null)
 			if(Math.random()<0.01) {
 				talk("Je disparais a nouveau.");
@@ -331,9 +390,29 @@ public class EntityUnit extends EntityDynamic {
 		return false;
     }
     public void jump() {
-    	if(!isStun() && m_contact[CONTACT_DOWN]) {
-			Audio.Audio.playSound(getSound("jump"));
-            setSpeed(0,0.1f);
+		Realm r=Realm.getActiveRealm();
+		if(getContact(CONTACT_LEFT) && getInput(INPUT_RIGHT)) {
+			setLookRight(true);
+			setSpeed(0.15f,0.085f);
+			EntityParticle temp;
+			for(int i=0;i<5;i++) {
+					temp=new EntityParticle(((float)Math.random()*50)-25+225);
+					temp.setData(EntityDataParticle.get("particle"));
+					temp.setPos(getPos().x+getSize().x/2,getPos().y-getSize().y);
+					r.addEntity(temp);
+			}
+		} else if(getContact(CONTACT_RIGHT) && getInput(INPUT_LEFT)) {
+			setLookRight(false);
+			setSpeed(-0.15f,0.085f);
+			EntityParticle temp;
+			for(int i=0;i<5;i++) {
+					temp=new EntityParticle(((float)Math.random()*50)-25+315);
+					temp.setData(EntityDataParticle.get("particle"));
+					temp.setPos(getPos().x+getSize().x/2,getPos().y+getSize().y);
+					r.addEntity(temp);
+			}
+		} else if(getContact(CONTACT_DOWN)){
+				setSpeed(0,0.1f);
 		}
     }
     public boolean damage(int damage) {

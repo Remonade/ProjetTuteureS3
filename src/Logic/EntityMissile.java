@@ -61,6 +61,7 @@ public class EntityMissile extends EntityDynamic {
 		Audio.Audio.playSound(getSound("explode"));
 		
 		ArrayList<EntityUnit> targets=new ArrayList<>();
+		
 		if(getRadius()>0) {
 			for(int i=0;i<30;i++) {
 				EntityParticle temp;
@@ -80,7 +81,7 @@ public class EntityMissile extends EntityDynamic {
 				}
 			}
 		}
-		if(target!=null && target instanceof EntityUnit)
+		if(target!=null && target instanceof EntityUnit && (EntityUnit)target!=m_owner && getTeam()!=((EntityUnit)target).getTeam())
 			targets.add((EntityUnit)target);
 
 		for(EntityUnit u:targets) {

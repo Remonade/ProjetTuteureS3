@@ -12,12 +12,25 @@ import Maths.Vector2f;
 
 public class IARoamer extends IA{
 
+
+	public IARoamer() {
+		super();
+	}
 	public IARoamer(int maxAPM) {
 		super(maxAPM);
+	}
+	@Override
+	public IA copy() {
+		return new IARoamer();
+	}
+	@Override
+	public IA copy(int APM) {
+		return new IARoamer(APM);
 	}
 	
 	@Override
 	public void move(EntityUnit u, EntityUnit target) {
+		u.resetInput();
 		int mode=u.getCustomValue();
 		Vector2f mod=new Vector2f(0,0);
 		if(u.getContact(mode)) {
@@ -63,20 +76,23 @@ public class IARoamer extends IA{
 		mode=u.getCustomValue();
 		switch(mode) {
 			case Entity.CONTACT_UP: // in case of upward movement
-				mod.y=0.05f+Physic.PhysicMain.GRAVITY;
+				//u.setInput(EntityUnit.INPUT_UP,true);
+				mod.y=0.05f;
 				break;
 			case Entity.CONTACT_DOWN: // in case of upward movement
-				mod.y=-0.05f-Physic.PhysicMain.GRAVITY;
+				//u.setInput(EntityUnit.INPUT_DOWN,true);
+				mod.y=-0.05f;
 				break;
 			case Entity.CONTACT_LEFT: // in case of upward movement
+				//u.setInput(EntityUnit.INPUT_LEFT,true);
 				mod.x=-0.05f;
-				mod.y=-Physic.PhysicMain.GRAVITY;
 				break;
 			case Entity.CONTACT_RIGHT: // in case of upward movement
+				//u.setInput(EntityUnit.INPUT_RIGHT,true);
 				mod.x=0.05f;
-				mod.y=-Physic.PhysicMain.GRAVITY;
 				break;
 		}
+				mod.y=-Physic.PhysicMain.GRAVITY;
 		u.setSpeed(mod);
 	}
 }

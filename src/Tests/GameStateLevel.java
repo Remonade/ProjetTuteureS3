@@ -11,9 +11,6 @@ import GUI.GUIBuffBar;
 import GUI.GUIPlayerBar;
 import GUI.GUISpellBar;
 import static Graphic.GraphicMain.drawString;
-import Logic.Data.EntityDataParticle;
-import Logic.EntityDynamic;
-import Logic.EntityParticle;
 import Logic.EntityUnit;
 import Logic.EntityWayPoint;
 import Logic.Logic;
@@ -134,7 +131,7 @@ public class GameStateLevel extends GameState {
 		super.inputHandler();
 		Realm r=getActiveRealm();
 		if(r!=null) {
-			EntityUnit player=Logic.getPlayer();
+			EntityUnit player=Logic.getPlayer();/*
 			if(Input.isPressed(Input.getBind(Input.BIND_JUMP))) {
 				if(player.getContact(EntityDynamic.CONTACT_LEFT) && Input.isPressed(Input.getBind(Input.BIND_RIGHT))) {
 					player.setLookRight(true);
@@ -189,8 +186,29 @@ public class GameStateLevel extends GameState {
 				if(player.getLookRight())
 					dir=1;
 				player.shoot(new Vector2f(dir,0));
+			}*/
+			player.resetInput();
+			if(Input.isPressed(Input.getBind(Input.BIND_LEFT))) {
+				player.setInput(EntityUnit.INPUT_LEFT, true);
 			}
-			
+			if(Input.isPressed(Input.getBind(Input.BIND_RIGHT))) {
+				player.setInput(EntityUnit.INPUT_RIGHT, true);
+			}
+			if(Input.isPressed(Input.getBind(Input.BIND_UP))) {
+				player.setInput(EntityUnit.INPUT_UP, true);
+			}
+			if(Input.isPressed(Input.getBind(Input.BIND_DOWN))) {
+				player.setInput(EntityUnit.INPUT_DOWN, true);
+			}
+			if(Input.isPressed(Input.getBind(Input.BIND_JUMP))) {
+				player.setInput(EntityUnit.INPUT_JUMP, true);
+			}
+			if(Input.isPressed(Input.getBind(Input.BIND_SHOOT))) {
+				float dir=-1;
+				if(player.getLookRight())
+					dir=1;
+				player.shoot(new Vector2f(dir,0));
+			}
 			if(Input.isPressed(Input.getBind(Input.BIND_SPELL_1)))
 				player.useSpell(0);
 			if(Input.isPressed(Input.getBind(Input.BIND_SPELL_2)))

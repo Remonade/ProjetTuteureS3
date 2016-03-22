@@ -13,6 +13,7 @@ import Logic.Realm;
 import Maths.Vector2f;
 import static Physic.Vectorial.entityCollide;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class IA {
 	
@@ -25,6 +26,15 @@ public class IA {
 		m_maxAPM=maxAPM;
 	}
 	
+	public IA() {
+		m_maxAPM=60;
+	}
+	public IA copy() {
+		return new IA();
+	}
+	public IA copy(int APM) {
+		return new IA(APM);
+	}
 	public void execute(EntityUnit u) {
 		if(m_maxAPM>0) {
 			m_time=Logic.Logic.CURRENT_TIME;
@@ -43,20 +53,44 @@ public class IA {
 				u.setLookRight(true);
 			else
 				u.setLookRight(false);
-		}
+		} else if(u.getCustomValue()==1) 
+			u.setLookRight(true);
+		else if(u.getCustomValue()==-1)
+			u.setLookRight(false);
 	}
 	public void move(EntityUnit u, EntityUnit target) {
+		u.resetInput();
 		if(target!=null) {
 			Vector2f pos=target.getPos();
-			if(pos.y > u.getPos().y+pos.y)
-				u.jump();
+			Vector2f size=target.getSize();
+			if(pos.y > u.getPos().y+size.y)
+				u.setInput(EntityUnit.INPUT_JUMP,true);
 			if(Math.abs(pos.x-u.getPos().x)>2f) {
 				if(target.getPos().x>u.getPos().x) {
-					u.addSpeed(0.005f,0);
+					u.setInput(EntityUnit.INPUT_RIGHT,true);
 				} else {
-					u.addSpeed(-0.005f,0);
+					u.setInput(EntityUnit.INPUT_LEFT,true);
+				}
+			} else if(Math.abs(pos.x-u.getPos().x)<1f) {
+				if(target.getPos().x>u.getPos().x) {
+					u.setInput(EntityUnit.INPUT_LEFT,true);
+				} else {
+					u.setInput(EntityUnit.INPUT_RIGHT,true);
 				}
 			}
+		} else if(u.getCustomValue()==1) {
+			u.setInput(EntityUnit.INPUT_RIGHT,true);
+			if(Math.random()<0.05)
+				u.setCustomValue(0);
+		} else if(u.getCustomValue()==-1) {
+			u.setInput(EntityUnit.INPUT_LEFT,true);
+			if(Math.random()<0.05)
+				u.setCustomValue(0);
+		} else {
+			if(Math.random()<0.05)
+				u.setCustomValue(-1);
+			else if(Math.random()<0.05)
+				u.setCustomValue(1);
 		}
 	}
 	
@@ -82,7 +116,7 @@ public class IA {
 	public static EntityUnit getTarget(EntityUnit u) {
 		Realm r=Logic.Realm.getActiveRealm();
 		for(EntityUnit unit:r.getUnits())
-			if(u.getTeam()!=unit.getTeam())
+			if(u.getTeam()!=unit.getTeam() && lineOfSight(u,unit))
 				return unit;
 		return null;
 	}
@@ -130,4 +164,20 @@ public class IA {
 		return true;
 	}
 	
+	
+	/*******************************************************************/
+	
+	private static HashMap<String,IA> IA_TEMPLATES=new HashMap<>();
+	
+	public static void initIA_TEMPLATES() {
+		IA_TEMPLATES.put("default",new IA());
+		IA_TEMPLATES.put("roamer",new IARoamer());
+		IA_TEMPLATES.put("tuto",new IATutorial());
+	}
+	public static IA getIA_TEMPLATE(String key) {
+		return IA_TEMPLATES.get(key).copy();
+	}
+	public static IA getIA_TEMPLATE(String key, int APM) {
+		return IA_TEMPLATES.get(key).copy(APM);
+	}
 }

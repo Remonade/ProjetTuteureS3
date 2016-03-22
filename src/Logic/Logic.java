@@ -13,7 +13,6 @@ import Logic.Data.EntityData;
 import Graphic.GraphicMain;
 import Logic.Data.EntityDataParticle;
 import Logic.IA.IA;
-import Logic.IA.IARoamer;
 import Logic.Spell.Spell;
 import static Logic.Type.SNIPER;
 import Maths.Vector2f;
@@ -80,6 +79,7 @@ public class Logic {
 	public static void init() {
 		try{
 			loadEntityData("data/entity.data");
+			IA.initIA_TEMPLATES();
 			generateRun(0);
 			Realm.changeRealm(0);
 		} catch (Exception e) {
@@ -298,12 +298,10 @@ public class Logic {
 					System.out.println("set Collision Off int "+realm);
 				} else if(value.equals("IA")) {
 					String ia=data[2];
-					int APM=0;
+					int APM=60;
 					if(data.length>3) APM=Integer.valueOf(data[3]);
 					if(u!=null) {
-						if(ia.equals("Null") || ia.equals("0") || ia.equals("None")) u.setIA(null);
-						if(ia.equals("Default")) u.setIA(new IA(APM));
-						if(ia.equals("Roamer")) u.setIA(new IARoamer(APM));
+						u.setIA(IA.getIA_TEMPLATE(ia, APM));
 					}
 					System.out.println("set IA to "+ia+"("+APM+")");
 				} else if(value.equals("CustomValue")) {
@@ -356,7 +354,6 @@ public class Logic {
 						u.setData(EntityDataUnit.get(type));
 						u.setPos(Float.valueOf(posX),Float.valueOf(posY));
 						u.setTeam(Integer.valueOf(team));
-						u.setIA(new IA(0));
 						u.addSpell(new Spell("Empty",0,0));
 						Realm.getRealm(realm).addEntity(u);
 					}

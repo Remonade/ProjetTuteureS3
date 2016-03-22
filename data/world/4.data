@@ -33,6 +33,7 @@ new Entity block5x1 -1.25 3.75
 new Entity block5x1 1.25 3.75
 new Entity block1x5 -2.25 4.25
 new Entity block1x5 2.25 4.25
+new Entity block4x1 0 4.75
 +
 + WayPoints
 new WayPoint waypoint -3.75 1.25 -1 0 1 0
@@ -40,4 +41,15 @@ new WayPoint waypoint 3.75 1.25 1 0 -1 0
 +
 + Units
 new Unit enemy 0 5 1
+set IA default
+new Unit enemy 0 5 1
+set IA default
+new Unit enemy 0 5 1
+set IA default
+new Unit enemy 0 5 1
+set IA default
+new Unit enemy 0 5 1
+set IA default
+new Unit enemy 0 5 1
+set IA default
 +
