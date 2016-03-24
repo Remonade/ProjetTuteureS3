@@ -29,6 +29,13 @@ public class IARoamer extends IA{
 	}
 	
 	@Override
+	public void behavior(EntityUnit u, EntityUnit target) {
+		if(target!=null)
+			m_behavior=1; // fight
+		else
+			m_behavior=0; // just roam
+	}
+	@Override
 	public void move(EntityUnit u, EntityUnit target) {
 		u.resetInput();
 		int mode=u.getCustomValue();
@@ -76,23 +83,19 @@ public class IARoamer extends IA{
 		mode=u.getCustomValue();
 		switch(mode) {
 			case Entity.CONTACT_UP: // in case of upward movement
-				//u.setInput(EntityUnit.INPUT_UP,true);
 				mod.y=0.05f;
 				break;
 			case Entity.CONTACT_DOWN: // in case of upward movement
-				//u.setInput(EntityUnit.INPUT_DOWN,true);
 				mod.y=-0.05f;
 				break;
 			case Entity.CONTACT_LEFT: // in case of upward movement
-				//u.setInput(EntityUnit.INPUT_LEFT,true);
 				mod.x=-0.05f;
 				break;
 			case Entity.CONTACT_RIGHT: // in case of upward movement
-				//u.setInput(EntityUnit.INPUT_RIGHT,true);
 				mod.x=0.05f;
 				break;
 		}
-				mod.y=-Physic.PhysicMain.GRAVITY;
+		mod.y-=Physic.PhysicMain.GRAVITY;
 		u.setSpeed(mod);
 	}
 }

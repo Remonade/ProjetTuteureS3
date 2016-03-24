@@ -117,7 +117,7 @@ set Sound death Unit/Wscream.ogg
 +
 new EntityDataUnit player
 set Size 0.15 0.15
-set ModelSize 0.35 0.35
+set ModelSize 0.3 0.35
 set Model Player
 set Health 300 0
 set Shield 200 5

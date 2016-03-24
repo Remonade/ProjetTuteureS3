@@ -22,6 +22,8 @@ public class IA {
 	protected int m_actionLeft=0;
 	protected int m_maxAPM; // Attack Per Minute
 	
+	protected int m_behavior;
+	
 	public IA(int maxAPM) {
 		m_maxAPM=maxAPM;
 	}
@@ -41,26 +43,52 @@ public class IA {
 			m_actionLeft=(int)(m_maxAPM*m_time/60)-m_actionCount;
 		} else m_actionLeft=100;
 		EntityUnit target=getTarget(u);
+		behavior(u,target);
 		move(u,target);
 		rotate(u,target);
 		if(m_actionLeft>0){
 			attack(u,target);
 		}
 	}
+	public void behavior(EntityUnit u, EntityUnit target) {
+		if(u.getPercentShield()<0.2f || u.getPercentEnergy()<0.3f)
+			m_behavior=2; // flee
+		else if(target==null)
+			m_behavior=0; // do nothing
+		else
+				m_behavior=1; // fight
+	}
 	public void rotate(EntityUnit u, EntityUnit target) {
-		if(target!=null) {
+		if(m_behavior==0) {
+			if(u.getCustomValue()==1) 
+				u.setLookRight(true);
+			else if(u.getCustomValue()==-1)
+				u.setLookRight(false);
+		} else if(m_behavior==1) {
 			if(target.getPos().x>u.getPos().x)
 				u.setLookRight(true);
 			else
 				u.setLookRight(false);
-		} else if(u.getCustomValue()==1) 
-			u.setLookRight(true);
-		else if(u.getCustomValue()==-1)
-			u.setLookRight(false);
+		}
 	}
 	public void move(EntityUnit u, EntityUnit target) {
 		u.resetInput();
-		if(target!=null) {
+		if(m_behavior==0) {
+			if(u.getCustomValue()==1) {
+				u.setInput(EntityUnit.INPUT_RIGHT,true);
+				if(Math.random()<0.05)
+					u.setCustomValue(0);
+			} else if(u.getCustomValue()==-1) {
+				u.setInput(EntityUnit.INPUT_LEFT,true);
+				if(Math.random()<0.05)
+					u.setCustomValue(0);
+			} else {
+				if(Math.random()<0.05)
+					u.setCustomValue(-1);
+				else if(Math.random()<0.05)
+					u.setCustomValue(1);
+			}
+		} else if(m_behavior==1) {
 			Vector2f pos=target.getPos();
 			Vector2f size=target.getSize();
 			if(pos.y > u.getPos().y+size.y)
@@ -78,24 +106,25 @@ public class IA {
 					u.setInput(EntityUnit.INPUT_RIGHT,true);
 				}
 			}
-		} else if(u.getCustomValue()==1) {
-			u.setInput(EntityUnit.INPUT_RIGHT,true);
-			if(Math.random()<0.05)
-				u.setCustomValue(0);
-		} else if(u.getCustomValue()==-1) {
-			u.setInput(EntityUnit.INPUT_LEFT,true);
-			if(Math.random()<0.05)
-				u.setCustomValue(0);
-		} else {
-			if(Math.random()<0.05)
-				u.setCustomValue(-1);
-			else if(Math.random()<0.05)
-				u.setCustomValue(1);
+		} else if(m_behavior==2) {
+			if(u.getCustomValue()==-1) {
+				if(u.getContact(Entity.CONTACT_RIGHT)) {
+					u.setInput(EntityUnit.INPUT_JUMP,true);
+					u.setInput(EntityUnit.INPUT_LEFT,true);
+					u.setCustomValue(1);
+				} else u.setInput(EntityUnit.INPUT_RIGHT,true);
+			} else {
+				if(u.getContact(Entity.CONTACT_LEFT)) {
+					u.setInput(EntityUnit.INPUT_JUMP,true);
+					u.setInput(EntityUnit.INPUT_RIGHT,true);
+					u.setCustomValue(-1);
+				} else u.setInput(EntityUnit.INPUT_LEFT,true);
+			}
 		}
 	}
 	
 	public void attack(EntityUnit u, EntityUnit target) {
-		if(target!=null) {
+		if(m_behavior==1 || (m_behavior==2 && target!=null)) {
 			Vector2f pos=target.getPos();
 			Vector2f size=target.getSize();
 			if(lineOfSight(u,target)) {

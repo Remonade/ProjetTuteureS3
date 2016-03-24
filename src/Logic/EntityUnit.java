@@ -80,13 +80,6 @@ public class EntityUnit extends EntityDynamic {
 				r.addEntity(temp);
 			}
 		} else setSpeed(getSpeed().x*0.5f,getSpeed().y);
-		/*if(getInput(INPUT_UP) && !getInput(INPUT_DOWN)) {
-			if(getSpeed().x>-0.075f)
-				setSpeed(getSpeed().x,0.075f);
-		} else if(getInput(INPUT_DOWN) && !getInput(INPUT_UP)) {
-			if(getSpeed().x<0.075f)
-				setSpeed(getSpeed().x,-0.075f);
-		}*/
 	}
 	// buff part
 	protected float m_buffHealthRegen=0;

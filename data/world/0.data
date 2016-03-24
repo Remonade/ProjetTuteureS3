@@ -40,5 +40,5 @@ new WayPoint waypoint -4.5 1.25 -1 0 1 0
 new WayPoint waypoint 4.5 1.25 1 0 -1 0.15
 +
 + Units
-new Unit enemy -2.5 2 0
+new Unit enemy 0 2 0
 set IA tuto
