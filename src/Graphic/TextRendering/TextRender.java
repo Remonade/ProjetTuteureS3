@@ -39,10 +39,10 @@ public class TextRender {
 			String s=(String)o[0];
 			out+=s+"\n";
 		}
-			Object[] o=lines.get(0);
-			lines.remove(0);
-			String s=(String)o[0];
-			out+=s;
+		Object[] o=lines.get(0);
+		lines.remove(0);
+		String s=(String)o[0];
+		out+=s;
 		return out;
 	}
 	public static ArrayList<Object[]> getLines(String str, float size, float maxWidth) {
@@ -129,9 +129,9 @@ public class TextRender {
         glMatrixMode(GL_MODELVIEW);
         float line=0;
         glLoadIdentity();
-        glTranslatef(pos.x,pos.y,0);
+        glTranslatef(pos.x,pos.y-2*size,0);
         glScalef(size,size,1f);
-		glLineWidth((float) Math.sqrt(size)+1);
+		glLineWidth((float) Math.sqrt(size)+0.5f);
 		if(color==null)
 			glColor4f(1,1,1,1);
 		else
@@ -161,7 +161,7 @@ public class TextRender {
 				
 			line--;
 			glLoadIdentity();
-			glTranslatef(pos.x,pos.y,0);
+			glTranslatef(pos.x,pos.y-2*size,0);
 			glScalef(size,size,1f);
 			glTranslatef(0,line*LINE_HEIGHT,0);
 		}

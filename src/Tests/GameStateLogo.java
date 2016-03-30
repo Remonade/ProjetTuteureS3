@@ -40,7 +40,7 @@ public class GameStateLogo  extends GameState {
 	@Override
 	public void onEnter() {
 		glfwSetInputMode(window,GLFW_CURSOR,GLFW_CURSOR_DISABLED);
-		Audio.Audio.playSound("GUI/OTSU.ogg");
+		//Audio.Audio.playSound("GUI/OTSU.ogg");
 		m_time=0;
 		m_in=true;
 	}
@@ -58,6 +58,7 @@ public class GameStateLogo  extends GameState {
 			m_GUI.get(1).setModelColor(0, 1, 1, 1, m_time/m_inDuration);
 			if(m_time>m_inDuration*1.25) {
 				m_in=false;
+				Audio.Audio.playSound("GUI/wow.ogg");
 				m_time=m_outDuration;
 			}
 		} else {

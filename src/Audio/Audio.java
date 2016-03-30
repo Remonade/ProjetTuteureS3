@@ -12,11 +12,11 @@ public class Audio {
 	private static ALContext context;
 	private static boolean VALIDE=false;
 	
-	private static float generalVolume=1.0f;
+	private static float generalVolume=0.75f;
 	
 	// sound
 	private static Channel[] soundChannels;
-	private static float soundVolume=0.85f;
+	private static float soundVolume=0.75f;
 	
 	
 	// music
