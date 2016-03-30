@@ -29,8 +29,8 @@ public class GUIBindingButton extends GUIButton {
 		m_modelName="button";
 	}
 	@Override
-	public void onClick() {
-		super.onClick();
+	public void onMouseClick() {
+		super.onMouseClick();
 		Main.setGameState(6);
 		GameStateBinding g=(GameStateBinding)Main.getGameState();
 		g.setBinding(m_key);

@@ -8,6 +8,9 @@ package Tests;
 
 import GUI.GUIBindingButton;
 import GUI.GUICheckBox;
+import GUI.GUIInputSliderVolumeGeneral;
+import GUI.GUIInputSliderVolumeMusic;
+import GUI.GUIInputSliderVolumeSound;
 import GUI.GUIMenuButton;
 import static Graphic.GraphicMain.window;
 import static Tests.Input.*;
@@ -121,7 +124,7 @@ public class GameStateSettingMenu extends GameState {
 		b.setSize(w,h);
 		b.setLabelSize(2);
 		//b.setLabelColor(0,0,1,0,1);
-		b.setLabelText("Spell 5");
+		b.setLabelText("Spell 4");
 		m_GUI.add(b);
 		
 		b=new GUIBindingButton(BIND_SPELL_5);
@@ -129,8 +132,29 @@ public class GameStateSettingMenu extends GameState {
 		b.setSize(w,h);
 		b.setLabelSize(2);
 		//b.setLabelColor(0,0,1,0,1);
-		b.setLabelText("Spell 3");
+		b.setLabelText("Spell 5");
 		m_GUI.add(b);
+		
+		GUIInputSliderVolumeSound svs=new GUIInputSliderVolumeSound();
+		svs.setLabelText("Sound volume: ");
+		svs.setPos(600,150);
+		svs.setSize(100,20);
+		svs.setLabelSize(2);
+		m_GUI.add(svs);
+		
+		GUIInputSliderVolumeMusic svm=new GUIInputSliderVolumeMusic();
+		svm.setLabelText("Music volume: ");
+		svm.setPos(600,200);
+		svm.setSize(100,20);
+		svm.setLabelSize(2);
+		m_GUI.add(svm);
+		
+		GUIInputSliderVolumeGeneral svg=new GUIInputSliderVolumeGeneral();
+		svg.setLabelText("General Volume: ");
+		svg.setPos(600,250);
+		svg.setSize(100,20);
+		svg.setLabelSize(2);
+		m_GUI.add(svg);
 		
 		GUIMenuButton m=new GUIMenuButton(Main.STATE_MAIN_MENU);
 		m.setLabelText("retour");

@@ -17,8 +17,10 @@ public class Input {
     // public static GLFWKeyCallback   keyCallback;
 	private static boolean[] press=new boolean[GLFW_KEY_LAST];
 	private static boolean[] push=new boolean[GLFW_KEY_LAST];
+	private static boolean[] free=new boolean[GLFW_KEY_LAST];
 	private static boolean[] click=new boolean[GLFW_MOUSE_BUTTON_8];
 	private static boolean[] down=new boolean[GLFW_MOUSE_BUTTON_8];
+	private static boolean[] up=new boolean[GLFW_MOUSE_BUTTON_8];
 	
 	private static String[] keyName;
 	// mouse
@@ -102,11 +104,17 @@ public class Input {
 	public static boolean isPushed(int bind) {
 		return push[bind];
 	}
+	public static boolean isFreed(int bind) {
+		return free[bind];
+	}
 	public static boolean isClicked(int bind) {
 		return click[bind];
 	}
 	public static boolean isDown(int bind) {
 		return down[bind];
+	}
+	public static boolean isUp(int bind) {
+		return up[bind];
 	}
 	public static int getBind(int bind) {
 		return BIND[bind];
@@ -125,10 +133,13 @@ public class Input {
 		});*/
 	}
 	public static void updateInput() {
-		for(int i=0;i<GLFW_KEY_LAST;i++)
+		for(int i=0;i<GLFW_KEY_LAST;i++) {
 			push[i]=false;
+			free[i]=false;
+		}
 		for(int i=0;i<GLFW_MOUSE_BUTTON_8;i++) {
 			click[i]=false;
+			up[i]=false;
 		}
         glfwPollEvents();
 		for(int i=0;i<GLFW_KEY_LAST;i++) {
@@ -138,7 +149,10 @@ public class Input {
 					//System.out.println("Pressed: "+getKeyName(i));
 				}
 				press[i]=true;
-			} else press[i]=false;
+			} else {
+				press[i]=false;
+				free[i]=true;
+			}
 		}
 		updateMouseCoordinate();
 		for(int i=0;i<GLFW_MOUSE_BUTTON_8;i++) {
@@ -148,7 +162,10 @@ public class Input {
 					//System.out.println("Clicked: "+i);
 				}
 				down[i]=true;
-			} else down[i]=false;
+			} else {
+				down[i]=false;
+				up[i]=true;
+			}
 		}
 	}
 	

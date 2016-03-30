@@ -24,8 +24,8 @@ public class GUICheckBox extends GUIButton {
 		this.m_value = false;
 	}
 	@Override
-	public void onClick() {
-		super.onClick();
+	public void onMouseClick() {
+		super.onMouseClick();
 		m_value=!m_value;
 	}
 	@Override

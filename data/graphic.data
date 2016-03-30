@@ -39,6 +39,8 @@ new Texture HUD/dialog.png
 new Texture HUD/loadingScreenLeft.png
 new Texture HUD/loadingScreenRight.png
 new Texture HUD/otsu_logo.png
+new Texture HUD/sliderBar.png
+new Texture HUD/sliderCursor.png
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++ backgrounds
 new Texture background/night.jpg
 new Texture background/hangar.jpg
@@ -113,6 +115,10 @@ new Model loadingScreenRight
 set Texture HUD/loadingScreenRight.png
 new Model logo
 set Texture HUD/otsu_logo.png
+new Model sliderBar
+set Texture HUD/sliderBar.png
+new Model sliderCursor
+set Texture HUD/sliderCursor.png
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++ backgrounds
 new Model background/night
 set Texture background/night.jpg

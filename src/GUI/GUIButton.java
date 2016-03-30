@@ -25,7 +25,7 @@ public class GUIButton extends GUI {
 		m_help=help;
 	}
 	@Override
-	public void onClick() {
+	public void onMouseClick() {
 		Audio.Audio.playSound("GUI/ButtonClick.ogg");
 	}
 	@Override

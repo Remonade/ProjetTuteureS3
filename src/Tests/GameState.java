@@ -7,6 +7,7 @@
 package Tests;
 
 import GUI.GUI;
+import GUI.GUIInput;
 import static Graphic.GraphicMain.setCameraGUI;
 import static Graphic.GraphicMain.window;
 import static Tests.Input.BIND_MOUSE;
@@ -43,11 +44,19 @@ public class GameState {
 		Input.updateInput();
 		if((Input.isPressed(GLFW_KEY_RIGHT_ALT) || Input.isPressed(GLFW_KEY_LEFT_ALT)) && Input.isPushed(GLFW_KEY_F4))
 			glfwSetWindowShouldClose(window, GL_TRUE);
-		for(GUI g:m_GUI)
+		for(GUI g:m_GUI) {
 			g.tryHover();
+			if(g instanceof GUIInput) {
+				((GUIInput)g).inputHandler();
+			}
+		}
 		if(Input.isClicked(BIND_MOUSE)) {
 			for(GUI g:m_GUI)
-				g.tryClick();
+				g.tryOnMouseClick();
+		}
+		if(Input.isUp(BIND_MOUSE)) {
+			for(GUI g:m_GUI)
+				g.tryOnMouseUp();
 		}
 	}
 	public void destroy() {

@@ -29,8 +29,8 @@ public class GUIMenuButton extends GUIButton {
 		return m_gameState;
 	}
     @Override
-	public void onClick() {
-		super.onClick();
+	public void onMouseClick() {
+		super.onMouseClick();
 		if(m_gameState==-1)
 			glfwSetWindowShouldClose(window, GL_TRUE);
 		else

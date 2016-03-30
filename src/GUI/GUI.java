@@ -34,16 +34,17 @@ public class GUI {
 	// texte
 	protected String m_labelText;
 	protected float m_labelSize;
-	protected Vector4f[] m_labelColor=new Vector4f[2];
+	protected Vector4f[] m_labelColor=new Vector4f[GUI_MODES];
 	protected float m_padding=10f;
 	// model
 	protected String m_modelName;
 	protected Model m_model;
-	protected Vector4f[] m_modelColor=new Vector4f[2];
+	protected Vector4f[] m_modelColor=new Vector4f[GUI_MODES];
 	// listener
 	protected boolean m_hover=false;
 	protected float m_hoverTime=0;
-	
+	// static
+	public static int GUI_MODES=3;
 	public GUI() {
 		// taille et position
 		m_position=new Vector2f();
@@ -108,13 +109,13 @@ public class GUI {
 		return m_labelSize;
 	}
 	public void setLabelColor(int mode,float r,float g,float b,float a) {
-		m_labelColor[mode]=new Vector4f(r,g,b,a);
+		m_labelColor[mode%GUI_MODES]=new Vector4f(r,g,b,a);
 	}
 	public void setLabelColor(int mode,Vector4f color) {
-		m_labelColor[mode]=color;
+		m_labelColor[mode%GUI_MODES]=color;
 	}
 	public Vector4f getLabelColor(int mode) {
-		return m_labelColor[mode];
+		return m_labelColor[mode%GUI_MODES];
 	}
 	public void setLabelText(String text) {
 		m_labelText=text;
@@ -123,24 +124,30 @@ public class GUI {
 		return m_labelText;
 	}
 	public void setModelColor(int mode,float r,float g,float b,float a) {
-		m_modelColor[mode]=new Vector4f(r,g,b,a);
+		m_modelColor[mode%GUI_MODES]=new Vector4f(r,g,b,a);
 	}
 	public void setModelColor(int mode,Vector4f color) {
-		m_modelColor[mode]=color;
+		m_modelColor[mode%GUI_MODES]=color;
 	}
 	public Vector4f getModelColor(int mode) {
-		return m_modelColor[mode];
+		return m_modelColor[mode%GUI_MODES];
 	}
-	public void tryClick() {
+	public void tryOnMouseClick() {
 		if(m_hover)
-			onClick();
+			onMouseClick();
+	}
+	public void tryOnMouseUp() {
+		if(m_hover)
+			onMouseUp();
 	}
 	public void tryHover() {
 		isOver();
 	}
-	public void onClick() {
+	public void onMouseClick() {
 	}
 	public void onHover() {
+	}
+	public void onMouseUp() {
 	}
 	public boolean isOver() {
 		DoubleBuffer b1 = BufferUtils.createDoubleBuffer(1);

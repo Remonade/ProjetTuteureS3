@@ -129,7 +129,7 @@ public class TextRender {
         glMatrixMode(GL_MODELVIEW);
         float line=0;
         glLoadIdentity();
-        glTranslatef(pos.x,pos.y-2*size,0);
+        glTranslatef(pos.x,pos.y-LINE_HEIGHT/2,0);
         glScalef(size,size,1f);
 		glLineWidth((float) Math.sqrt(size)+0.5f);
 		if(color==null)
@@ -161,7 +161,7 @@ public class TextRender {
 				
 			line--;
 			glLoadIdentity();
-			glTranslatef(pos.x,pos.y-2*size,0);
+			glTranslatef(pos.x,pos.y-LINE_HEIGHT/2,0);
 			glScalef(size,size,1f);
 			glTranslatef(0,line*LINE_HEIGHT,0);
 		}
