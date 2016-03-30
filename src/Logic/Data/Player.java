@@ -103,9 +103,9 @@ public class Player implements Serializable {
 		player.setOwner(this);
 		player.setData(EntityDataUnit.get("player"));
 		player.setTeam(0);
-		player.addSpell(new SpellShotSpread("Spread",4,0.05f,2));
-		player.addSpell(new SpellDash("Dash",10,1));
-		player.addSpell(new SpellHeal("Heal",10,0.5f,-1,250));
+		player.addSpell(new SpellShotSpread("Spread",10,0.35f,2));
+		player.addSpell(new SpellDash("Dash",25,3));
+		player.addSpell(new SpellHeal("Heal",50,10,5,250));
 		//player.addSpell(new Spell("Health",10,0.35f,20));
 		//player.addSpell(new SpellSummon("Invoque",25,10,5,"enemy"));
 		

@@ -15,23 +15,35 @@ public class TextRenderUVWXYZ {
 		if(!getRenderMod())
 			return 5;
 		glVertex3f(1f,4f, STRING_LAYER);
-		glVertex3f(1f,0f, STRING_LAYER);
-		glVertex3f(1f,0f, STRING_LAYER);
-		glVertex3f(4f,0f, STRING_LAYER);
+		glVertex3f(1f,1f, STRING_LAYER);
+		glVertex3f(1f,1f, STRING_LAYER);
+		glVertex3f(2f,0f, STRING_LAYER);
+		
+		glVertex3f(2f,0f, STRING_LAYER);
+		glVertex3f(3f,0f, STRING_LAYER);
+		
+		glVertex3f(3f,0f, STRING_LAYER);
+		glVertex3f(4f,1f, STRING_LAYER);
 		glVertex3f(4f,0f, STRING_LAYER);
 		glVertex3f(4f,4f, STRING_LAYER);
 		return 5;
 	}
 	public static float render_U() {
 		if(!getRenderMod())
-			return 5;
-		glVertex3f(1f,4f, STRING_LAYER);
-		glVertex3f(1f,0f, STRING_LAYER);
-		glVertex3f(1f,0f, STRING_LAYER);
+			return 6;
+		glVertex3f(1f,8f, STRING_LAYER);
+		glVertex3f(1f,1f, STRING_LAYER);
+		glVertex3f(1f,1f, STRING_LAYER);
+		glVertex3f(2f,0f, STRING_LAYER);
+		
+		glVertex3f(2f,0f, STRING_LAYER);
 		glVertex3f(4f,0f, STRING_LAYER);
+		
 		glVertex3f(4f,0f, STRING_LAYER);
-		glVertex3f(4f,4f, STRING_LAYER);
-		return 5;
+		glVertex3f(5f,1f, STRING_LAYER);
+		glVertex3f(5f,1f, STRING_LAYER);
+		glVertex3f(5f,8f, STRING_LAYER);
+		return 6;
 	}
 	public static float render_v() {
 		if(!getRenderMod())
@@ -44,12 +56,12 @@ public class TextRenderUVWXYZ {
 	}
 	public static float render_V() {
 		if(!getRenderMod())
-			return 5;
-		glVertex3f(1f,4f, STRING_LAYER);
-		glVertex3f(2.5f,0f, STRING_LAYER);
-		glVertex3f(2.5f,0f, STRING_LAYER);
-		glVertex3f(4f,4f, STRING_LAYER);
-		return 5;
+			return 6;
+		glVertex3f(1f,8f, STRING_LAYER);
+		glVertex3f(3f,0f, STRING_LAYER);
+		glVertex3f(3f,0f, STRING_LAYER);
+		glVertex3f(5f,8f, STRING_LAYER);
+		return 6;
 	}
 	public static float render_w() {
 		if(!getRenderMod())
@@ -67,14 +79,14 @@ public class TextRenderUVWXYZ {
 	public static float render_W() {
 		if(!getRenderMod())
 			return 8;
-		glVertex3f(1f,4f, STRING_LAYER);
+		glVertex3f(1f,8f, STRING_LAYER);
 		glVertex3f(2.5f,0f, STRING_LAYER);
 		glVertex3f(2.5f,0f, STRING_LAYER);
 		glVertex3f(4f,4f, STRING_LAYER);
 		glVertex3f(4f,4f, STRING_LAYER);
 		glVertex3f(5.5f,0f, STRING_LAYER);
 		glVertex3f(5.5f,0f, STRING_LAYER);
-		glVertex3f(7f,4f, STRING_LAYER);
+		glVertex3f(7f,8f, STRING_LAYER);
 		return 8;
 	}
 	public static float render_x() {
@@ -88,12 +100,12 @@ public class TextRenderUVWXYZ {
 	}
 	public static float render_X() {
 		if(!getRenderMod())
-			return 5;
-		glVertex3f(1f,4f, STRING_LAYER);
-		glVertex3f(4f,0f, STRING_LAYER);
-		glVertex3f(4f,4f, STRING_LAYER);
+			return 6;
+		glVertex3f(1f,8f, STRING_LAYER);
+		glVertex3f(5f,0f, STRING_LAYER);
+		glVertex3f(5f,8f, STRING_LAYER);
 		glVertex3f(1f,0f, STRING_LAYER);
-		return 5;
+		return 6;
 	}
 	public static float render_y() {
 		if(!getRenderMod())
@@ -106,12 +118,16 @@ public class TextRenderUVWXYZ {
 	}
 	public static float render_Y() {
 		if(!getRenderMod())
-			return 5;
-		glVertex3f(1f,4f, STRING_LAYER);
-		glVertex3f(2.5f,0f, STRING_LAYER);
-		glVertex3f(1f,-4f, STRING_LAYER);
-		glVertex3f(4f,4f, STRING_LAYER);
-		return 5;
+			return 6;
+		glVertex3f(1f,8f, STRING_LAYER);
+		glVertex3f(3f,4f, STRING_LAYER);
+		
+		glVertex3f(3f,4f, STRING_LAYER);
+		glVertex3f(3f,0f, STRING_LAYER);
+		
+		glVertex3f(3f,4f, STRING_LAYER);
+		glVertex3f(5f,8f, STRING_LAYER);
+		return 6;
 	}
 	public static float render_z() {
 		if(!getRenderMod())
@@ -126,14 +142,14 @@ public class TextRenderUVWXYZ {
 	}
 	public static float render_Z() {
 		if(!getRenderMod())
-			return 5;
-		glVertex3f(4f,4f, STRING_LAYER);
-		glVertex3f(1f,4f, STRING_LAYER);
+			return 6;
+		glVertex3f(5f,8f, STRING_LAYER);
+		glVertex3f(1f,8f, STRING_LAYER);
 		glVertex3f(1f,0f, STRING_LAYER);
-		glVertex3f(4f,4f, STRING_LAYER);
-		glVertex3f(4f,0f, STRING_LAYER);
+		glVertex3f(5f,8f, STRING_LAYER);
+		glVertex3f(5f,0f, STRING_LAYER);
 		glVertex3f(1f,0f, STRING_LAYER);
-		return 5;
+		return 6;
 	}
 
 }

@@ -15,7 +15,7 @@
 + General level settings
 new Realm The_Fall
 set CameraBound -1 1 2 8
-set Background background/hangar
+set Background background/echoes
 set Music Music/ded.ogg
 +set Music Music/HOTS_46.ogg
 +

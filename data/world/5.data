@@ -15,7 +15,7 @@
 + General level settings
 new Realm The_Boss
 set CameraBound -1 1 2 7
-set Background background/night
+set Background background/echoes
 set Music Music/HOTS_46.ogg
 +
 + Main ground thing

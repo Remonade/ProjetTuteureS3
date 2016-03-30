@@ -18,13 +18,25 @@ public class Main {
     // The window handle
     private long window;
     //private Camera2D camera;
-    private final int WIDTH = 900;
+    private final int WIDTH = 800;
     private final int HEIGHT = 600;
+	
+	public static final int STATE_MAIN_MENU=0;
+	public static final int STATE_LOADING_MENU=1;
+	public static final int STATE_LEVEL=2;
+	public static final int STATE_IN_GAME_MENU=3;
+	public static final int STATE_SAVING_MENU=4;
+	public static final int STATE_SETTING_MENU=5;
+	public static final int STATE_BINDING=6;
+	public static final int STATE_GAME_OVER=7;
+	public static final int STATE_TRANSITION=8;
+	public static final int STATE_LOGO=9;
 
-	public static int GAME_STATE=0;
+	public static int GAME_STATE=-1;
 	public static void setGameState(int state) {
 		System.out.println("Set GameState: "+state);
-		m_gameState[GAME_STATE].onLeave();
+		if(GAME_STATE!=-1)
+			m_gameState[GAME_STATE].onLeave();
 		GAME_STATE=state;
 		m_gameState[GAME_STATE].onEnter();
 	}
@@ -35,17 +47,8 @@ public class Main {
 		((GameStateTransition)m_gameState[STATE_TRANSITION]).setNext(state);
 		setGameState(STATE_TRANSITION);
 	}
-	public static final int STATE_MAIN_MENU=0;
-	public static final int STATE_LOADING_MENU=1;
-	public static final int STATE_LEVEL=2;
-	public static final int STATE_IN_GAME_MENU=3;
-	public static final int STATE_SAVING_MENU=4;
-	public static final int STATE_SETTING_MENU=5;
-	public static final int STATE_BINDING=6;
-	public static final int STATE_GAME_OVER=7;
-	public static final int STATE_TRANSITION=8;
 	
-	private static GameState[] m_gameState=new GameState[9];
+	private static GameState[] m_gameState=new GameState[10];
 	
 	public static GameState getGameState(int state) {
 		return m_gameState[state];
@@ -76,14 +79,16 @@ public class Main {
 		m_gameState[STATE_BINDING]=new GameStateBinding();
 		m_gameState[STATE_GAME_OVER]=new GameStateGameOver();
 		m_gameState[STATE_TRANSITION]=new GameStateTransition();
+		m_gameState[STATE_LOGO]=new GameStateLogo();
+        GraphicMain.init(WIDTH,HEIGHT);
+        glfwShowWindow(GraphicMain.window);
 		Input.defaultBinding();
 		Input.initKeyName();
         Input.initInput();
 		Audio.Audio.init();
-        GraphicMain.init(WIDTH,HEIGHT);
         Logic.init();
         // Make the window visible
-        glfwShowWindow(GraphicMain.window);
+		setGameState(STATE_LOGO);
         System.out.println("Init successful");
     }
     

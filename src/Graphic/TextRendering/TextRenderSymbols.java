@@ -11,6 +11,22 @@ import static Graphic.TextRendering.TextRender.getRenderMod;
 import static org.lwjgl.opengl.GL11.glVertex3f;
 
 public class TextRenderSymbols {
+	public static float render_cedil() {
+		if(!getRenderMod())
+			return 6;
+		glVertex3f(1f,0f, STRING_LAYER);
+		glVertex3f(1f,4f, STRING_LAYER);
+		glVertex3f(1f,4f, STRING_LAYER);
+		glVertex3f(5f,4f, STRING_LAYER);
+		glVertex3f(5f,0f, STRING_LAYER);
+		glVertex3f(1f,0f, STRING_LAYER);
+		
+		glVertex3f(3f,0f, STRING_LAYER);
+		glVertex3f(3.5f,-1.5f, STRING_LAYER);
+		glVertex3f(3.5f,-1.5f, STRING_LAYER);
+		glVertex3f(2f,-3f, STRING_LAYER);
+		return 6;
+	}
 	public static float render_dot() {
 		if(!getRenderMod())
 			return 3;
@@ -65,6 +81,23 @@ public class TextRenderSymbols {
 		glVertex3f(1f,-0.5f, STRING_LAYER);
 		glVertex3f(6f,-0.5f, STRING_LAYER);
 		return 7;
+	}
+	public static float render_apostrophe() {
+		if(!getRenderMod())
+			return 3;
+		glVertex3f(1f,7f, STRING_LAYER);
+		glVertex3f(2f,6f, STRING_LAYER);
+		return 3;
+	}
+	public static float render_quote() {
+		if(!getRenderMod())
+			return 3;
+		glVertex3f(1f,7f, STRING_LAYER);
+		glVertex3f(1f,6f, STRING_LAYER);
+		
+		glVertex3f(2f,7f, STRING_LAYER);
+		glVertex3f(2f,6f, STRING_LAYER);
+		return 3;
 	}
 
 }

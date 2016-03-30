@@ -12,40 +12,42 @@ import Logic.EntityUnit;
 import Maths.Vector2f;
 import Maths.Vector4f;
 
-public class GUIBossBar {
+public class GUIBossBar extends GUI {
 
-	private static EntityUnit BOSS;
-	private static boolean VISIBLE=true;
+	private EntityUnit m_boss;
+	private boolean m_visible=true;
+
 	
+	private Model modelGUI=GraphicMain.getModel("defaultBar");
+	private Vector4f colorGUI=new Vector4f(0.5f,0.5f,0.5f,1);
+	private Model modelBar=GraphicMain.getModel("defaultBar");
+	private Vector4f colorHealth=new Vector4f(0.75f,0f,0f,1);
+	private Vector4f colorShield=new Vector4f(0f,0f,0.75f,0.75f);
 	
-	private static Vector2f pose=new Vector2f(400,550);
-	private static Vector2f size=new Vector2f(200,15);
-	
-	private static Model modelGUI=GraphicMain.getModel("defaultBar");
-	private static Vector4f colorGUI=new Vector4f(0.5f,0.5f,0.5f,1);
-	private static Model modelBar=GraphicMain.getModel("defaultBar");
-	private static Vector4f colorHealth=new Vector4f(0.75f,0f,0f,1);
-	private static Vector4f colorShield=new Vector4f(0f,0f,0.75f,0.75f);
-	
-	public static void setBoss(EntityUnit boss) {
-		BOSS=boss;
+	public void setBoss(EntityUnit boss) {
+		m_boss=boss;
 	}
-	
-	public static void draw() {
-		if(VISIBLE && BOSS!=null && BOSS.getHealth()>0) {
+	public GUIBossBar() {
+		super();
+	}
+	@Override
+	public boolean draw() {
+		if(m_visible && m_boss!=null && m_boss.getHealth()>0) {
 			if(modelGUI!=null)
-				modelGUI.draw(pose,size,colorGUI);
+				modelGUI.draw(getPos(),getSize(),colorGUI);
 			
-			float percentHealth=BOSS.getPercentHealth();
-			float percentShield=BOSS.getPercentShield();
+			float percentHealth=m_boss.getPercentHealth();
+			float percentShield=m_boss.getPercentShield();
 			
-			Vector2f healthSize=new Vector2f((size.x-5)*percentHealth,size.y-5);
-			Vector2f shieldSize=new Vector2f((size.x-5)*percentShield,size.y-5);
+			Vector2f healthSize=new Vector2f((getSize().x-5)*percentHealth,getSize().y-5);
+			Vector2f shieldSize=new Vector2f((getSize().x-5)*percentShield,getSize().y-5);
 			
 			if(modelBar!=null) {
-				modelGUI.draw(pose,healthSize,colorHealth);
-				modelGUI.draw(pose,shieldSize,colorShield);
+				modelGUI.draw(getPos(),healthSize,colorHealth);
+				modelGUI.draw(getPos(),shieldSize,colorShield);
 			}
+			return true;
 		}
+		return false;
 	}
 }

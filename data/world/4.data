@@ -15,7 +15,7 @@
 + General level settings
 new Realm The_End
 set CameraBound -2 2 2 8
-set Background background/ice
+set Background background/echoes
 set Music Music/HOTS_46.ogg
 +
 + Main ground thing

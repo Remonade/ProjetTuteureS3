@@ -14,32 +14,40 @@ import Maths.Vector2f;
 import Maths.Vector4f;
 import java.util.ArrayList;
 
-public class GUIBuffBar {
+public class GUIBuffBar extends GUI {
 
-	private static EntityUnit PLAYER;
-	private static ArrayList<Buff> buffs;
-	private static boolean VISIBLE=true;
+	private EntityUnit m_player;
+	private ArrayList<Buff> m_buffs;
 	
-	private static Vector2f size=new Vector2f(20,20);
-	private static Vector2f pos=new Vector2f(800-(size.x+10),600-(size.y+10));
-	private static float offsetY=size.y*2;
-	
-	public static void setPlayer(EntityUnit p) {
-		PLAYER=p;
-		buffs=PLAYER.getBuffList();
+	private float offsetY=1;
+	public GUIBuffBar () {
+		super();
 	}
-	public static void draw() {
-		int spellCount=buffs.size();
-		for(int i=0;i<spellCount;i++) {
-			Buff b=buffs.get(i);
-			
-			Vector4f color=new Vector4f(1,1,1,1);
-			
-			Vector2f bPos=new Vector2f(pos.x,pos.y-i*(offsetY+5));
-			Model.renderTexture(b.getIcone(), bPos, size, color);
-			GraphicMain.drawString(b.getName(), bPos.subtract(new Vector2f(size.x,-size.y/2)), 0.8f, new Vector4f(0,0,0,1));
-			float duration=((float)(int)(b.getRemainingDuration()*10))/10;
-			GraphicMain.drawString(""+duration, bPos.subtract(new Vector2f(size.x/2,size.y/2)), 1.5f, new Vector4f(0,0,0,1));
+	@Override
+	public void setSize(float x, float y) {
+		super.setSize(x,y);
+		offsetY=getSize().y*2;
+	}
+	@Override
+	public boolean draw() {
+		m_player=Logic.Logic.getPlayer();
+		if(m_player!=null) {
+			m_buffs=m_player.getBuffList();
+			if(m_buffs==null)
+				return false;
+			int buffCount=m_buffs.size();
+			for(int i=0;i<buffCount;i++) {
+				Buff b=m_buffs.get(i);
+				Vector4f color=new Vector4f(1,1,1,1);
+
+				Vector2f bPos=new Vector2f(getPos().x-(getSize().x+10),getPos().y-(getSize().y+10)-i*(offsetY+10));
+				Model.renderTexture(b.getIcone(), bPos, getSize(), color);
+				GraphicMain.drawString(b.getName(), bPos.subtract(new Vector2f(getSize().x,-getSize().y/2)), 0.8f, new Vector4f(0,0,0,1));
+				float duration=((float)(int)(b.getRemainingDuration()*10))/10;
+				GraphicMain.drawString(""+duration, bPos.subtract(new Vector2f(getSize().x/2,getSize().y/2)), 1.5f, new Vector4f(0,0,0,1));
+			}
+			return true;
 		}
+		return false;
 	}
 }

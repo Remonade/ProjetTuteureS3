@@ -9,16 +9,31 @@ package Tests;
 import GUI.GUIHelp;
 import GUI.GUILabel;
 import GUI.GUIMenuButton;
+import GUI.GUITexture;
 import static Graphic.GraphicMain.window;
+import static org.lwjgl.glfw.GLFW.GLFW_CURSOR;
+import static org.lwjgl.glfw.GLFW.GLFW_CURSOR_NORMAL;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_1;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_2;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_3;
+import static org.lwjgl.glfw.GLFW.glfwSetInputMode;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowShouldClose;
 import static org.lwjgl.opengl.GL11.GL_TRUE;
 
 public class GameStateMainMenu extends GameState {
+	
+	@Override
+	public void onEnter() {
+		glfwSetInputMode(window,GLFW_CURSOR,GLFW_CURSOR_NORMAL);
+	}
 	public GameStateMainMenu() {
 		super();
+		
+		GUITexture t= new GUITexture("logo");
+		t.setPos(100,100);
+		t.setSize(75,75);
+		//m_GUI.add(t);
+		
 		GUILabel l=new GUILabel(GUILabel.ALIGN_CENTER);
 		l.setLabelText("Main Menu");
 		l.setPos(0.5f,0.8f);
@@ -36,7 +51,7 @@ public class GameStateMainMenu extends GameState {
 		h.setModelColor(0,0.5f,1,0.5f,1);
 		
 		GUIMenuButton m=new GUIMenuButton(Main.STATE_LEVEL);
-		m.setLabelText("Play");
+		m.setLabelText("Enter game");
 		m.setPos(0.5f,0.6f);
 		m.setSize(0.15f,0.05f);
 		m.setLabelSize(0.1f);

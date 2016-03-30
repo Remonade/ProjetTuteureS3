@@ -6,11 +6,13 @@
 
 package Tests;
 
+import GUI.GUI;
 import GUI.GUIBossBar;
 import GUI.GUIBuffBar;
 import GUI.GUIPlayerBar;
 import GUI.GUISpellBar;
 import static Graphic.GraphicMain.drawString;
+import static Graphic.GraphicMain.window;
 import Logic.EntityUnit;
 import Logic.EntityWayPoint;
 import Logic.Logic;
@@ -21,21 +23,46 @@ import Physic.PhysicMain;
 import static Tests.Main.STATE_LEVEL;
 import static Tests.Main.STATE_TRANSITION;
 import static Tests.Main.getGameState;
+import static org.lwjgl.glfw.GLFW.GLFW_CURSOR;
+import static org.lwjgl.glfw.GLFW.GLFW_CURSOR_DISABLED;
+import static org.lwjgl.glfw.GLFW.GLFW_CURSOR_NORMAL;
+import static org.lwjgl.glfw.GLFW.glfwSetInputMode;
 
 public class GameStateLevel extends GameState {
 	public GameStateLevel() {
 		super();
+		GUIBossBar b=new GUIBossBar();
+		b.setPos(0.5f,0.95f);
+		b.setSize(0.30f,0.02f);
+		m_GUI.add(b);
+		
+		GUIBuffBar g = new GUIBuffBar();
+		g.setPos(1f,1f);
+		g.setSize(20,20);
+		m_GUI.add(g);
+		
+		GUIPlayerBar p = new GUIPlayerBar();
+		p.setPos(0f,1f);
+		p.setSize(0.06f,0.015f);
+		m_GUI.add(p);
 	}
 	@Override
 	public void onEnter() {
 		if(Realm.getActiveRealm()==null) {
 			if(Realm.getRealmCount()>0)
 				this.setRealm(0);
+			for(GUI g:m_GUI) {
+				if(g instanceof GUIBossBar)
+					((GUIBossBar)g).setBoss(Realm.getActiveRealm().getBoss());
+			}
 		} else Audio.Audio.continueMusic();
+		glfwSetInputMode(window,GLFW_CURSOR,GLFW_CURSOR_DISABLED);
 	}
 	@Override
 	public void onLeave() {
 		Audio.Audio.pauseMusic();
+		int GLFW_CURSOR_ENABLED = 0;
+		glfwSetInputMode(window,GLFW_CURSOR,GLFW_CURSOR_NORMAL);
 	}
 	public void changeRealm(int realm) {
 		System.out.println("GameStateLevel changing realm to "+realm);
@@ -45,6 +72,10 @@ public class GameStateLevel extends GameState {
 	}
 	public void setRealm(int realm) {
 		Realm.changeRealm(realm);
+		for(GUI g:m_GUI) {
+			if(g instanceof GUIBossBar)
+				((GUIBossBar)g).setBoss(Realm.getActiveRealm().getBoss());
+		}
 	}
 	public Realm getActiveRealm() {
 		return Realm.getActiveRealm();
@@ -109,19 +140,15 @@ public class GameStateLevel extends GameState {
 				//System.out.println(info+"\n______________________________");
 				drawString(info,new Vector2f(0,200),2f,new Vector4f(1,1,1,1));
 				
-				if(r.getBoss()!=null) {
-					GUIBossBar.setBoss(r.getBoss());
-					GUIBossBar.draw();
-				}
 				if(Logic.getPlayer()!=null) {
-					GUIPlayerBar.setPlayer(Logic.getPlayer());
-					GUIPlayerBar.draw();
+					//GUIPlayerBar.setPlayer(Logic.getPlayer());
+					//GUIPlayerBar.draw();
 
 					GUISpellBar.setPlayer(Logic.getPlayer());
 					GUISpellBar.draw();
 
-					GUIBuffBar.setPlayer(Logic.getPlayer());
-					GUIBuffBar.draw();
+					//GUIBuffBar.setPlayer(Logic.getPlayer());
+					//GUIBuffBar.draw();
 				}
 			}
 		}
@@ -131,62 +158,7 @@ public class GameStateLevel extends GameState {
 		super.inputHandler();
 		Realm r=getActiveRealm();
 		if(r!=null) {
-			EntityUnit player=Logic.getPlayer();/*
-			if(Input.isPressed(Input.getBind(Input.BIND_JUMP))) {
-				if(player.getContact(EntityDynamic.CONTACT_LEFT) && Input.isPressed(Input.getBind(Input.BIND_RIGHT))) {
-					player.setLookRight(true);
-					player.setSpeed(0.15f,0.085f);
-					EntityParticle temp;
-					for(int i=0;i<5;i++) {
-							temp=new EntityParticle(((float)Math.random()*50)-25+225);
-							temp.setData(EntityDataParticle.get("particle"));
-							temp.setPos(player.getPos().x+player.getSize().x/2,player.getPos().y-player.getSize().y);
-							r.addEntity(temp);
-					}
-				} else if(player.getContact(EntityDynamic.CONTACT_RIGHT) && Input.isPressed(Input.getBind(Input.BIND_LEFT))) {
-					player.setLookRight(false);
-					player.setSpeed(-0.15f,0.085f);
-					EntityParticle temp;
-					for(int i=0;i<5;i++) {
-							temp=new EntityParticle(((float)Math.random()*50)-25+315);
-							temp.setData(EntityDataParticle.get("particle"));
-							temp.setPos(player.getPos().x+player.getSize().x/2,player.getPos().y+player.getSize().y);
-							r.addEntity(temp);
-					}
-				} else if(player.getContact(EntityDynamic.CONTACT_DOWN)){
-					player.jump();
-				}
-			}
-			if(Input.isPressed(Input.getBind(Input.BIND_LEFT)) && !Input.isPressed(Input.getBind(Input.BIND_RIGHT))) {
-				if(player.getSpeed().x>-0.075f)
-					player.setSpeed(-0.075f,player.getSpeed().y);
-				player.setLookRight(false);
-				EntityParticle temp;
-				if(player.getContact(EntityDynamic.CONTACT_DOWN) && Math.random()<0.2) {
-					temp=new EntityParticle(((float)Math.random()*50)-25+0);
-					temp.setData(EntityDataParticle.get("particle"));
-					temp.setPos(player.getPos().x+player.getSize().x/2,player.getPos().y-player.getSize().y);
-					r.addEntity(temp);
-				}
-			}
-			else if(Input.isPressed(Input.getBind(Input.BIND_RIGHT)) && !Input.isPressed(Input.getBind(Input.BIND_LEFT))) {
-				if(player.getSpeed().x<0.075f)
-					player.setSpeed(0.075f,player.getSpeed().y);
-				player.setLookRight(true);
-				EntityParticle temp;
-				if(player.getContact(EntityDynamic.CONTACT_DOWN) && Math.random()<0.2) {
-					temp=new EntityParticle(((float)Math.random()*50)-25+180);
-					temp.setData(EntityDataParticle.get("particle"));
-					temp.setPos(player.getPos().x-player.getSize().x/2,player.getPos().y-player.getSize().y);
-					r.addEntity(temp);
-				}
-			} else player.setSpeed(player.getSpeed().x*0.5f,player.getSpeed().y);
-			if(Input.isPressed(Input.getBind(Input.BIND_SHOOT))) {
-				float dir=-1;
-				if(player.getLookRight())
-					dir=1;
-				player.shoot(new Vector2f(dir,0));
-			}*/
+			EntityUnit player=Logic.getPlayer();
 			player.resetInput();
 			if(Input.isPressed(Input.getBind(Input.BIND_LEFT))) {
 				player.setInput(EntityUnit.INPUT_LEFT, true);

@@ -128,17 +128,8 @@ public class IA {
 			Vector2f pos=target.getPos();
 			Vector2f size=target.getSize();
 			if(lineOfSight(u,target)) {
-				if(!u.isTalking() && Math.random()<0.05) {
-					u.talk("Je te vois!");
-				}
 				if(u.shoot(u.getPos().subtract(pos).negate()))
 					m_actionCount++;
-			}
-			if(!u.isTalking() && Math.random()<0.05) {
-				if(u.getPercentHealth()<0.5f) {
-					u.talk("Oh, ça ce n'est pas gentil...");
-					Audio.Audio.playSound("Unit/Nasty.ogg");
-				}
 			}
 		}
 	}

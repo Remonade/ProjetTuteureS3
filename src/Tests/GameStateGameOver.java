@@ -10,8 +10,11 @@ import GUI.GUILabel;
 import GUI.GUIMenuButton;
 import static Graphic.GraphicMain.window;
 import Logic.Logic;
+import static org.lwjgl.glfw.GLFW.GLFW_CURSOR;
+import static org.lwjgl.glfw.GLFW.GLFW_CURSOR_NORMAL;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_1;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_2;
+import static org.lwjgl.glfw.GLFW.glfwSetInputMode;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowShouldClose;
 import static org.lwjgl.opengl.GL11.GL_TRUE;
 
@@ -27,14 +30,14 @@ public class GameStateGameOver  extends GameState {
 		m_GUI.add(g);
 		
 		GUIMenuButton m=new GUIMenuButton(Main.STATE_LEVEL);
-		m.setLabelText("recommencer");
+		m.setLabelText("Try again");
 		m.setPos(0.5f,0.5f);
 		m.setSize(0.2f,0.05f);
 		m.setLabelSize(0.1f);
 		m_GUI.add(m);
 		
 		m=new GUIMenuButton(-1);
-		m.setLabelText("quitter");
+		m.setLabelText("Quit");
 		m.setPos(0.5f,0.3f);
 		m.setSize(0.2f,0.05f);
 		m.setLabelSize(0.1f);
@@ -44,6 +47,7 @@ public class GameStateGameOver  extends GameState {
 	@Override
 	public void onEnter() {
 		Logic.generateRun(15);
+		glfwSetInputMode(window,GLFW_CURSOR,GLFW_CURSOR_NORMAL);
 	}
 	@Override
 	public void inputHandler() {

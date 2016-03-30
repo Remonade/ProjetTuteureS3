@@ -38,6 +38,7 @@ new Texture HUD/button.jpg
 new Texture HUD/dialog.png
 new Texture HUD/loadingScreenLeft.png
 new Texture HUD/loadingScreenRight.png
+new Texture HUD/otsu_logo.png
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++ backgrounds
 new Texture background/night.jpg
 new Texture background/hangar.jpg
@@ -110,6 +111,8 @@ new Model loadingScreenLeft
 set Texture HUD/loadingScreenLeft.png
 new Model loadingScreenRight
 set Texture HUD/loadingScreenRight.png
+new Model logo
+set Texture HUD/otsu_logo.png
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++ backgrounds
 new Model background/night
 set Texture background/night.jpg
@@ -187,8 +190,9 @@ set Duration 0.25
 set Frame 0 6
 set Frame 1 7
 set Frame 2 7
-+
++ Model "Enemy"
 new ModelAnim Enemy
++ Animation standard pour le model "Enemy"
 new Animation NAN
 set Texture robot.png
 set FrameCount 15
@@ -208,7 +212,7 @@ set Frame 11 2
 set Frame 12 2
 set Frame 13 2
 set Frame 14 2
-+
++ Annimation de course pour le model "Enemy"
 new Animation RUN
 set Texture robot.png
 set FrameCount 2

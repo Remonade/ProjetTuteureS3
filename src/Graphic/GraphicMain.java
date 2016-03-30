@@ -68,7 +68,7 @@ public class GraphicMain {
         //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
         
         // Create the window
-        window = glfwCreateWindow(WIDTH, HEIGHT, "GameEngine", NULL, NULL);
+        window = glfwCreateWindow(WIDTH, HEIGHT, "GameEngine", glfwGetPrimaryMonitor(), NULL);
         if ( window == NULL )
             throw new RuntimeException("Failed to create the GLFW window");
         

@@ -9,10 +9,19 @@ package Tests;
 import GUI.GUIBindingButton;
 import GUI.GUICheckBox;
 import GUI.GUIMenuButton;
+import static Graphic.GraphicMain.window;
 import static Tests.Input.*;
+import static org.lwjgl.glfw.GLFW.GLFW_CURSOR;
+import static org.lwjgl.glfw.GLFW.GLFW_CURSOR_NORMAL;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
+import static org.lwjgl.glfw.GLFW.glfwSetInputMode;
 
 public class GameStateSettingMenu extends GameState {
+	
+	@Override
+	public void onEnter() {
+		glfwSetInputMode(window,GLFW_CURSOR,GLFW_CURSOR_NORMAL);
+	}
 	public GameStateSettingMenu() {
 		super();
 		

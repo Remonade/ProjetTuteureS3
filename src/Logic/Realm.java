@@ -219,7 +219,7 @@ public class Realm {
 			m_activeRealm.addEntity(Logic.getPlayer());
 			String musicPath=m_activeRealm.getMusic();
 			m_activeRealmID=realm;
-			if(!musicPath.equals(""))
+			if((Main.GAME_STATE==Main.STATE_LEVEL || Main.GAME_STATE==Main.STATE_TRANSITION)&& !musicPath.equals(""))
 				Audio.Audio.playMusic(musicPath,true);
 		} else {
 			System.out.println("Realm: "+m_activeRealmID+" not found");
@@ -240,7 +240,7 @@ public class Realm {
 			m_activeRealm.addEntity(Logic.getPlayer());
 			String musicPath=m_activeRealm.getMusic();
 			m_activeRealmID=realm;
-			if(!musicPath.equals(""))
+			if((Main.GAME_STATE==Main.STATE_LEVEL || Main.GAME_STATE==Main.STATE_TRANSITION) && !musicPath.equals(""))
 				Audio.Audio.playMusic(musicPath,true);
 		} else {
 			System.out.println("Realm: "+m_activeRealmID+" not found");

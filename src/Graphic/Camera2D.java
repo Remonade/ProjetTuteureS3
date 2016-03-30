@@ -22,7 +22,7 @@ import static org.lwjgl.opengl.GL11.glOrtho;
 
 
 public class Camera2D {
-    private float m_zoom=3, m_finalZoom=3;
+    private float m_zoom=3, m_finalZoom=3f;
     private float m_posX,m_posY;
     private float m_BT,m_BB,m_BL,m_BR;
     /**

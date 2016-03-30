@@ -131,7 +131,7 @@ public class TextRender {
         glLoadIdentity();
         glTranslatef(pos.x,pos.y,0);
         glScalef(size,size,1f);
-		glLineWidth((float) Math.sqrt(size));
+		glLineWidth((float) Math.sqrt(size)+1);
 		if(color==null)
 			glColor4f(1,1,1,1);
 		else
@@ -430,6 +430,9 @@ public class TextRender {
 	private static float renderSymbol(int c) {
 		float offset;
 		switch (c) {
+			case 'ç':
+				offset=render_cedil();
+				break;
 			case '.':
 				offset=render_dot();
 				break;
@@ -450,6 +453,12 @@ public class TextRender {
 				break;
 			case '_':
 				offset=render_underscore();
+				break;
+			case '\'':
+				offset=render_apostrophe();
+				break;
+			case '\"':
+				offset=render_quote();
 				break;
 			case ' ':
 				offset=WHITE_WIDTH;

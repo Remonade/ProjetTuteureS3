@@ -38,39 +38,38 @@ public class Logic {
 		DELTA_TIME=GLFW.glfwGetTime()-CURRENT_TIME;
 		CURRENT_TIME+=DELTA_TIME;
 	}
-	private static EntityUnit PLAYER=null;
-	private static Player LOCAL_PLAYER=null;
+	private static EntityUnit PLAYER_ENTITY=null;
+	private static Player PLAYER_DATA=null;
 	public static float LEVEL_POWER=0.05f;
 	public static Realm getActiveRealm() {
 		return  ((GameStateLevel)getGameState(2)).getActiveRealm();
 	}
 	public static EntityUnit getPlayer() {
-		if(LOCAL_PLAYER==null) {
-			LOCAL_PLAYER=new Player();
-			LOCAL_PLAYER.setName("Daratrix");
-			LOCAL_PLAYER.setLevel(0);
+		if(PLAYER_DATA==null) {
+			PLAYER_DATA=new Player();
+			PLAYER_DATA.setName("Daratrix");
+			PLAYER_DATA.setLevel(0);
 		}
-		if(PLAYER==null) {
+		if(PLAYER_ENTITY==null) {
 			if(Realm.getRealmCount()>0) {
 				Realm r=getActiveRealm();
 				if(r!=null) {
-					PLAYER=LOCAL_PLAYER.getPlayerEntity();
-					Vector2f pos=getActiveRealm().getWayPoints().get(0).getPos();
-					//pos=pos.add(getActiveRealm().getWayPoints().get(0).getOut());
+					PLAYER_ENTITY=PLAYER_DATA.getPlayerEntity();
+					Vector2f pos=r.getWayPoints().get(0).getPos();
 
-					PLAYER.setPos(pos);
-					getActiveRealm().addEntity(PLAYER);
+					PLAYER_ENTITY.setPos(pos);
+					r.addEntity(PLAYER_ENTITY);
 				} else return null;
 			} else return null;
 		}
-		return PLAYER;
+		return PLAYER_ENTITY;
 	}
 	public static void killPlayer() {
 		try {
 			for(int i=0;i<Realm.getRealmCount();i++) {
-				Realm.getRealm(i).removeEntity(PLAYER);
+				Realm.getRealm(i).removeEntity(PLAYER_ENTITY);
 			}
-			PLAYER=null;
+			PLAYER_ENTITY=null;
 			Main.setGameState(Main.STATE_GAME_OVER);
 		} catch (Exception ex) {
 			Logger.getLogger(Logic.class.getName()).log(Level.SEVERE, null, ex);
@@ -81,7 +80,7 @@ public class Logic {
 			loadEntityData("data/entity.data");
 			IA.initIA_TEMPLATES();
 			generateRun(0);
-			Realm.changeRealm(0);
+			//Realm.changeRealm(0);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -261,7 +260,7 @@ public class Logic {
 		Entity e=null;
 		EntityUnit u=null;
 		for(String l:lines) {
-			if(l.charAt(0)=='+')
+			if(l.length()==0 || l.charAt(0)=='+' || l.charAt(0)=='\n')
 				continue;
 			String[] data = l.split(" ");
 			String action=data[0];
