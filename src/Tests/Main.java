@@ -18,8 +18,8 @@ public class Main {
     // The window handle
     private long window;
     //private Camera2D camera;
-    private final int WIDTH = 800;
-    private final int HEIGHT = 600;
+    private final int WIDTH = 1024;
+    private final int HEIGHT = 768;
 	
 	public static final int STATE_MAIN_MENU=0;
 	public static final int STATE_LOADING_MENU=1;
