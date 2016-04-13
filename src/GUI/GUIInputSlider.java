@@ -10,7 +10,7 @@ import Graphic.GraphicMain;
 import Graphic.Model;
 import static Graphic.TextRendering.TextRender.drawStringLeft;
 import Maths.Vector2f;
-import static Tests.Input.getMouseX;
+import static Tools.Input.getMouseX;
 
 public class GUIInputSlider extends GUIInput {
 	

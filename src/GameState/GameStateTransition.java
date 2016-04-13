@@ -4,12 +4,13 @@
  * and open the template in the editor.
  */
 
-package Tests;
+package GameState;
 
 import GUI.GUITexture;
 import static Graphic.GraphicMain.WIDTH;
 import Logic.Logic;
 import Logic.Realm;
+import Tests.Main;
 import static Tests.Main.setGameState;
 
 public class GameStateTransition extends GameState {

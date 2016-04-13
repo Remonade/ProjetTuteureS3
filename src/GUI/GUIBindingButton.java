@@ -8,9 +8,9 @@ package GUI;
 
 import Graphic.GraphicMain;
 import static Graphic.TextRendering.TextRender.drawStringCentered;
-import Tests.GameStateBinding;
-import Tests.Input;
-import static Tests.Input.BIND;
+import GameState.GameStateBinding;
+import Tools.Input;
+import static Tools.Input.BIND;
 import Tests.Main;
 
 public class GUIBindingButton extends GUIButton {
