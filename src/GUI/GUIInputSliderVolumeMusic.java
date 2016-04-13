@@ -6,7 +6,7 @@
 
 package GUI;
 
-import static Tests.Input.getMouseX;
+import static Tools.Input.getMouseX;
 
 public class GUIInputSliderVolumeMusic  extends GUIInputSlider {
 	

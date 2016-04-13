@@ -16,7 +16,7 @@ import Logic.IA.IA;
 import Logic.Spell.Spell;
 import static Logic.Type.SNIPER;
 import Maths.Vector2f;
-import Tests.GameStateLevel;
+import GameState.GameStateLevel;
 import Tests.Main;
 import static Tests.Main.getGameState;
 import java.io.IOException;

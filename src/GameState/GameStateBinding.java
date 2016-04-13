@@ -4,10 +4,11 @@
  * and open the template in the editor.
  */
 
-package Tests;
+package GameState;
 
 import GUI.GUILabel;
-import static Tests.Input.BIND;
+import Tools.Input;
+import static Tools.Input.BIND;
 import static Tests.Main.setGameState;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_LAST;
 

@@ -4,9 +4,10 @@
  * and open the template in the editor.
  */
 
-package Tests;
+package GameState;
 
 import GUI.GUITexture;
+import Tests.Main;
 import static Graphic.GraphicMain.window;
 import static Tests.Main.setGameState;
 import static org.lwjgl.glfw.GLFW.GLFW_CURSOR;

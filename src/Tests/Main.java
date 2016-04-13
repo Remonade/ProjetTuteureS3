@@ -1,5 +1,14 @@
 package Tests;
 
+import Tools.Input;
+import GameState.GameStateMainMenu;
+import GameState.GameStateLevel;
+import GameState.GameStateSettingMenu;
+import GameState.GameState;
+import GameState.GameStateLogo;
+import GameState.GameStateTransition;
+import GameState.GameStateBinding;
+import GameState.GameStateGameOver;
 import Graphic.GraphicMain;
 import static Graphic.GraphicMain.resetScreen;
 import static Graphic.GraphicMain.updateScreen;

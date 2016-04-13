@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package Tests;
+package Tools;
 
 import Graphic.GraphicMain;
 import static Graphic.GraphicMain.window;

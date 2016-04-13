@@ -4,13 +4,14 @@
  * and open the template in the editor.
  */
 
-package Tests;
+package GameState;
 
 import GUI.GUI;
 import GUI.GUIInput;
+import Tools.Input;
 import static Graphic.GraphicMain.setCameraGUI;
 import static Graphic.GraphicMain.window;
-import static Tests.Input.BIND_MOUSE;
+import static Tools.Input.BIND_MOUSE;
 import java.util.ArrayList;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_F4;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT_ALT;

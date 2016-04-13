@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package Tests;
+package GameState;
 
 import GUI.GUI;
 import GUI.GUIBossBar;
@@ -20,6 +20,8 @@ import Logic.Realm;
 import Maths.Vector2f;
 import Maths.Vector4f;
 import Physic.PhysicMain;
+import Tools.Input;
+import Tests.Main;
 import static Tests.Main.STATE_LEVEL;
 import static Tests.Main.STATE_TRANSITION;
 import static Tests.Main.getGameState;

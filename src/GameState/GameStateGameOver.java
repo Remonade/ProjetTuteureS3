@@ -4,12 +4,14 @@
  * and open the template in the editor.
  */
 
-package Tests;
+package GameState;
 
 import GUI.GUILabel;
 import GUI.GUIMenuButton;
 import static Graphic.GraphicMain.window;
 import Logic.Logic;
+import Tools.Input;
+import Tests.Main;
 import static org.lwjgl.glfw.GLFW.GLFW_CURSOR;
 import static org.lwjgl.glfw.GLFW.GLFW_CURSOR_NORMAL;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_1;

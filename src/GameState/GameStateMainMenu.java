@@ -4,13 +4,16 @@
  * and open the template in the editor.
  */
 
-package Tests;
+package GameState;
 
 import GUI.GUIHelp;
 import GUI.GUILabel;
 import GUI.GUIMenuButton;
 import GUI.GUITexture;
+import Tools.Input;
+import Tests.Main;
 import static Graphic.GraphicMain.window;
+import Tools.Lang;
 import static org.lwjgl.glfw.GLFW.GLFW_CURSOR;
 import static org.lwjgl.glfw.GLFW.GLFW_CURSOR_NORMAL;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_1;
@@ -35,23 +38,23 @@ public class GameStateMainMenu extends GameState {
 		//m_GUI.add(t);
 		
 		GUILabel l=new GUILabel(GUILabel.ALIGN_CENTER);
-		l.setLabelText("Main Menu");
+		l.setLabelText(Lang.getString("HUD_Label_MainMenu"));
 		l.setPos(0.5f,0.8f);
 		l.setSize(0,0.1f);
-		l.setLabelSize(0.2f);
+		l.setLabelSize(0.15f);
 		m_GUI.add(l);
 		
 		GUIHelp h;
 		
 		h=new GUIHelp();
-		h.setLabelText("Will send you back to the game.");
+		h.setLabelText(Lang.getString("HUD_Help_Play"));
 		h.setLabelSize(0.1f);
-		h.setSize(0.5f,0.05f);
+		h.setSize(0.15f,0.05f);
 		h.setPos(0,200f);
 		h.setModelColor(0,0.5f,1,0.5f,1);
 		
 		GUIMenuButton m=new GUIMenuButton(Main.STATE_LEVEL);
-		m.setLabelText("Enter game");
+		m.setLabelText(Lang.getString("HUD_Button_Play"));
 		m.setPos(0.5f,0.6f);
 		m.setSize(0.15f,0.05f);
 		m.setLabelSize(0.1f);
@@ -59,14 +62,14 @@ public class GameStateMainMenu extends GameState {
 		m_GUI.add(m);
 		
 		h=new GUIHelp();
-		h.setLabelText("Will open the settings menu.");
+		h.setLabelText(Lang.getString("HUD_Help_Settings"));
 		h.setLabelSize(0.1f);
-		h.setSize(0.5f,0.05f);
+		h.setSize(0.15f,0.05f);
 		h.setPos(0,200);
 		h.setModelColor(0,0.5f,1,0.5f,1);
 		
 		m=new GUIMenuButton(Main.STATE_SETTING_MENU);
-		m.setLabelText("Settings");
+		m.setLabelText(Lang.getString("HUD_Button_Settings"));
 		m.setPos(0.5f,0.4f);
 		m.setSize(0.15f,0.05f);
 		m.setLabelSize(0.1f);
@@ -74,14 +77,14 @@ public class GameStateMainMenu extends GameState {
 		m_GUI.add(m);
 		
 		h=new GUIHelp();
-		h.setLabelText("Will close the game.");
+		h.setLabelText(Lang.getString("HUD_Help_Quit"));
 		h.setLabelSize(0.1f);
-		h.setSize(0.5f,0.05f);
+		h.setSize(0.15f,0.05f);
 		h.setPos(0,200);
 		h.setModelColor(0,0.5f,1,0.5f,1);
 		
 		m=new GUIMenuButton(-1);
-		m.setLabelText("Quit");
+		m.setLabelText(Lang.getString("HUD_Button_Quit"));
 		m.setPos(0.5f,0.2f);
 		m.setSize(0.15f,0.05f);
 		m.setLabelSize(0.1f);
