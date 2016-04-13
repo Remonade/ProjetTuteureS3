@@ -1,14 +1,20 @@
-+ This file is used to describe world data
-+ Everything is created in the last edited realm. Be sure to create at least one!
-+ To create an StringData:
-+	"new StringData"
-+		"set Name [name=string]"
-+		"set Content [content=string]"
++ This file is used to describe language string data.
++ To create a StringData:
++	"new StringData [name=string]"
++		"set [lang=string(1 word)] [content=string]"
 +
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-+ default entity, will be used if datas are missing - !! NEED A DEFAULT ENTITY TO SECURE ENGINE !!
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
++
+new StringData STR_example
+	set FR Exemple
+	set EN Example
+new StringData HUD_main_menu
+	set FR Menu principal
+	set EN Main menu
+new StringData DIALOG_intro_1
+	set FR Pour réaliser le saut mural, maintenez "saut" et alternez entre gauche et droite
+	set EN To achieve walljump, hold "jump" and switch between left and right.
+	
 
 
 
