@@ -70,4 +70,14 @@
     nbproject/build-impl.xml file. 
 
     -->
+    <target name="-post-jar">
+        <jar jarfile="TCL.jar">
+          <zipfileset src="${dist.jar}" excludes="META-INF/*" />
+          <zipfileset src="lib/lwjgl/jar/lwjgl.jar" excludes="META-INF/*" />
+          <zipfileset src="lib/lwjgl/native/native.zip"/>
+          <manifest>
+              <attribute name="Main-Class" value="Tests.Main"/>
+          </manifest>
+        </jar>
+    </target>
 </project>
