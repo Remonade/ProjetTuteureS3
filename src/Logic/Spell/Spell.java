@@ -59,7 +59,7 @@ public class Spell {
 		}
 	}
 	public void script(EntityUnit u) {
-		u.addBuff(new Buff("BERZERKER",5));
+		u.addBuff(new Buff(null));
 	}
 	public float getCooldownPercent() {
 		return m_currentCooldown/m_baseCooldown;
