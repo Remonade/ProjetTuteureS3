@@ -3,6 +3,7 @@ package Logic.Spell;
 
 import static Graphic.GraphicMain.getModel;
 import Logic.Buff.BuffDash;
+import Logic.Data.DataBuff;
 import Logic.EntityUnit;
 
 public class SpellDash extends Spell {
@@ -30,7 +31,7 @@ public class SpellDash extends Spell {
 	
 	@Override
 	public void script(EntityUnit u) {
-		u.addBuff(new BuffDash("",0.15f,3.5f));
+		u.addBuff(new BuffDash(DataBuff.getDataBuff("dash")));
 	}
 
 }

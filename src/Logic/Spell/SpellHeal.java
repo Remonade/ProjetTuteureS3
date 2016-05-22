@@ -2,7 +2,8 @@
 package Logic.Spell;
 
 import static Graphic.GraphicMain.getModel;
-import Logic.Buff.BuffHOT;
+import Logic.Data.DataBuff;
+import Logic.Buff.BuffHealOverTime;
 import Logic.EntityUnit;
 
 public class SpellHeal extends Spell{
@@ -23,7 +24,7 @@ public class SpellHeal extends Spell{
 	@Override
 	public void script(EntityUnit u) {
 		//u.heal(m_heal);
-		u.addBuff(new BuffHOT("regen",10,20,500));
+		u.addBuff(new BuffHealOverTime(DataBuff.getDataBuff("regen")));
 	}
 
 }

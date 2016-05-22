@@ -6,6 +6,7 @@
 
 package Logic.Buff;
 
+import Logic.Data.DataBuff;
 import Logic.Data.EntityDataMissile;
 import Logic.EntityUnit;
 import Logic.IA.IA;
@@ -16,13 +17,11 @@ public class BuffAutoAttack extends Buff {
 	protected int m_activation;
 	protected EntityDataMissile m_type;
 	
-	
-	public BuffAutoAttack(String name, float duration, int activation, EntityDataMissile data) {
-		super(name,duration);
-		m_activation=activation-1;
-		m_delay=duration/m_activation;
-		m_type=data;
-		m_icone="icone/spread.png";
+	public BuffAutoAttack(DataBuff dataModel) {
+		super(dataModel);
+		m_activation=getActivationCount()-1;
+		m_delay=m_dataModel.getMaxDuration()/m_activation;
+		m_type=(EntityDataMissile)EntityDataMissile.get(getMissileTypeName());
 	}
 	@Override
 	public void onStart(EntityUnit u) {
@@ -47,5 +46,10 @@ public class BuffAutoAttack extends Buff {
 			u.shoot(dir);
 		}
 	}
-
+	private int getActivationCount() {
+		return m_dataModel.getIntegerProperty("activationCount");
+	}
+	private String getMissileTypeName() {
+		return m_dataModel.getStringProperty("missileTypeName");
+	}
 }

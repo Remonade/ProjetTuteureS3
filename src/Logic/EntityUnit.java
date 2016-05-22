@@ -10,6 +10,7 @@ import Graphic.ModelAnim;
 import Logic.Buff.Buff;
 import Logic.Data.EntityDataParticle;
 import Logic.IA.IA;
+import static Logic.Realm.getActiveRealm;
 import Logic.Spell.Spell;
 import static Logic.Type.*;
 import Maths.Vector2f;
@@ -175,12 +176,16 @@ public class EntityUnit extends EntityDynamic {
 	}
 	
 	public void addBuff(Buff b) {
-		b.onStart(this);
-		m_buffList.add(b);
+		if(b!=null) {
+			b.onStart(this);
+			m_buffList.add(b);
+		}
 	}
 	public void removeBuff(Buff b) {
-		b.onExpire(this);
-		m_buffList.remove(b);
+		if(b!=null) {
+			b.onExpire(this);
+			m_buffList.remove(b);
+		}
 	}
 	public ArrayList<Buff> getBuffList() {
 		return m_buffList;
@@ -409,6 +414,13 @@ public class EntityUnit extends EntityDynamic {
 		}
     }
     public boolean damage(int damage) {
+		EntityParticle temp;
+			temp=new EntityParticle(180);
+			temp.setData(EntityDataParticle.get("EDPTextRed"));
+			temp.setPos(getPos().x, getPos().y + getSize().y*-2f);
+			temp.m_text=""+damage;
+			getActiveRealm().addEntity(temp);
+			
 		m_shieldCooldown=SHIELD_REGEN_DELAY;
 		if(getShield()>=damage)
 			m_shield-=damage/getMaxShield();
@@ -424,6 +436,13 @@ public class EntityUnit extends EntityDynamic {
 		return false;
     }
 	public void heal(int heal) {
+		EntityParticle temp;
+			temp=new EntityParticle(0);
+			temp.setData(EntityDataParticle.get("EDPTextGreen"));
+			temp.setPos(getPos().x, getPos().y + getSize().y*2f);
+			temp.m_text=""+heal;
+			getActiveRealm().addEntity(temp);
+			
 		float percent=heal/getMaxHealth();
 		m_health+=percent;
 		if(m_health>1.0f)

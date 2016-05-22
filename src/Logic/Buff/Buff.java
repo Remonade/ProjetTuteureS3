@@ -2,61 +2,47 @@
 
 package Logic.Buff;
 
+import Logic.Data.DataBuff;
 import Logic.EntityUnit;
 
 public class Buff {
-	protected String m_name="";
-	protected String m_icone="icone/berzerker.png";
+	protected DataBuff m_dataModel;
 	protected int m_remainingStack=1;
-	protected int m_maxStack=1;
 	protected float m_remainingDuration=0;
-	protected float m_maxDuration=0;
 	
-	protected boolean m_stackDuration=false;
-	
-	public Buff(String name, float duration) {
-		m_name=name;
-		m_remainingDuration=duration;
-		m_maxDuration=duration;
-	}
-	public Buff(String name, float duration, boolean sd) {
-		m_name=name;
-		m_remainingDuration=duration;
-		m_maxDuration=duration;
-		m_stackDuration=sd;
-	}
-	public Buff(String name, float duration,int stack) {
-		m_name=name;
-		m_remainingDuration=duration;
-		m_maxDuration=duration;
-		m_remainingStack=stack;
-		m_maxStack=stack;
-	}
-	public Buff(String name, float duration, boolean sd, int stack) {
-		m_name=name;
-		m_remainingDuration=duration;
-		m_maxDuration=duration;
-		m_stackDuration=sd;
-		m_remainingStack=stack;
-		m_maxStack=stack;
+	public Buff(DataBuff dataModel) {
+		m_dataModel = dataModel;
+		m_remainingDuration = getMaxDuration();
 	}
 	public String getName() {
-		return m_name;
+		return m_dataModel != null ? m_dataModel.getName() : "no name";
 	}
 	public String getIcone() {
-		return m_icone;
+		return m_dataModel != null ? m_dataModel.getIcone() : "default.png";
 	}
 	public float getMaxDuration() {
-		return m_maxDuration;
+		return m_dataModel != null ? m_dataModel.getMaxDuration() : 0;
 	}
 	public float getRemainingDuration() {
 		return m_remainingDuration;
 	}
-	public int getMaxStack() {
-		return m_maxStack;
+	public float getElapsedDuration() {
+		return getMaxDuration() - getRemainingDuration();
+	}
+	public int getMaxStackCount() {
+		return m_dataModel != null ? m_dataModel.getMaxStackCount() : 0;
 	}
 	public int getRemainingStack() {
 		return m_remainingStack;
+	}
+	public float getActivationDelay() {
+		return m_dataModel.getActivationDelay();
+	}
+	public int getMaxActivationCount() {
+		return m_dataModel.getMaxActivationCount();
+	}
+	public boolean getStackDuration() {
+		return m_dataModel.isStackDuration();
 	}
 	public void onStart(EntityUnit u) {
 		
@@ -69,15 +55,15 @@ public class Buff {
 	}
 	public boolean update(EntityUnit u) {
 		if(m_remainingDuration>0.0f)
-			m_remainingDuration-=Logic.Logic.DELTA_TIME;
+			m_remainingDuration -= Logic.Logic.DELTA_TIME;
 		if(m_remainingDuration<0.0f) {
 			m_remainingDuration=0.0f;
-			if(m_stackDuration) {
+			if(getStackDuration()) {
 				m_remainingStack--;
-				if(m_remainingStack==0) {
+				if(m_remainingStack == 0) {
 					return true;
 				} else
-					m_remainingDuration=m_maxDuration;
+					m_remainingDuration = getMaxDuration();
 			} else {
 				return true;
 			}
