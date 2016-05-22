@@ -193,3 +193,27 @@ set Size 0.25 0.25
 set Model Pexplosion
 set Duration 0.1
 set Speed 7.5
++
+new EntityDataParticle EDPheal
+set Color 0 1 0 0.25
+set Size 0.05 0.05
+set Model Pheal
+set Duration 0.5
+set Speed 0.5
+set Rotation 5
+set Type 1
++
+new EntityDataParticle EDPTextGreen
+set Color 0 1 0 1
+set Duration 0.75
+set Speed 0.5
+set Rotation 5
+set Type 1
++
+new EntityDataParticle EDPTextRed
+set Color 1 0 0 1
+set Duration 0.75
+set Speed 0.5
+set Rotation 5
+set Type 1
++

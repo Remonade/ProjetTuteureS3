@@ -23,6 +23,7 @@ public class EntityParticle extends Entity {
 		m_time=0;
 		m_angle=a;
 	}
+	public String m_text = "";
 	public boolean updateTime() {
 			if(m_data!=null) {
 			m_time += Logic.DELTA_TIME;
@@ -43,16 +44,28 @@ public class EntityParticle extends Entity {
 				color.w=0.25f+(1-m_time/getDuration())*color.w;
 			
 			Vector2f mod;
-			if(getType()==1)
-				mod=new Vector2f((float)Math.cos(m_angle),(float)Math.sin(m_angle)).scale((getDuration()-m_time)*getSpeed());
-			else
-				mod=new Vector2f((float)Math.cos(m_angle),(float)Math.sin(m_angle)).scale(m_time*getSpeed());
 			
 			Model model=getData().getModel();
-			if(model instanceof ModelAnim)
-				((ModelAnim)model).draw(m_pos.subtract(mod),getModelSize(),color,0,m_time,"NAN");
+			if(model!=null) {
+				if(getType()==1)
+					mod=new Vector2f((float)Math.cos(m_angle),(float)Math.sin(m_angle)).scale((getDuration()-m_time)*getSpeed());
+				else
+					mod=new Vector2f((float)Math.cos(m_angle),(float)Math.sin(m_angle)).scale(m_time*getSpeed());
+				
+				if(model instanceof ModelAnim)
+					((ModelAnim)model).draw(m_pos.subtract(mod),getModelSize(),color,0,m_time,"NAN");
+				else
+					model.draw(m_pos.subtract(mod),getModelSize(),color,m_angle);
+			}
+			
+			if(getType()==1)
+				mod=new Vector2f((float)Math.sin(m_angle),(float)Math.cos(m_angle)).scale((getDuration()-m_time)*getSpeed());
 			else
-				model.draw(m_pos.subtract(mod),getModelSize(),color,m_angle);
+				mod=new Vector2f((float)Math.sin(m_angle),(float)Math.cos(m_angle)).scale(m_time*getSpeed());
+			
+			if(!m_text.equals("")) {
+				Graphic.TextRendering.TextRender.drawStringCentered(m_text, m_pos.subtract(mod.scale(0.5f)), 0.02f, color);
+			}
 		}
 	}
 	

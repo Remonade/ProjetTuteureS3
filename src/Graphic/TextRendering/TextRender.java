@@ -131,7 +131,7 @@ public class TextRender {
         glLoadIdentity();
         glTranslatef(pos.x,pos.y-(size*LINE_HEIGHT/3),0);
         glScalef(size,size,1f);
-		glLineWidth((float) Math.sqrt(size)+0.5f);
+		glLineWidth((float)1.5f);
 		if(color==null)
 			glColor4f(1,1,1,1);
 		else
