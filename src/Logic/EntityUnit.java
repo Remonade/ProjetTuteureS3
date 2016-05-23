@@ -333,7 +333,7 @@ public class EntityUnit extends EntityDynamic {
         regen();
 		
 		for(Spell s: m_spellList)
-			s.refreshCooldown();
+			s.refreshCooldown(this);
 		updateBuff();
 		if(m_ia!=null)
 			m_ia.execute(this);
