@@ -2,6 +2,7 @@
 
 package Logic.Buff;
 
+import Graphic.Model;
 import Logic.Data.DataBuff;
 import Logic.EntityUnit;
 
@@ -17,8 +18,8 @@ public class Buff {
 	public String getName() {
 		return m_dataModel != null ? m_dataModel.getName() : "no name";
 	}
-	public String getIcone() {
-		return m_dataModel != null ? m_dataModel.getIcone() : "default.png";
+	public String getIconeName() {
+		return m_dataModel != null ? m_dataModel.getIconeName() : "default.png";
 	}
 	public float getMaxDuration() {
 		return m_dataModel != null ? m_dataModel.getMaxDuration() : 0;
@@ -43,6 +44,9 @@ public class Buff {
 	}
 	public boolean getStackDuration() {
 		return m_dataModel.isStackDuration();
+	}
+	public Model getIconeModel() {
+		return m_dataModel != null ? m_dataModel.getIconeModel() : null;
 	}
 	public void onStart(EntityUnit u) {
 		

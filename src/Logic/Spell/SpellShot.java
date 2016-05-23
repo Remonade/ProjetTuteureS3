@@ -6,7 +6,7 @@
 
 package Logic.Spell;
 
-import static Graphic.GraphicMain.getModel;
+import Logic.Data.DataSpell;
 import Logic.Data.EntityDataMissile;
 import Logic.EntityMissile;
 import Logic.EntityUnit;
@@ -14,35 +14,34 @@ import Logic.Realm;
 import Maths.Vector2f;
 
 public class SpellShot  extends Spell {
-	public SpellShot(String name, float cost, float cooldown) {
-		super(name,cost,cooldown);
-		m_icone=getModel("Ispread");
-	}
-	
-	public SpellShot(String name, float cost, float cooldown, int charge) {
-		super(name,cost,cooldown,charge);
-		m_icone=getModel("Ispread");
+	public SpellShot(DataSpell dataModel) {
+		super(dataModel);
 	}
 	@Override
 	public void script(EntityUnit u) {
-		//u.heal(10*(int)m_energyCost);
-		
 		float speed=-1;
 		if(u.getLookRight())
 			speed=1;
 		
-		EntityMissile mis;
-		
-		mis=new EntityMissile();
-		mis.setData(EntityDataMissile.get("missile"));
-		mis.setDir(new Vector2f(0.75f*speed,0f));
-		Realm.getActiveRealm().addEntity(mis);
-		mis.setPos(u.getPos());
-		mis.setOwner(u);
-		mis.setTeam(u.getTeam());
+		EntityDataMissile dataMissile = getEntityDataMissile();
+		if(dataMissile != null) {
+			EntityMissile mis;
+			mis=new EntityMissile();
+			mis.setData(dataMissile);
+			mis.setDir(new Vector2f(0.75f*speed,0f));
+			Realm.getActiveRealm().addEntity(mis);
+			mis.setPos(u.getPos());
+			mis.setOwner(u);
+			mis.setTeam(u.getTeam());
+		}
 	}
-	public float getCooldownPercent() {
-		return m_currentCooldown/m_baseCooldown;
+	
+	public String getEntityDataMissileName() {
+		return m_dataModel != null ? m_dataModel.getStringProperty("missileType") : "";
 	}
-
+	
+	public EntityDataMissile getEntityDataMissile() {
+		String missile = getEntityDataMissileName();
+		return !missile.equals("") ? (EntityDataMissile)EntityDataMissile.get(missile) : null;
+	}
 }

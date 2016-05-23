@@ -13,7 +13,6 @@ import Logic.Data.EntityData;
 import Graphic.GraphicMain;
 import Logic.Data.EntityDataParticle;
 import Logic.IA.IA;
-import Logic.Spell.Spell;
 import static Logic.Type.SNIPER;
 import Maths.Vector2f;
 import GameState.GameStateLevel;
@@ -353,7 +352,6 @@ public class Logic {
 						u.setData(EntityDataUnit.get(type));
 						u.setPos(Float.valueOf(posX),Float.valueOf(posY));
 						u.setTeam(Integer.valueOf(team));
-						u.addSpell(new Spell("Empty",0,0));
 						Realm.getRealm(realm).addEntity(u);
 					}
 					

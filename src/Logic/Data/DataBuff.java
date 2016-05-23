@@ -1,11 +1,13 @@
 
 package Logic.Data;
 
+import static Graphic.GraphicMain.getModel;
+import Graphic.Model;
 import java.util.HashMap;
 
 public class DataBuff {
 	protected String m_name = ""; // nom d'affichage
-	protected String m_icone = "icone/berzerker.png"; // nom de l'icone pour affichage
+	protected String m_iconeName = "icone/berzerker.png"; // nom de l'icone pour affichage
 	protected int m_maxStackCount = 1; // nombre maximum de stack
 	protected float m_maxDuration = 0; // durée avant dissipation de l'effet ou d'une stack
 	protected boolean m_stackDuration = false; // comportement de dissipation
@@ -24,12 +26,12 @@ public class DataBuff {
 		this.m_name = name;
 	}
 
-	public String getIcone() {
-		return m_icone;
+	public String getIconeName() {
+		return m_iconeName;
 	}
 
-	public void setIcone(String icone) {
-		this.m_icone = icone;
+	public void setIconeName(String iconeName) {
+		this.m_iconeName = iconeName;
 	}
 
 	public int getMaxStackCount() {
@@ -89,16 +91,20 @@ public class DataBuff {
 		return Float.parseFloat(m_properties.get(propertyName));
 	}
 	
+	public Model getIconeModel() {
+		return getModel(m_iconeName);
+	}
+	
 	// static part
 	
-	private static HashMap<String,DataBuff> BUFF_DATA = initBuffData();
-	private static HashMap<String,DataBuff> initBuffData() {
+	private static HashMap<String,DataBuff> DATA_BUFF = initDataBuff();
+	private static HashMap<String,DataBuff> initDataBuff() {
 		HashMap<String,DataBuff> out = new HashMap<>();
 		DataBuff data;
 		
 		data = new DataBuff();
 		data.m_name = "regen";
-		data.m_icone = "icone/heal.png";
+		data.m_iconeName = "icone/heal.png";
 		data.m_maxActivationCount = 10;
 		data.m_maxDuration = 2;
 		data.setProperty("healAmount", "100");
@@ -106,7 +112,7 @@ public class DataBuff {
 		
 		data = new DataBuff();
 		data.m_name = "dash";
-		data.m_icone = "icone/dash.png";
+		data.m_iconeName = "icone/dash.png";
 		data.m_maxDuration = 0.15f;
 		data.setProperty("range", "3");
 		out.put("dash", data);
@@ -115,6 +121,6 @@ public class DataBuff {
 	}
 	
 	public static DataBuff getDataBuff(String name) {
-		return BUFF_DATA.get(name);
+		return DATA_BUFF.get(name);
 	}
 }

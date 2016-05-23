@@ -6,7 +6,7 @@
 
 package Logic.Spell;
 
-import static Graphic.GraphicMain.getModel;
+import Logic.Data.DataSpell;
 import Logic.Data.EntityData;
 import Logic.EntityUnit;
 import Logic.IA.IA;
@@ -14,25 +14,8 @@ import Logic.Realm;
 
 public class SpellSummon extends Spell{
 	private EntityData m_type;
-	public SpellSummon(String name, float cost, float cooldown, EntityData type) {
-		super(name,cost,cooldown);
-		m_type=type;
-		m_icone=getModel("Isummon");
-	}
-	public SpellSummon(String name, float cost, float cooldown, String type) {
-		super(name,cost,cooldown);
-		m_type=EntityData.get(type);
-		m_icone=getModel("Isummon");
-	}
-	public SpellSummon(String name, float cost, float cooldown, int charge, EntityData type) {
-		super(name,cost,cooldown,charge);
-		m_type=type;
-		m_icone=getModel("Isummon");
-	}
-	public SpellSummon(String name, float cost, float cooldown, int charge, String type) {
-		super(name,cost,cooldown,charge);
-		m_type=EntityData.get(type);
-		m_icone=getModel("Isummon");
+	public SpellSummon(DataSpell dataModel) {
+		super(dataModel);
 	}
 	
 	@Override

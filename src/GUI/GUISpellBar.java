@@ -38,10 +38,12 @@ public class GUISpellBar {
 				color=new Vector4f(1,1,1,1f);
 			
 			Vector2f sPos=new Vector2f(pos.x+i*size.x+i*offsetX,pos.y);
-			s.getIcone().draw(sPos, size, color);
+			Model iconeModel = s.getIconeModel();
+			if(iconeModel != null)
+				iconeModel.draw(sPos, size, color);
 			GraphicMain.drawString(s.getName(), sPos.subtract(new Vector2f(size.x,-size.y/2)), 1, new Vector4f(0,0,0,1));
 			
-			int charge=s.getCharge();
+			int charge=s.getRemainingCharge();
 			if(charge>-1)
 				GraphicMain.drawString(""+charge, sPos.subtract(new Vector2f(-size.x/2,-size.y/2)), 1, new Vector4f(0,0,0,1));
 			

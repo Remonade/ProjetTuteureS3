@@ -1,24 +1,17 @@
 
 package Logic.Spell;
 
-import static Graphic.GraphicMain.getModel;
 import Logic.Data.DataBuff;
 import Logic.Buff.BuffHealOverTime;
+import Logic.Data.DataSpell;
 import Logic.EntityUnit;
 
 public class SpellHeal extends Spell{
 	
 	private int m_heal;
 	
-	public SpellHeal(String name, float cost, float cooldown, int heal) {
-		super(name,cost,cooldown);
-		m_heal=heal;
-		m_icone=getModel("Iheal");
-	}
-	public SpellHeal(String name, float cost, float cooldown, int charge, int heal) {
-		super(name,cost,cooldown,charge);
-		m_heal=heal;
-		m_icone=getModel("Iheal");
+	public SpellHeal(DataSpell dataModel) {
+		super(dataModel);
 	}
 	
 	@Override

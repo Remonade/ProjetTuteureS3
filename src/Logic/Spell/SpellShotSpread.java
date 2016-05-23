@@ -6,6 +6,7 @@
 
 package Logic.Spell;
 
+import Logic.Data.DataSpell;
 import Logic.Data.EntityDataMissile;
 import Logic.EntityMissile;
 import Logic.EntityUnit;
@@ -13,22 +14,14 @@ import Logic.Realm;
 import Maths.Vector2f;
 
 public class SpellShotSpread extends SpellShot {
-	
-	protected int m_missileCount=1;
-	public SpellShotSpread(String name, float cost, float cooldown, int count) {
-		super(name,cost,cooldown);
-		m_missileCount=count;
-	}
-	
-	public SpellShotSpread(String name, float cost, float cooldown, int charge, int count) {
-		super(name,cost,cooldown,charge);
-		m_missileCount=count;
+	public SpellShotSpread(DataSpell dataModel) {
+		super(dataModel);
 	}
 	
 	
 	@Override
 	public void script(EntityUnit u) {
-		if(m_missileCount<2) {
+		if(getMissileCount()<2) {
 			super.script(u);
 		} else {
 			EntityMissile mis;
@@ -38,9 +31,9 @@ public class SpellShotSpread extends SpellShot {
 				speed=1;
 			
 			float spreadValue=0.1f;
-			float spreedOffset=spreadValue/m_missileCount*2;
+			float spreedOffset=spreadValue/getMissileCount()*2;
 			
-			for(int i=0;i<m_missileCount;i++) {
+			for(int i=0;i<getMissileCount();i++) {
 				mis=new EntityMissile();
 				mis.setData(EntityDataMissile.get("explosive"));
 				mis.setDir(new Vector2f(0.75f*speed,spreadValue-spreedOffset*i));
@@ -51,5 +44,7 @@ public class SpellShotSpread extends SpellShot {
 			}
 		}
 	}
-
+	private int getMissileCount() {
+		return m_dataModel != null ? m_dataModel.getIntegerProperty("missileCount") : 2;
+	}
 }
