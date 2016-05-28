@@ -227,16 +227,12 @@ public class Logic {
 	}
 	public static void generateRun(int difficulty) {
 		clearRun();
-		ArrayList<Integer> levels=new ArrayList<>();
-		levels.add(0);
-		for(int i=1;i<6;i++)
-			levels.add(i);
-		/*for(int i=0;i<difficulty;i++) {
-			int id=1+(int)(Math.random()*4);
-			levels.add(id);
-		}*/
-		levels.add(6);
-		loadLevelList(levels);
+		XmlParser.loadFile("data/world/level0.xml");
+		XmlParser.loadFile("data/world/level1.xml");
+		XmlParser.loadFile("data/world/level2.xml");
+		XmlParser.loadFile("data/world/level3.xml");
+		XmlParser.loadFile("data/world/level4.xml");
+		XmlParser.loadFile("data/world/level5.xml");
 	}
 	public static void loadLevelList(Collection<Integer> list) {
 		for(int i:list) {

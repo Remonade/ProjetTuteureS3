@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<realm name="the enemy" background="background/echoes" music="Music/HOTS_46.ogg" cameraBound="-1 1 2 8">
+	<ground>
+		<entity type="wall3back" position="0 5" collision="off"/>
+		<entity type="ground5" position="0 0"/>
+		<entity type="ground5" position="0 10"/>
+		<entity type="wall5" position="-4 5"/>
+		<entity type="wall5" position="4 5"/>
+	</ground>
+	<waypoint>
+		<entity type="waypoint" position="-2.5 1.25" targetRealm="-1" targetWaypoint="0" targetPosition="1 0"/>
+		<entity type="waypoint" position="2.5 1.25" targetRealm="1" targetWaypoint="0" targetPosition="-1 0"/>
+	</waypoint>
+	<unit>
+		<entity type="enemy" position="1 1.15" team="1" ia="default"/>
+	</unit>
+	<boss>
+	</boss>
+</realm>
