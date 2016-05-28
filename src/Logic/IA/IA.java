@@ -178,10 +178,7 @@ public class IA {
 		
 		Vector2f speed=dest.subtract(pos1);
 		
-		if(speed.length()+0.01f<LOS.length())
-			return false;
-		
-		return true;
+		return speed.length()+0.01f >= LOS.length();
 	}
 	
 	

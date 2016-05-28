@@ -92,7 +92,7 @@ public class GameStateLevel extends GameState {
 				EntityWayPoint t=e.getTargetWayPoint();
 				if(t==null) {
 					//System.out.println("NO TARGET");
-					return false;
+					continue;
 				}
 				if(e.getDirection()!=0) {
 					//System.out.println("Direction: "+e.getDirection());

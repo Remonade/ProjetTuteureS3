@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<realm name="the end" background="background/echoes" music="Music/HOTS_46.ogg" cameraBound="-2 2 2 8">
+	<ground>
+		<entity type="ground5" position="0 0"/>
+		<entity type="ground5" position="0 10"/>
+		<entity type="wall5" position="-5 5"/>
+		<entity type="wall5" position="5 5"/>
+		<entity type="block5x1" position="2.75 2"/>
+		<entity type="block5x1" position="-2.75 2"/>
+		<entity type="block1x5" position="-0.25 2.25"/>
+		<entity type="block1x5" position="0.25 2.25"/>
+		<entity type="block5x1" position="-1.25 3.75"/>
+		<entity type="block5x1" position="1.25 3.75"/>
+		<entity type="block1x5" position="-2.25 4.25"/>
+		<entity type="block1x5" position="2.25 4.25"/>
+		<entity type="block4x1" position="0 4.75"/>
+	</ground>
+	<waypoint>
+		<entity type="waypoint" position="-3.75 1.25" targetRealm="-1" targetWaypoint="0" targetPosition="1 0"/>
+		<entity type="waypoint" position="3.75 1.25" targetRealm="1" targetWaypoint="0" targetPosition="-1 0"/>
+	</waypoint>
+	<unit>
+		<entity type="enemy" position="-1.5 5" team="1" ia="default"/>
+		<entity type="enemy" position="-1 5" team="1" ia="default"/>
+		<entity type="enemy" position="-0.5 5" team="1" ia="default"/>
+		<entity type="enemy" position="0.5 5" team="1" ia="default"/>
+		<entity type="enemy" position="1 5" team="1" ia="default"/>
+		<entity type="enemy" position="1.5 5" team="1" ia="default"/>
+	</unit>
+	<boss>
+	</boss>
+</realm>

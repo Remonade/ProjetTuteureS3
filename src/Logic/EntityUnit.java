@@ -354,7 +354,7 @@ public class EntityUnit extends EntityDynamic {
 			m_speed.y=max.y*Math.signum(m_speed.x);
 	}
 	public Vector2f getMaxSpeed() {
-		if(this.getData()!=null)
+		if(this.getData()!=null && m_data instanceof EntityDataUnit)
 			return ((EntityDataUnit)m_data).getMaxSpeed();
 		return new Vector2f(0.05f,0.05f);
 	}
