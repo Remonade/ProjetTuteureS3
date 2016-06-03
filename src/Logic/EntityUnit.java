@@ -12,7 +12,6 @@ import Logic.Data.EntityDataParticle;
 import Logic.IA.IA;
 import static Logic.Realm.getActiveRealm;
 import Logic.Spell.Spell;
-import static Logic.Type.*;
 import Maths.Vector2f;
 import Maths.Vector4f;
 import Physic.PhysicMain;
@@ -452,28 +451,6 @@ public class EntityUnit extends EntityDynamic {
 		if(!isStun()) {
 			Vector2f pos=target.getPos();
 			Vector2f size=target.getSize();
-			switch(((EntityDataUnit)m_data).getType()){
-				case GUNNER :
-					if(Physic.PhysicMain.inRow(pos, size.y, getPos(), getSize().y)) {
-						if(getMaxEnergy()==m_energy)
-							m_custom=1; //the gunner can launch a burst with his weapon
-						if(m_custom==1 && m_energy-50>0f) { //the gunner shoot
-							if(m_lookRight)
-								shoot(new Vector2f(1,0));
-							else
-								shoot(new Vector2f(-1,0)); 
-						} else
-							m_custom=0; //the weapon of the gunner is overheated and he needs to wait before launching another burst
-					}
-					break;
-				case SNIPER :
-					if(m_energy-50>0f) {
-						shoot(getPos().subtract(pos).negate());
-					}
-					break;
-				default :
-					break;
-			}
 		}
     }
     public void regen() {
@@ -517,11 +494,11 @@ public class EntityUnit extends EntityDynamic {
 			barPos=new Vector2f(m_pos.x,m_pos.y+getSize().y+barSize.y+0.06f);
 			Model.renderTexture("",barPos, barSize, new Vector4f(0,0,1,1));
 		}
-		//GraphicMain.drawString((int)getHealth()+"/"+getMaxHealth(),m_pos.add(getSize()),0.01f,new Vector4f(0,1,0,1));
-		//GraphicMain.drawString((int)getShield()+"/"+getMaxShield(),m_pos.add(new Vector2f(getSize().x,0)),0.01f,new Vector4f(0,0,1,1));
-		//GraphicMain.drawString((int)getEnergy()+"/"+getMaxEnergy(),m_pos.add(new Vector2f(getSize().x,-getSize().y)),0.01f,new Vector4f(1,0,1,1));
+		//GraphicMain.drawString((int)getHealth()+"/"+getMaxHealth(),m_pos.add(getBodySize()),0.01f,new Vector4f(0,1,0,1));
+		//GraphicMain.drawString((int)getShield()+"/"+getMaxShield(),m_pos.add(new Vector2f(getBodySize().x,0)),0.01f,new Vector4f(0,0,1,1));
+		//GraphicMain.drawString((int)getEnergy()+"/"+getMaxEnergy(),m_pos.add(new Vector2f(getBodySize().x,-getBodySize().y)),0.01f,new Vector4f(1,0,1,1));
 		//if(m_owner!=null)
-			//GraphicMain.drawString(m_owner.getName()+" - "+m_owner.getLevel(),m_pos.add(new Vector2f(-getSize().x,getSize().y*2)),0.03f,new Vector4f(1,1,0,1));
+			//GraphicMain.drawString(m_owner.getName()+" - "+m_owner.getLevel(),m_pos.add(new Vector2f(-getBodySize().x,getBodySize().y*2)),0.03f,new Vector4f(1,1,0,1));
 		GraphicMain.setDirection(1);
 		drawDialog();
 	}

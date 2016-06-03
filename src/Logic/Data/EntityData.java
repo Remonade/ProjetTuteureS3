@@ -65,26 +65,26 @@ public class EntityData {
 		if(m_modelSize!=null)
 			return m_modelSize;
 		else
-			return getSize();
+			return getBodySize();
     }
 	// physic part
-    public void setSize(Vector2f size) {
-        setSize(size.x,size.y);
+    public void setBodySize(Vector2f size) {
+        setBodySize(size.x,size.y);
     }
-    public void setSize(float w, float h) {
+    public void setBodySize(float w, float h) {
 		if(m_size==null)
 			m_size=new Vector2f();
         m_size.x=w;
 		m_size.y=h;
     }
-    public Vector2f getSize() {
+    public Vector2f getBodySize() {
 		if(m_size!=null)
 			return m_size;
 		else
 			return new Vector2f(0.1f,0.1f);
     }
 	// audio part
-	public void setSound(String key,String path) {
+	public void setSound(String key, String path) {
 		if(m_sounds.containsKey(key))
 			m_sounds.remove(key);
 		m_sounds.putIfAbsent(key, path);

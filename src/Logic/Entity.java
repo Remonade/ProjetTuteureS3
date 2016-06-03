@@ -44,7 +44,7 @@ public class Entity {
 	public Vector2f getSize() {
 		if(m_data==null)
 				return new Vector2f(0.0f,0.0f);
-		return m_data.getSize();
+		return m_data.getBodySize();
 	}
 	public Vector2f getModelSize() {
 		if(m_data==null)

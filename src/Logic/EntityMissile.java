@@ -99,7 +99,7 @@ public class EntityMissile extends EntityDynamic {
 	}
 	public float getMaxSpeed() {
 		if(m_data!=null)
-			return getMissileData().getMaxSpeed();
+			return getMissileData().getSpeed();
 		return 0.05f;
 	}
 	public float getRange() {

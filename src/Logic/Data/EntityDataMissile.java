@@ -6,7 +6,6 @@
 
 package Logic.Data;
 
-import Logic.Data.EntityData;
 import static Logic.Data.EntityData.all;
 
 public class EntityDataMissile extends EntityData {
@@ -34,10 +33,10 @@ public class EntityDataMissile extends EntityData {
         return m_radius;
     }
 	// movement part
-    public void setMaxSpeed(float speed) {
+    public void setSpeed(float speed) {
         m_speed=speed;
     }
-    public float getMaxSpeed() {
+    public float getSpeed() {
         return m_speed;
     }
     public void setRange(float range) {

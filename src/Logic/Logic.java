@@ -13,7 +13,6 @@ import Logic.Data.EntityData;
 import Graphic.GraphicMain;
 import Logic.Data.EntityDataParticle;
 import Logic.IA.IA;
-import static Logic.Type.SNIPER;
 import Maths.Vector2f;
 import GameState.GameStateLevel;
 import Tests.Main;
@@ -77,6 +76,7 @@ public class Logic {
 	public static void init() {
 		try{
 			loadEntityData("data/entity.data");
+			XmlParser.loadFile("data/entityData.xml");
 			IA.initIA_TEMPLATES();
 			generateRun(0);
 			//Realm.changeRealm(0);
@@ -154,7 +154,7 @@ public class Logic {
 				if("Size".equals(attribute)) {
 					String sizeX=data[2];
 					String sizeY=data[3];
-					e.setSize(Float.valueOf(sizeX),Float.valueOf(sizeY));
+					e.setBodySize(Float.valueOf(sizeX),Float.valueOf(sizeY));
 				} else if("ModelSize".equals(attribute)) {
 					String sizeX=data[2];
 					String sizeY=data[3];
@@ -191,12 +191,11 @@ public class Logic {
 						u.setRegenEnergy(Float.valueOf(regen));
 					} else if("Type".equals(attribute)) {
 						String type=data[2];
-						u.setType(SNIPER);
 					}
 				} else if(m!=null) {
 					if("Speed".equals(attribute)) {
 						String speed=data[2];
-						m.setMaxSpeed(Float.valueOf(speed));
+						m.setSpeed(Float.valueOf(speed));
 					} else if("Range".equals(attribute)) {
 						String range=data[2];
 						m.setRange(Float.valueOf(range));

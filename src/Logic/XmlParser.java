@@ -19,6 +19,9 @@ public class XmlParser {
 				if (n.getNodeName().equals("realm")) {
 					XmlParserRealm.loadRealm(n);
 				}
+				if (n.getNodeName().equals("entityData")) {
+					XmlParserEntityData.loadEntityDataGlobal(n);
+				}
 			} else {
 				System.out.println("no data loaded");
 			}

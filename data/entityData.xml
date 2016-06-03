@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<entityData>
+	<block>
+		<data name="default" bodySize="0.1 0.1" modelName="default"/>
+		<data name="ground2.5" bodySize="2.5 1" modelName="wall3"/>
+		<data name="ground5x0.5" bodySize="5 0.5" modelName="wall3"/>
+		<data name="wall2.5" bodySize="1 2.5" modelName="wall3"/>
+		<data name="wall0.5x5" bodySize="0.5 5" modelName="wall3"/>
+		<data name="ground10" bodySize="10 1" modelName="wall3"/>
+		<data name="ground5" bodySize="5 1" modelName="wall3"/>
+		<data name="wall5" bodySize="1 5" modelName="wall3"/>
+		<data name="wall10" bodySize="1 10" modelName="wall3"/>
+		<data name="wall20" bodySize="1 20" modelName="wall3"/>
+		<data name="block" bodySize="0.25 0.25" modelName="wall3"/>
+		<data name="block4x1" bodySize="1 0.25" modelName="wall3"/>
+		<data name="block5x1" bodySize="1.25 0.25" modelName="wall3"/>
+		<data name="block10x1" bodySize="2.5 0.25" modelName="wall3"/>
+		<data name="block1x5" bodySize="0.25 1.25" modelName="wall3"/>
+		<data name="block1x10" bodySize="0.25 2.5" modelName="wall3"/>
+		<data name="waypoint" bodySize="0.25 0.25" modelName="teleporter" color="0.5 0.5 1 1"/>
+		<data name="wallback" bodySize="5 5" modelName="wall"/>
+		<data name="wall3back" bodySize="5 5" modelName="wall3" color="0.25 0.25 0.25 1"/>
+	</block>
+	<unit>
+		<data name="enemy" bodySize="0.1 0.1" modelName="Enemy" maxHealth="100" maxShield="200" regenShield="1" maxEnergy="100" regenEnergy="0.15">
+			<sound key="death" value="Unit/Wscream.ogg"/>
+		</data>
+		<data name="player" bodySize="0.15 0.15" modelSize="0.35 0.35" modelName="Player" maxHealth="300" regenHealth="" maxShield="200" regenShield="1" maxEnergy="100" regenEnergy="0.2">
+			<sound key="death" value="Unit/Wscream.ogg"/>
+			<sound key="hurt" value="Unit/Wscream.ogg"/>
+		</data>
+		<data name="boss" bodySize="0.35 0.35" modelName="Enemy" maxHealth="500" maxShield="100" regenShield="1" maxEnergy="100" regenEnergy="0.4">
+			<sound key="death" value="Unit/Wscream.ogg"/>
+		</data>
+		<data name="monster" bodySize="0.5 0.5" modelName="monster" maxHealth="100" regenHealth="0.05" maxShield="100" regenShield="" maxEnergy="100" regenEnergy="0.15">
+			<sound key="death" value="Unit/MonsterDeath.ogg"/>
+		</data>
+	</unit>
+	<missile>
+		<data name="missile" bodySize="0.1 0.1" modelName="missile" speed="6" range="3" damage="75">
+			<sound key="explode" value="Effect/EnergyExplosion.ogg"/>
+		</data>
+		<data name="strike" bodySize="0.10 0.15" modelName="missile" speed="10" range="0.35" damage="100">
+			<sound key="explode" value="Effect/Explosion.ogg"/>
+		</data>
+		<data name="explosive" bodySize="0.15 0.15" modelName="Pexplosion" speed="5" range="2.5" damage="35" radius="0.75">
+			<sound key="explode" value="Effect/Explosion.ogg"/>
+		</data>
+	</missile>
+	<particle>
+		<data name="particule" bodySize="0.05 0.05" modelName="Pheal" color="1 0.75 0 1" speed="0.5" duration="0.35"/>
+		<data name="EDPexplosion" bodySize="0.25 0.25" modelName="Pexplosion" color="1 0.75 0 1" speed="7.5" duration="0.1"/>
+		<data name="EDPheal" bodySize="0.05 0.05" modelName="Pheal" color="0 1 0 0.25" speed="0.5" duration="0.5" rotationSpeed="5" type="1"/>
+		<data name="EDPTextGreen" color="0 1 0 1" speed="0.5" duration="0.75" rotationSpeed="5" type="1"/>
+		<data name="EDPTextRed" color="1 0 0 1" speed="0.5" duration="0.75" rotationSpeed="5" type="1"/>
+	</particle>
+</entityData>

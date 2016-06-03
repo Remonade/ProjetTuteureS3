@@ -6,9 +6,6 @@
 
 package Logic.Data;
 
-import Logic.Data.EntityData;
-import Logic.Type;
-import static Logic.Type.*;
 
 import Maths.Vector2f;
 
@@ -20,7 +17,6 @@ public class EntityDataUnit extends EntityData {
     private float m_maxShield=0;
 	private float m_regenShield=0;
     private Vector2f m_maxSpeed=new Vector2f(0.5f,0.5f);
-    private Type m_type=GUNNER;
     
     public EntityDataUnit() {
         super();
@@ -42,12 +38,6 @@ public class EntityDataUnit extends EntityData {
     }
     public Vector2f getMaxSpeed() {
         return m_maxSpeed;
-    }
-    public void setType(Type type) {
-        m_type=type;
-    }
-    public Type getType(){
-        return m_type; 
     }
     public void setMaxShield(float maxShield) {
         m_maxShield=maxShield;
